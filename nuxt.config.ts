@@ -17,7 +17,7 @@ export default defineNuxtConfig({
             { hid: 'd4sign-domain-verification', name: 'd4sign-domain-verification',content: 'd3f378e8-f6ab-47cd-a98b-4cb40d038c52'},
         ],
         link: [
-          { rel: 'icon', type: 'image/x-icon', href: './public/Favicon.ico' }//favicon
+          { rel: 'icon', type: 'image/x-icon', href: './assets/images/logo.png' }//favicon
         ],
     },
   },
@@ -50,6 +50,7 @@ export default defineNuxtConfig({
   plugins: [  
     '~/plugins/toastify.js',
     '~/plugins/axios.js',
+    '~/plugins/vueTheMask.js',
   ],
   vue: {  
     compilerOptions: {

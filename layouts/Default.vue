@@ -87,7 +87,7 @@
 </script>
 <style scoped>
     .h-100 {
-        height: 100dvh !important;
+        min-height: 100dvh !important;
     }
 
     .leao {

@@ -2,6 +2,7 @@
     <v-row class="h-100 justify-center align-center">
         <v-col cols="12" v-show="showForm">
             <FormClient 
+            v-show="showForm"
                 :id="id"
                 @voltar="voltarListagemMateriais($event)"
             />
@@ -51,12 +52,13 @@
 
     const showFormFunc = (ev) => {
         id.value = ev; 
-        show.value = true;
+        showForm.value = true;
     };
 
     const voltarListagemMateriais = (ev) => {
         id.value = ev;
-        show.value = ev;
+        showForm.value = ev;
+        getClients();
     };
 
     onBeforeMount(() => getClients());

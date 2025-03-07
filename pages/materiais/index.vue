@@ -8,6 +8,7 @@
         </v-col>
         <v-col cols="12" v-show="!idMaterial && !showMaterialForm">
             <DataTable 
+                v-show="materiais.length > 0"
                 title="Listagem de materiais cadastrados"
                 :items="materiais"
                 :headers="nomesColunas" 
@@ -58,6 +59,7 @@
     const voltarListagemMateriais = (ev) => {
         idMaterial.value = ev;
         showMaterialForm.value = ev;
+        getMateriais();
     };
 
     onBeforeMount(() => {
