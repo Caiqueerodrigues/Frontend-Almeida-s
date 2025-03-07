@@ -26,7 +26,7 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" md="7" class="pl-7 d-flex">
                 <v-text-field
                     rounded="xl"
                     label="Telefone"
@@ -36,6 +36,17 @@
                     :rules="[(value) => !!value || 'O telefone é obrigatório!']"
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
+                <v-btn
+                    variant="flat"
+                    rounded="xl"
+                    color="success"
+                    style="width: 20%"
+                    class="ml-4 mt-2"
+                    @click="copyToClipboard()"
+                    :disabled="!cliente.telefone || textBtn === 'COPIADO!'"
+                >
+                    {{ textBtn }}
+                </v-btn>
             </v-col>
             <v-col cols="12" md="7" class="pl-7">
                 <v-textarea
@@ -89,6 +100,7 @@
         ativo: true,
         obs: ''
     });
+    const textBtn = ref("COPIAR TELEFONE");
 
     const getCliente = async () => {
         axios.get(`/clients/${props.id}`).then(response => {
@@ -97,6 +109,7 @@
     };
 
     const voltar = (value) => {
+        textBtn.value = "COPIAR TELEFONE";
         formClient.value.reset();
         cliente.value = {
             nome: '',
@@ -106,6 +119,18 @@
             obs: ''
         };
         emit('voltar', value);
+    }
+
+    const copyToClipboard = () => {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(cliente.value.telefone.replace(/[^0-9]/g, '')).then(() => {
+                textBtn.value = "COPIADO!"
+            }).catch(err => {
+                console.error('Falha ao copiar o texto: ', err);
+            });
+        } else {
+            console.warn('O navegador não suporta a API Clipboard');
+        }
     }
 
     const validateForm = async () => {

@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     },
   },
   alias: {
-    'svg': resolve(__dirname, './assets/svg'),
+    'svg': resolve(__dirname, './assets/images/svg'),
     'node_modules': resolve(__dirname, './node_modules'),
     './': resolve( './*')
   },
