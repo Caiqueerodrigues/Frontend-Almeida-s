@@ -17,23 +17,10 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" md="7" class="text-center">
-                <span class="text-secondary">Está ativo?</span>
-                <v-radio-group 
-                    v-model="material.ativo"
-                    inline
-                    class="d-flex justify-center"
-                >
-                    <v-radio
-                        color="white"
-                        label="Sim"
-                        :value="true"
-                    ></v-radio>
-                    <v-radio
-                        color="white"
-                        label="Não"
-                        :value="false"
-                    ></v-radio>
-                </v-radio-group>
+                <FormAtivo 
+                    :valueInicial="material.ativo"
+                    @setValue="material.ativo = $event"
+                />
             </v-col>
             <v-col cols="12" class="text-center">
                 <v-btn
@@ -60,7 +47,7 @@
     const form = ref(null);
     const axios = inject("axios");
     const props = defineProps([ 'idMaterial' ]);
-    const emit = defineEmits([ 'voltar' ])
+    const emit = defineEmits([ 'voltar' ]);
 
     const material = ref({
         nome: "",
