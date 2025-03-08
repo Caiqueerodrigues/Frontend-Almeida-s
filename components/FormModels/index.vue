@@ -23,7 +23,7 @@
                     v-model="modelo.preco"
                     variant="outlined"
                     :rules="[(value) => !!value || 'O preço é obrigatório!']"
-                    @input="formateddPrice"
+                    @input="formateddPrice($event, 'modelo')"
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
@@ -95,7 +95,8 @@
                 >
                     <v-icon
                         @click="triggerPhotoInput(index)"
-                        class="text-primary pa-8"
+                        class="pa-8"
+                        :class="foto.routeFile ? 'text-primary' : 'text-success'"
                         size="30"
                     >
                         mdi-pencil
@@ -103,10 +104,48 @@
                 </v-img>
                 <v-text-field
                     rounded="xl"
+                    v-if="foto.routeFile"
                     label="Nome da peça"
                     v-model="foto.nomeFile"
-                    class="mx-2"
+                    class="ma-2"
                     :rules="[(value) => !!value || 'O nome da peça é obrigatório!']"
+                    variant="outlined"
+                ></v-text-field>
+                <v-text-field
+                    rounded="xl"
+                    v-if="foto.routeFile"
+                    label="Qtd ao par"
+                    v-model="foto.qtdPar"
+                    type="number"
+                    class="ma-2"
+                    :rules="[(value) => !!value || 'A QTD ao par é obrigatório!']"
+                    variant="outlined"
+                ></v-text-field>
+                <v-text-field
+                    rounded="xl"
+                    v-if="foto.routeFile"
+                    label="Propriedade da faca"
+                    v-model="foto.propriedadeFaca"
+                    class="ma-2"
+                    :rules="[(value) => !!value || 'A propriedade é obrigatório!']"
+                    variant="outlined"
+                ></v-text-field>
+                <v-text-field
+                    rounded="xl"
+                    v-if="foto.routeFile"
+                    label="Preço por faca"
+                    v-model="foto.precoFaca"
+                    class="ma-2"
+                    :rules="[(value) => !!value || 'O preço por faca é obrigatório!']"
+                    @input="formateddPrice($event, 'foto', index)"
+                    variant="outlined"
+                ></v-text-field>
+                <v-text-field
+                    rounded="xl"
+                    v-if="foto.routeFile"
+                    label="Obs"
+                    v-model="foto.obs"
+                    class="ma-2"
                     variant="outlined"
                 ></v-text-field>
                 <v-file-input 
@@ -119,6 +158,7 @@
             </v-col>
             <v-col cols="12" class="text-center">
                 <v-btn
+                    v-if="modelo.id"
                     variant="flat"
                     color="warning"
                     rounded="xl"
@@ -157,7 +197,7 @@
     const modelo = ref({
         tipo: "",
         preco: 0,
-        qtdPecasPar: 2,
+        qtdPar: 2,
         refOrdem: "",
         fotos: '',
         qtdFaca: 0,
@@ -167,6 +207,7 @@
         fotos: []
     });
     const photoInput = ref(null);
+    const alterouFotos = ref(false);
 
     const handleEnterKey = (ev) => {
         ev.preventDefault();
@@ -189,32 +230,68 @@
     };
 
     const sendPutModelo = async () => {
-        if(modelo.value.fotos) formatteFotosSubmit();
+        if(alterouFotos.value) await putFotos();
+        if(typeof modelo.value.fotos !== 'string') formatteFotosSubmit();
         axios.put(`/models`, modelo.value).then(response => {
             voltar();
         }).catch(err => console.error(err));
     };
 
     const formatteFotosSubmit = () => {
-        let fotos = "";
-        modelo.value.fotos.map((item, index) => {
-            fotos += `${item.id}${index < modelo.value.fotos.length ? ',' : ''}`;
-        });
-        delete modelo.value.fotos;
-        modelo.value.fotos = fotos;
+        if(typeof modelo.value.fotos !== 'string') {
+            let fotos = "";
+            modelo.value.fotos.map((item, index) => {
+                fotos += `${item.id}${index < modelo.value.fotos.length - 1 ? ',' : ''}`;
+            });
+            fotos += modelo.value.newIdsFotos ? modelo.value.newIdsFotos : "";
+            delete modelo.value.fotos;
+            modelo.value.fotos = fotos;
+        }
     }
 
     const sendPostModelo = async () => {
         delete modelo.value.id;
         modelo.value.client = props.client[0];
 
+        modelo.value.preco = Number(modelo.value.preco);
+        modelo.value.qtdPecasPar = Number(modelo.value.qtdPar);
+        modelo.value.fotos = '';
+
         axios.post(`/models`, modelo.value).then(response => {
             voltar();
         }).catch(err => console.error(err));
     };
 
+    const putFotos = async () => {
+        const formData = new FormData();
+
+        modelo.value.fotos.forEach((foto, index) => {
+            if (foto.routeFile) {
+                const fileInput = photoInput.value[index];
+                if (fileInput && fileInput.files[0]) {
+                    formData.append(`files[]`, fileInput.files[0]);
+                    formData.append(`nomePeca[]`, foto.nomeFile.replace(" ", "-"));
+                    formData.append(`propriedadeFaca[]`, foto.propriedadeFaca);
+                    formData.append("pecaPar[]", foto.qtdPar);
+                    formData.append("precoFaca[]", foto.precoFaca);
+                    formData.append("obs[]", foto.obs.length > 0 ? foto.obs : " ");
+                }
+            }
+        });
+        formData.append("idModelo", modelo.value.id);
+        formData.append("idClient", modelo.value.client.id);
+        formData.append("nomeModelo", modelo.value.tipo);
+
+
+        axios.post('anexo', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
+            modelo.value.fotos += response;
+            modelo.value.newIdsFotos = response;
+        }).catch(err => console.error(err));
+    };
+
     const adcFoto = () => {
-        modelo.value.fotos.push({ nomeFile: "", routeFile: "" });
+        alterouFotos.value = true;
+        modelo.value.fotos.push({ nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPar: "", propriedadeFaca: "", obs: '' });
         setTimeout(() => {
             triggerPhotoInput(modelo.value.fotos.length - 1);
         }, 500);
@@ -225,6 +302,7 @@
     }
 
     const handleFileChange = (index, event) => {
+        alterouFotos.value = true;
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -235,17 +313,22 @@
         }
     }
 
-    const formateddPrice = (key) => {
-        let priceText = String(modelo.value.preco).replace(/\D/g, '');
+    const formateddPrice = (key, type, i) => {
+        const price = type === "foto" ? modelo.value.fotos[i].precoFaca : modelo.value.preco;
+        let priceText = String(price).replace(/\D/g, '');
+        let result = 0;
 
         if (!priceText.includes('.') && priceText.length < 3) {
             priceText = "0" + priceText;
         };
         if(priceText[0] === '0' && priceText.length > 3) priceText = priceText.slice(1);
-        if (priceText.length >= 2) modelo.value.preco = priceText.slice(0, -2) + "." + priceText.slice(-2);
-        else modelo.value.preco = priceText;
-        modelo.value.preco = Number(modelo.value.preco);
-        if(key.target.value.slice(-1) === '0') modelo.value.preco = Number(modelo.value.preco).toFixed(2);
+        if (priceText.length >= 2) result = priceText.slice(0, -2) + "." + priceText.slice(-2);
+        else result = priceText;
+        result = Number(result);
+        if(key.target.value.slice(-1) === '0') result = Number(result).toFixed(2);
+        
+        if(type === 'foto') modelo.value.fotos[i].precoFaca = result;
+        else modelo.value.preco = result;
     }
 
     watch(() => props.idModelo, (nv, od) => {
@@ -257,7 +340,7 @@
         modelo.value = {
             tipo: "",
             preco: 0,
-            qtdPecasPar: 2,
+            qtdPar: 2,
             refOrdem: "",
             fotos: '',
             qtdFaca: 0,

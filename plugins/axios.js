@@ -34,7 +34,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         // }
         if(response.data.msgSucesso !== "") showToastfy(response.data.msgSucesso, "success");
         else if(response.data.msgAlerta !== "") showToastfy(response.data.msgAlerta, "warning");
-        else return response.data.response;
+        return response.data.response;
     }, error => {
         loading.value = false;
         showToastfy(error.response.data.msgErro, "error");

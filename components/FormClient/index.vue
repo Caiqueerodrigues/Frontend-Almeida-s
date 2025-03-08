@@ -122,8 +122,10 @@
     }
 
     const copyToClipboard = () => {
+        const numero = cliente.value.telefone.replace(/[^0-9]/g, '');
+        window.location.href = `tel:${numero}`;
         if (navigator.clipboard) {
-            navigator.clipboard.writeText(cliente.value.telefone.replace(/[^0-9]/g, '')).then(() => {
+            navigator.clipboard.writeText(numero).then(() => {
                 textBtn.value = "COPIADO!"
             }).catch(err => {
                 console.error('Falha ao copiar o texto: ', err);
