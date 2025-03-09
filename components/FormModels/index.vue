@@ -31,7 +31,7 @@
             <v-col cols="12" md="7" class="pl-7">
                 <v-text-field
                     rounded="xl"
-                    label="ReferÊncia/Ordem do calçado"
+                    label="Referência/Ordem do calçado"
                     v-model="modelo.refOrdem"
                     variant="outlined"
                     @keydown.enter="handleEnterKey($event)"
@@ -195,6 +195,7 @@
     const form = ref(null);
     const axios = inject("axios");
     const loading = inject('loading');
+    const validForm = inject('validateForm');
     const props = defineProps([ 'client', 'idModelo' ]);
     const emit = defineEmits([ 'voltar' ]);
 
@@ -218,7 +219,7 @@
     };
 
     const validateForm = async () => {
-        const errors = await form.value.validate();
+        const errors = await validForm(form);
         if(errors.valid) {
             if(modelo.value.id) sendPutModelo();
             else sendPostModelo();

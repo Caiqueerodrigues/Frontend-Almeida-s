@@ -57,6 +57,7 @@ export default defineNuxtConfig({
     '~/plugins/axios.js',
     '~/plugins/vueTheMask.js',
     '~/plugins/formattePreco.js',
+    '~/plugins/validateForm.js',
   ],
   vue: {  
     compilerOptions: {

@@ -48,6 +48,7 @@
     const form = ref(null);    
     const axios = inject("axios");
     const loading = inject('loading');
+    const validForm = inject('validateForm');
     const props = defineProps([ 'idMaterial' ]);
     const emit = defineEmits([ 'voltar' ]);
 
@@ -63,7 +64,7 @@
 
 
     const validateForm = async () => {
-        const errors = await form.value.validate();
+        const errors = await validForm(form);
         if(errors.valid) {
             if(material.value.id) sendPutMaterial();
             else sendPostMaterial();

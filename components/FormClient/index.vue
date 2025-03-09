@@ -124,6 +124,7 @@
 <script setup>
     const axios = inject("axios");
     const loading = inject('loading');
+    const validForm = inject('validateForm');
     const formClient = ref(null);
     const props = defineProps([ 'id' ]);
     const emit = defineEmits([ 'voltar' ]);
@@ -185,7 +186,7 @@
     }
 
     const validateForm = async () => {
-        const errors = await formClient.value.validate();
+        const errors = await validForm(formClient);
         if(errors.valid) {
             if(cliente.value.id) sendPutMaterial();
             else sendPostMaterial();

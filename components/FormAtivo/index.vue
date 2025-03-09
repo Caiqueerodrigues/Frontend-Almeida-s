@@ -3,7 +3,7 @@
         <v-radio-group 
         v-model="props.valueInicial"
         inline
-        class="d-flex justify-center text-black font-weight-bold"
+        class="d-flex justify-center color-default"
     >
         <v-radio
             label="Sim"

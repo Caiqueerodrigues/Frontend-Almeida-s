@@ -31,9 +31,21 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-.v-text-field input {
-    color: #000 !important;
+.v-text-field input, .v-field, .color-default {
+    font-weight: bold;
+    color: #C0812D !important;
 }
-.v-field {
-    color: #000;
+.v-input--error .v-input__append-inner .v-icon {
+    color: #eeff00 !important; 
+}
+
+.v-input--error .v-messages__message {
+    color: #eeff00 !important;
+}
+.v-field--error .v-label {
+    color:  #eeff00  !important;
+}
+.v-text-field.v-input--error .v-field--error .v-field__outline {
+    --v-field-border-opacity: 1;
+    color: #eeff00 !important;
 }
