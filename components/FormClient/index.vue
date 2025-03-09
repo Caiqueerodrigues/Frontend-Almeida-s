@@ -157,6 +157,8 @@
     }
 
     const copyToClipboard = () => {
+        const numero = cliente.value.telefone.replace(/[^0-9]/g, '');
+        
         if (navigator.clipboard) {
             navigator.clipboard.writeText(numero).then(() => {
                 textBtn.value = "COPIADO!"
