@@ -30,3 +30,10 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
+.v-text-field input {
+    color: #000 !important;
+}
+.v-field {
+    color: #000;
+}

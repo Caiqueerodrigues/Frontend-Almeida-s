@@ -3,16 +3,14 @@
         <v-radio-group 
         v-model="props.valueInicial"
         inline
-        class="d-flex justify-center"
+        class="d-flex justify-center text-black font-weight-bold"
     >
         <v-radio
-            color="white"
             label="Sim"
             :value="true"
             @click="emitValue(true)"
         ></v-radio>
         <v-radio
-            color="white"
             label="Não"
             :value="false"
             @click="emitValue(false)"

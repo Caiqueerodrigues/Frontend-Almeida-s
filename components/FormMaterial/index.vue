@@ -36,6 +36,7 @@
                     color="success"
                     rounded="xl"
                     @click="validateForm()"
+                    :loading="loading"
                 >
                     SALVAR
                 </v-btn>
@@ -44,8 +45,9 @@
     </v-form>
 </template>
 <script setup>
-    const form = ref(null);
+    const form = ref(null);    
     const axios = inject("axios");
+    const loading = inject('loading');
     const props = defineProps([ 'idMaterial' ]);
     const emit = defineEmits([ 'voltar' ]);
 

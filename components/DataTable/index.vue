@@ -12,10 +12,14 @@
             >
                 <template v-slot:[`item.situacao`]="{ item }">
                     <v-chip :color="item.ativo ? 'success' : 'primary'" text-color="white">
-                        <v-icon :color="item.ativo ? 'success' : 'primary'" v-if="item.icons">
+                        <v-icon v-if="item.icons">
                             {{ item.situacao }}
                         </v-icon>
                     </v-chip>
+                </template>
+
+                <template v-slot:[`item.preco`]="{ item }">
+                    {{ formattePrice(item.preco) }}
                 </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
@@ -32,6 +36,7 @@
 <script setup>
     const props = defineProps([ 'title', 'items', 'headers', 'acaoVer' ]);
     const emit = defineEmits([ 'verId' ]);
+    const formattePrice = inject('formattePrice');
 
     const emitId = (item) => {
         emit('verId', item.id);

@@ -21,6 +21,7 @@
                     rounded="xl"
                     label="Preço do calçado"
                     v-model="modelo.preco"
+                    type="tel"
                     variant="outlined"
                     :rules="[(value) => !!value || 'O preço é obrigatório!']"
                     @input="formateddPrice($event, 'modelo')"
@@ -30,7 +31,7 @@
             <v-col cols="12" md="7" class="pl-7">
                 <v-text-field
                     rounded="xl"
-                    label="Ordem do calçado"
+                    label="ReferÊncia/Ordem do calçado"
                     v-model="modelo.refOrdem"
                     variant="outlined"
                     @keydown.enter="handleEnterKey($event)"
@@ -74,7 +75,7 @@
                     rows="4"
                     variant="outlined"
                     auto-grow
-                    label="Observevação"
+                    label="Observação"
                     counter
                     cleareble
                     maxlength="255"
@@ -135,6 +136,7 @@
                     v-if="foto.routeFile"
                     label="Preço por faca"
                     v-model="foto.precoFaca"
+                    type="tel"
                     class="ma-2"
                     :rules="[(value) => !!value || 'O preço por faca é obrigatório!']"
                     @input="formateddPrice($event, 'foto', index)"
@@ -143,7 +145,7 @@
                 <v-text-field
                     rounded="xl"
                     v-if="foto.routeFile"
-                    label="Obs"
+                    label="Observação"
                     v-model="foto.obs"
                     class="ma-2"
                     variant="outlined"
@@ -181,6 +183,7 @@
                     color="success"
                     rounded="xl"
                     @click="validateForm()"
+                    :loading="loading"
                 >
                     SALVAR
                 </v-btn>
@@ -191,6 +194,7 @@
 <script setup>
     const form = ref(null);
     const axios = inject("axios");
+    const loading = inject('loading');
     const props = defineProps([ 'client', 'idModelo' ]);
     const emit = defineEmits([ 'voltar' ]);
 
@@ -224,6 +228,7 @@
     const getModelo = async () => {
         axios.get(`/models/${props.idModelo}`).then(response => {
             if(response.fotos.length > 0) response.fotos.map(foto => foto.nomeFile = foto.nomeFile.split("_")[0]);
+            response.preco = Number(response.preco).toFixed(2);
             modelo.value = response;
             modelo.value.client = props.client[0];
         }).catch(err => console.error(err));

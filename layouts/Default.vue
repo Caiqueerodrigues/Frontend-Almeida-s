@@ -37,7 +37,11 @@
                     class="pointer"
                 >
                     <v-list-item-content>
-                        <v-list-item-title @click="goTo(item.route)" class="text-surface font-weight-bold text-center py-4">
+                        <v-list-item-title 
+                            @click="goTo(item.route)" 
+                            class="text-surface font-weight-bold text-center py-4"             
+                            :class="itemSelected === item.route ? 'selected' : ''"
+                        >
                             <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
                             {{ item.title }}
                             <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
@@ -54,8 +58,8 @@
     </v-card>
 </template>
 <script setup>
+    const route = useRoute()
     const drawer = ref(false);
-    const group = ref(null);
     const items = ref([
         {
             title: 'Clientes',
@@ -78,12 +82,18 @@
             icon: 'mdi-currency-usd',
         },
     ]);
+    const itemSelected = ref(null);
 
     const goTo = (route) => {
         drawer.value = !drawer.value;
+        itemSelected.value = route;
         
         navigateTo(route);
-    }
+    };
+
+    onMounted(() => {
+        itemSelected.value = route.fullPath;
+    });
 </script>
 <style scoped>
     .h-100 {
@@ -96,5 +106,9 @@
 
     .logoEscrito {
         height: 60px;
+    }
+
+    .selected {
+        color: #fff !important;
     }
 </style>

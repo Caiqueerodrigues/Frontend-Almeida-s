@@ -56,6 +56,7 @@ export default defineNuxtConfig({
     '~/plugins/toastify.js',
     '~/plugins/axios.js',
     '~/plugins/vueTheMask.js',
+    '~/plugins/formattePreco.js',
   ],
   vue: {  
     compilerOptions: {
