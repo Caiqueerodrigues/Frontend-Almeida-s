@@ -1,6 +1,6 @@
 <template>
     <v-row class="h-100 justify-center align-center">
-        <v-col cols="12" v-show="showMaterialForm">
+        <v-col cols="12" v-show="showMaterialForm && !loading">
             <FormMaterial 
                 :idMaterial="idMaterial"
                 @voltar="voltarListagemMateriais($event)"
@@ -17,7 +17,7 @@
             />
         </v-col>
 
-        <v-col cols="12" class="text-center pb-12" v-if="!showMaterialForm">
+        <v-col cols="12" class="text-center pb-12" v-if="!showMaterialForm && !loading">
             <v-btn 
                 variant="flat"
                 color="success"
@@ -31,6 +31,7 @@
 </template>
 <script setup>
     const axios = inject("axios");
+    const loading = inject("loading");
     const showMaterialForm = ref(false);
     const idMaterial = ref(false);
     const nomesColunas = ref([

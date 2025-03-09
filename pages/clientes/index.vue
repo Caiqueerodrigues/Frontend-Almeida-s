@@ -1,6 +1,6 @@
 <template>
     <v-row class="h-100 justify-center align-center">
-        <v-col cols="12" v-show="showForm">
+        <v-col cols="12" v-show="showForm && !loading">
             <FormClient 
             v-show="showForm"
                 :id="id"
@@ -17,7 +17,7 @@
             />
         </v-col>
 
-        <v-col cols="12" class="text-center pb-12" v-if="!showForm">
+        <v-col cols="12" class="text-center pb-12" v-if="!showForm && !loading">
             <v-btn 
                 variant="flat"
                 color="success"
@@ -31,6 +31,7 @@
 </template>
 <script setup>
     const axios = inject("axios");
+    const loading = inject("loading");
     const showForm = ref(false);
     const id = ref(false);
     const nomesColunas = ref([

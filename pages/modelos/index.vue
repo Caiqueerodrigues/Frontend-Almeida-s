@@ -14,7 +14,7 @@
                 prepend-inner-icon="mdi-account-tie"
             ></v-autocomplete>
         </v-col>
-        <v-col cols="12" v-show="idModelo || showForm">
+        <v-col cols="12" v-show="(idModelo || showForm) && !loading">
             <FormModels 
                 v-show="showForm"
                 :client="clientComplete"
@@ -55,6 +55,7 @@
 </template>
 <script setup>
     const axios = inject("axios");
+    const loading = inject("loading");
     const showForm = ref(false);
     const nomesColunas = ref([
         { title: 'Tipo', align: 'center', key: 'tipo' },
