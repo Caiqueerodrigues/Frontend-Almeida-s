@@ -1,12 +1,13 @@
 <template>
     <v-card>
+        <Loading v-if="loading"/>
         <v-layout>
             <v-app-bar color="#000" class="pr-4">
-                <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+                <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" :disabled="loading"></v-app-bar-nav-icon>
 
                 <v-toolbar-title class="text-secondary ml-n2">
                     <v-row class="align-center justify-space-between">
-                        <v-col cols="1" @click.stop="drawer = !drawer">
+                        <v-col cols="1" @click.stop="!loading ? drawer = !drawer : ''">
                             <img src="../assets/images/logo.png" alt="Logo da empresa" class="leao">
                         </v-col>
                         <v-col cols="9" class="d-flex justify-center pl-12">
@@ -38,7 +39,7 @@
                 >
                     <v-list-item-content>
                         <v-list-item-title 
-                            @click="goTo(item.route)" 
+                            @click="!loading && goTo(item.route)" 
                             class="text-surface font-weight-bold text-center py-4"             
                             :class="itemSelected === item.route ? 'selected' : ''"
                         >
@@ -58,6 +59,7 @@
     </v-card>
 </template>
 <script setup>
+    const loading = inject("loading");
     const route = useRoute()
     const drawer = ref(false);
     const items = ref([
