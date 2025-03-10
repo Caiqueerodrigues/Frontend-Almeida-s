@@ -93,9 +93,10 @@
                     cover
                     :src="foto.routeFile"
                     class="ma-3 rounded-xl d-flex justify-space-between"
+                    @click="showModal(foto.nomePeca, foto.routeFile)"
                 >
                     <v-icon
-                        @click="triggerPhotoInput(index)"
+                        @click.stop="triggerPhotoInput(index)"
                         class="pa-8"
                         :class="foto.routeFile ? 'text-primary' : 'text-success'"
                         size="30"
@@ -107,11 +108,11 @@
                     rounded="xl"
                     v-if="foto.routeFile"
                     label="Nome da peça"
-                    v-model="foto.nomeFile"
+                    v-model="foto.nomePeca"
                     class="ma-2"
-                    :rules="[(value) => !!value || 'O nome da peça é obrigatório!']"
+                    :rules="[ (value) => !!value || 'O nome da peça é obrigatório!', nomeUnico(foto, index) ]"
                     variant="outlined"
-                    @click="alterouFotos = true"
+                    @input="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
                     rounded="xl"
@@ -122,7 +123,7 @@
                     class="ma-2"
                     :rules="[(value) => !!value || 'A QTD ao par é obrigatório!']"
                     variant="outlined"
-                    @click="alterouFotos = true"
+                    @input="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
                     rounded="xl"
@@ -132,6 +133,7 @@
                     class="ma-2"
                     :rules="[(value) => !!value || 'A propriedade é obrigatório!']"
                     variant="outlined"
+                    @input="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
                     rounded="xl"
@@ -141,9 +143,8 @@
                     type="tel"
                     class="ma-2"
                     :rules="[(value) => !!value || 'O preço por faca é obrigatório!']"
-                    @input="formateddPrice($event, 'foto', index)"
+                    @input="formateddPrice($event, 'foto', index), alterouFotos = true"
                     variant="outlined"
-                    @click="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
                     rounded="xl"
@@ -152,7 +153,7 @@
                     v-model="foto.obs"
                     class="ma-2"
                     variant="outlined"
-                    @click="alterouFotos = true"
+                    @input="alterouFotos = true"
                 ></v-text-field>
                 <v-file-input 
                     ref="photoInput"
@@ -160,7 +161,7 @@
                     style="display: none;"
                     accept=".png, .jpg, .jpeg, .svg"
                     @change="handleFileChange(index, $event)"
-                    @click="alterouFotos = true"
+                    @input="alterouFotos = true"
                 ></v-file-input>
             </v-col>
             <v-col cols="12" class="text-center">
@@ -195,6 +196,11 @@
             </v-col>
         </v-row>
     </v-form>
+    <ModalPhoto 
+        :isActiveModal="isActiveModal"
+        :dadosFoto="dadosFoto"
+        @setInactiveModal="isActiveModal = $event, dadosFoto = {}"
+    />
 </template>
 <script setup>
     const form = ref(null);
@@ -203,6 +209,8 @@
     const validForm = inject('validateForm');
     const props = defineProps([ 'client', 'idModelo' ]);
     const emit = defineEmits([ 'voltar' ]);
+    const isActiveModal = ref(false);
+    const dadosFoto = ref({});
 
     const modelo = ref({
         tipo: "",
@@ -222,6 +230,19 @@
 
     const handleEnterKey = (ev) => {
         ev.preventDefault();
+    };
+
+    const nomeUnico = (fotoAtual, indexAtual) => {
+        return (value) => {
+            const existeNomeRepetido = modelo.value.fotos.some((foto, index) => {
+            return foto.nomeFile === value && index !== indexAtual;
+            });
+
+            if (existeNomeRepetido) {
+            return 'Já existe uma peça com o mesmo nome!';
+            }
+            return true;
+        };
     };
 
     const validateForm = async () => {
@@ -276,19 +297,20 @@
 
     const putFotos = async () => {
         const formData = new FormData();
+        const fileFake = new File(["conteúdo do arquivo fake"], "fake.txt", { type: 'text/plain' });
 
         modelo.value.fotos.forEach((foto, index) => {
             if (foto.routeFile) {
                 const fileInput = photoInput.value[index];
-                if (fileInput && fileInput.files[0]) {
-                    formData.append(`files[]`, fileInput.files[0]);
-                    formData.append(`nomePeca[]`, foto.nomeFile.replace(" ", "-"));
+                // if (fileInput && fileInput.files[0]) {
+                    formData.append(`files[]`, fileInput.files[0] ?? fileFake);
+                    formData.append(`nomePeca[]`, foto.nomePeca);
                     formData.append(`propriedadeFaca[]`, foto.propriedadeFaca);
                     formData.append("pecaPar[]", foto.qtdPar);
                     formData.append("precoFaca[]", foto.precoFaca);
                     formData.append("obs[]", foto.obs.length > 0 ? foto.obs : " ");
                     formData.append("idsFotos[]", idsFotos.value[index]);
-                }
+                // }
             }
         });
         formData.append("idModelo", modelo.value.id);
@@ -304,7 +326,7 @@
 
     const adcFoto = () => {
         alterouFotos.value = true;
-        modelo.value.fotos.push({ nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPar: "", propriedadeFaca: "", obs: '' });
+        modelo.value.fotos.push({ nomePeca: "", nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPar: "", propriedadeFaca: "", obs: '' });
         idsFotos.value.push(0);
 
         setTimeout(() => {
@@ -344,6 +366,12 @@
         
         if(type === 'foto') modelo.value.fotos[i].precoFaca = result;
         else modelo.value.preco = result;
+    }
+
+    const showModal = (nomePeca, url) => {
+        dadosFoto.value.url = url;
+        dadosFoto.value.nomePeca = nomePeca;
+        isActiveModal.value = true;
     }
 
     watch(() => props.idModelo, (nv, od) => {
