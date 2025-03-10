@@ -111,6 +111,7 @@
                     class="ma-2"
                     :rules="[(value) => !!value || 'O nome da peça é obrigatório!']"
                     variant="outlined"
+                    @click="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
                     rounded="xl"
@@ -121,6 +122,7 @@
                     class="ma-2"
                     :rules="[(value) => !!value || 'A QTD ao par é obrigatório!']"
                     variant="outlined"
+                    @click="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
                     rounded="xl"
@@ -141,6 +143,7 @@
                     :rules="[(value) => !!value || 'O preço por faca é obrigatório!']"
                     @input="formateddPrice($event, 'foto', index)"
                     variant="outlined"
+                    @click="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
                     rounded="xl"
@@ -149,6 +152,7 @@
                     v-model="foto.obs"
                     class="ma-2"
                     variant="outlined"
+                    @click="alterouFotos = true"
                 ></v-text-field>
                 <v-file-input 
                     ref="photoInput"
@@ -156,6 +160,7 @@
                     style="display: none;"
                     accept=".png, .jpg, .jpeg, .svg"
                     @change="handleFileChange(index, $event)"
+                    @click="alterouFotos = true"
                 ></v-file-input>
             </v-col>
             <v-col cols="12" class="text-center">
@@ -212,6 +217,7 @@
         fotos: []
     });
     const photoInput = ref(null);
+    const idsFotos = ref([]);
     const alterouFotos = ref(false);
 
     const handleEnterKey = (ev) => {
@@ -227,9 +233,13 @@
     };
 
     const getModelo = async () => {
-        axios.get(`/models/${props.idModelo}`).then(response => {
+        idsFotos.value = [];
+
+        await axios.get(`/models/${props.idModelo}`).then(response => {
             if(response.fotos.length > 0) response.fotos.map(foto => foto.nomeFile = foto.nomeFile.split("_")[0]);
             response.preco = Number(response.preco).toFixed(2);
+            response.fotos.map( foto => idsFotos.value.push(foto.id));
+
             modelo.value = response;
             modelo.value.client = props.client[0];
         }).catch(err => console.error(err));
@@ -238,18 +248,14 @@
     const sendPutModelo = async () => {
         if(alterouFotos.value) await putFotos();
         if(typeof modelo.value.fotos !== 'string') formatteFotosSubmit();
-        axios.put(`/models`, modelo.value).then(response => {
+        await axios.put(`/models`, modelo.value).then(response => {
             voltar();
         }).catch(err => console.error(err));
     };
 
     const formatteFotosSubmit = () => {
         if(typeof modelo.value.fotos !== 'string') {
-            let fotos = "";
-            modelo.value.fotos.map((item, index) => {
-                fotos += `${item.id}${index < modelo.value.fotos.length - 1 ? ',' : ''}`;
-            });
-            fotos += modelo.value.newIdsFotos ? modelo.value.newIdsFotos : "";
+            let fotos = idsFotos.value.length > 0 ? idsFotos.value.join() : "";
             delete modelo.value.fotos;
             modelo.value.fotos = fotos;
         }
@@ -263,7 +269,7 @@
         modelo.value.qtdPecasPar = Number(modelo.value.qtdPar);
         modelo.value.fotos = '';
 
-        axios.post(`/models`, modelo.value).then(response => {
+        await axios.post(`/models`, modelo.value).then(response => {
             voltar();
         }).catch(err => console.error(err));
     };
@@ -281,6 +287,7 @@
                     formData.append("pecaPar[]", foto.qtdPar);
                     formData.append("precoFaca[]", foto.precoFaca);
                     formData.append("obs[]", foto.obs.length > 0 ? foto.obs : " ");
+                    formData.append("idsFotos[]", idsFotos.value[index]);
                 }
             }
         });
@@ -289,15 +296,17 @@
         formData.append("nomeModelo", modelo.value.tipo);
 
 
-        axios.post('anexo', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
-            modelo.value.fotos += response;
-            modelo.value.newIdsFotos = response;
+        await axios.post('anexo', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
+            idsFotos.value = idsFotos.value.filter(id => id > 0).concat(response);
+            formatteFotosSubmit();
         }).catch(err => console.error(err));
     };
 
     const adcFoto = () => {
         alterouFotos.value = true;
         modelo.value.fotos.push({ nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPar: "", propriedadeFaca: "", obs: '' });
+        idsFotos.value.push(0);
+
         setTimeout(() => {
             triggerPhotoInput(modelo.value.fotos.length - 1);
         }, 500);
