@@ -42,7 +42,7 @@
     const materiais = ref([]);
 
     const getMateriais = async () => {
-        axios.get("/materials").then(response => {
+        await axios.get("/materials").then(response => {
             response.forEach(material => {
                 material.icons = true;
                 material.situacao = material.ativo ? "mdi-thumb-up" : "mdi-thumb-down";

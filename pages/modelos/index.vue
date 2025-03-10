@@ -71,7 +71,7 @@
     const idModelo = ref(null);
 
     const getClients = async () => {
-        axios.get('/clients').then(response => {
+        await get('/clients').then(response => {
             response.forEach(client => {
                 clientsNames.value.push(`${client.nome} - ${client.telefone}`);
             });
@@ -80,7 +80,7 @@
     };
 
     const getModelsClient = async (idClient) => {
-        axios.get(`/models/client/${idClient}`).then(response => {
+        await axios.get(`/models/client/${idClient}`).then(response => {
             if(response.length > 0) {
                 response.forEach(model => {
                     model.icons = true;

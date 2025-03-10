@@ -138,7 +138,7 @@
     const textBtn = ref("COPIAR");
 
     const getCliente = async () => {
-        axios.get(`/clients/${props.id}`).then(response => {
+        await axios.get(`/clients/${props.id}`).then(response => {
             cliente.value = response;
         }).catch(err => console.error(err));
     };
@@ -198,13 +198,13 @@
     const sendPostMaterial = async () => {
         delete cliente.value.id;
 
-        axios.post(`/clients`, cliente.value).then(response => {
+        await axios.post(`/clients`, cliente.value).then(response => {
             voltar();
         }).catch(err => console.error(err));
     };
 
     const sendPutMaterial = async () => {
-        axios.put(`/clients`, cliente.value).then(response => {
+        await axios.put(`/clients`, cliente.value).then(response => {
             voltar();
         }).catch(err => console.error(err));
     };

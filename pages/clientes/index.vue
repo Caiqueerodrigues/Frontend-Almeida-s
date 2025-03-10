@@ -42,7 +42,7 @@
     const clients = ref([]);
 
     const getClients = async () => {
-        axios.get('/clients').then(response => {
+        await axios.get('/clients').then(response => {
             response.forEach(client => {
                 client.icons = true;
                 client.ver = 'mdi-pencil'
