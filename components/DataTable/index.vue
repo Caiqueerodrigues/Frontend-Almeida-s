@@ -21,11 +21,17 @@
                 <template v-slot:[`item.preco`]="{ item }">
                     {{ formattePrice(item.preco) }}
                 </template>
+                <template v-slot:[`item.totalDinheiro`]="{ item }">
+                    {{ formattePrice(item.totalDinheiro) }}
+                </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
                     <v-btn variant="text" @click="emitId(item)">
-                        <v-icon v-if="item.icons">
-                            {{ item.ver }}
+                        <v-icon v-if="props.acaoVer">
+                            mdi-pencil
+                        </v-icon>
+                        <v-icon v-if="!props.acaoVer" size="30" :class="item === selectedItem ? 'text-success' : '' ">
+                            mdi-check-bold
                         </v-icon>
                     </v-btn>
                 </template>
@@ -37,8 +43,10 @@
     const props = defineProps([ 'title', 'items', 'headers', 'acaoVer' ]);
     const emit = defineEmits([ 'verId' ]);
     const formattePrice = inject('formattePrice');
+    const selectedItem = ref(false);
 
     const emitId = (item) => {
+        selectedItem.value = item;
         emit('verId', item.id);
     };
 </script>

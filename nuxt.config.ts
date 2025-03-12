@@ -5,7 +5,7 @@ export default defineNuxtConfig({
       host: '0.0.0.0',
     },
     head: {
-        titleTemplate: "Almeida's  Cortes",
+        titleTemplate: "Almeida's Cortes",
         htmlAttrs: {
           lang: 'pt-br'
         },

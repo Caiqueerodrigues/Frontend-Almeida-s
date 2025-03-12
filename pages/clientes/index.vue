@@ -45,7 +45,6 @@
         await axios.get('/clients').then(response => {
             response.forEach(client => {
                 client.icons = true;
-                client.ver = 'mdi-pencil'
             });
             clients.value = response;
         }).catch(err => console.error(err));

@@ -72,9 +72,11 @@
 
     const getClients = async () => {
         await axios.get('/clients').then(response => {
-            response.forEach(client => {
-                clientsNames.value.push(`${client.nome} - ${client.telefone}`);
-            });
+            if(response.length > 0) {
+                response.forEach(client => {
+                    clientsNames.value.push(`${client.nome} - ${client.telefone}`);
+                });
+            }
             clients.value = response;
         }).catch(err => console.error(err));
     };
@@ -84,7 +86,6 @@
             if(response.length > 0) {
                 response.forEach(model => {
                     model.icons = true;
-                    model.ver = 'mdi-pencil'
                 });
             }
             modelos.value = response;

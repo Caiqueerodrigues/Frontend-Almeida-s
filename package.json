@@ -15,11 +15,13 @@
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
+    "@nuxt/ui": "^3.0.0-beta.3",
     "@nuxtjs/dotenv": "^1.4.2",
+    "@vuepic/vue-datepicker": "^11.0.1",
     "axios": "^1.6.7",
     "vue-the-mask": "^0.11.1",
     "vue3-toastify": "^0.2.1",
-    "vuetify": "^3.5.8"
+    "vuetify": "^3.7.16"
   },
   "overrides": {
     "vue": "latest"

@@ -46,7 +46,6 @@
             response.forEach(material => {
                 material.icons = true;
                 material.situacao = material.ativo ? "mdi-thumb-up" : "mdi-thumb-down";
-                material.ver = 'mdi-pencil'
             });
             materiais.value = response;
         }).catch(err => console.error(err));

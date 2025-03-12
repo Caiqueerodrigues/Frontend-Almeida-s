@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <Loading v-if="loading"/>
+        <Loading v-if="loading || !mounted"/>
         <v-layout>
             <v-app-bar color="#000" class="pr-4">
                 <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" :disabled="loading"></v-app-bar-nav-icon>
@@ -83,8 +83,14 @@
             route: '/pedidos',
             icon: 'mdi-currency-usd',
         },
+        {
+            title: 'Relatórios',
+            route: '/relatorios',
+            icon: 'mdi-file-pdf-box',
+        },
     ]);
     const itemSelected = ref(null);
+    const mounted = ref(false);
 
     const goTo = (route) => {
         drawer.value = !drawer.value;
@@ -93,8 +99,13 @@
         navigateTo(route);
     };
 
+    watch(() => route.fullPath, (nv) => {
+        itemSelected.value = route.fullPath;
+    });
+
     onMounted(() => {
         itemSelected.value = route.fullPath;
+        mounted.value = true;
     });
 </script>
 <style scoped>
