@@ -49,4 +49,10 @@
         selectedItem.value = item;
         emit('verId', item.id);
     };
+
+    onMounted(() => {
+        setTimeout(() => {
+            if(!props.acaoVer && props.items.length === 1) selectedItem.value = props.items[0];
+        }, 100);
+    });
 </script>

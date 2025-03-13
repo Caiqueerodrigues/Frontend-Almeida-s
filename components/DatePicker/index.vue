@@ -15,29 +15,34 @@
         month-name-format="long"
         :name="props.name"
         dark
+        :clearable="props.clearable ?? false"
         :range="props.range"
-        @update:modelValue="emitEvento "
+        @update:modelValue="emitEvento"
     ></VueDatePicker>
 </template>
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
-
-    const props = defineProps([ 'title', 'range', 'format', 'name', 'date' ]);
+    
+    const props = defineProps([ 'title', 'range', 'format', 'name', 'date', 'onlyDate', 'clearable' ]);
     const emit = defineEmits([ 'dateEmit' ]);
 
-    const dateSelected = ref(props.date ? props.date.toISOString().split("T")[0] : null);
+    const dateSelected = ref(props.date && props.date instanceof Date ? props.date.toISOString() : null);
     
     const format = (date) => {
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        const hour = date
+        const adjustedDate = new Date(date.getTime() - (3 * 60 * 60 * 1000));
+
+        let day = adjustedDate.getDate();
+        const month = adjustedDate.getMonth() + 1;
+        const year = adjustedDate.getFullYear();
+        const hour = adjustedDate
             .toISOString()
             .split("T")[1]
             .split('.')[0];
 
-        return `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year} ${hour}`;
+        return props.onlyDate ?
+            `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year}` :
+            `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year} ${hour}`;
     }
 
     const emitEvento = () => {

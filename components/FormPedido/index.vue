@@ -3,7 +3,7 @@
         <v-row class="justify-center py-4">
             <v-col cols="12">
                 <h2 class="text-center text-secondary pt-3">
-                    {{ props.id > 0 ? "EDITAR O " : "CADASTRAR UM NOVO " }} PEDIDO 
+                    {{ props.id > 0 ? "EDITAR O " : "CADASTRAR UM NOVO " }} PEDIDO
                 </h2>
             </v-col>
             <v-col cols="12" md="7" class="text-secondary">
@@ -15,11 +15,12 @@
                     name="cliente"
                     variant="outlined"
                     rounded="xl"
-                    :disabled="pedido.client !== null"
+                    :disabled="pedido.modelo !== null"
                     prepend-inner-icon="mdi-account-tie"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="text-secondary" v-show="!loading && pedido.client">
+                <h2 class="text-center text-secondary" v-if="modelos.length === 0">Não existem produtos para este cliente</h2>
                 <DataTable
                     v-show="pedido.client && modelos.length > 0"
                     title="Listagem de modelos"
@@ -35,9 +36,9 @@
                         <DatePicker 
                             :range="false"
                             title="DATA DE INÍCIO"
-                            :date="pedido.dataInicio"
-                            name="dataInicio"
-                            @dateEmit="pedido.dataInicio = $event"
+                            :date="pedido.dataPedido"
+                            name="dataPedido"
+                            @dateEmit="pedido.dataPedido = $event"
                         />
                     </v-col>
                     <v-col cols="12" md="6">
@@ -46,7 +47,7 @@
                             title="DATA DE CONCLUSÃO"
                             name="dataConclusao"
                             :date="pedido.dataFinalizado"
-                            format="dd-MM-yyyy HH:mm:ss"
+                            :clearable="true"
                             @dateEmit="pedido.dataFinalizado = $event"
                         />
                     </v-col>
@@ -54,11 +55,50 @@
                         <DatePicker 
                             :range="false"
                             title="DATA DO PAGAMENTO"
+                            :clearable="true"
                             :date="pedido.dataPagamento"
                             name="dataPagamento"
-                            format="dd-MM-yyyy HH:mm:ss"
                             @dateEmit="pedido.dataPagamento = $event"
                         />
+                    </v-col>
+                </v-row>
+            </v-col>
+            <v-col cols="12" md="7">
+                <v-row class="justify-center" v-if="!loading && pedido.modelo">
+                    <v-col cols="12" md="6">
+                        <v-text-field
+                            rounded="xl"
+                            label="Total de pares"
+                            v-model="pedido.totalPares"
+                            type="number"
+                            variant="outlined"
+                            :rules="[ (value) => !!value || 'O total de pares é obrigatório!' ]"
+                            @input="formateddPrice($event), calculateTotal()"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field
+                            rounded="xl"
+                            label="Total de peças"
+                            v-model="pedido.totalPecas"
+                            type="number"
+                            variant="outlined"
+                            :rules="[ 
+                                (value) => !!value || 'O total de peças é obrigatório!',
+                                (value) => (value >= (pedido.totalPares * 2)) || 'Quantidade informada inferior à quantidade de pares' 
+                            ]"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field
+                            rounded="xl"
+                            label="Total do pedido"
+                            v-model="pedido.totalDinheiro"
+                            type="number"
+                            variant="outlined"
+                            :rules="[(value) => !!value || 'O total é obrigatório!']"
+                            @input="formateddPrice($event)"
+                        ></v-text-field>
                     </v-col>
                 </v-row>
             </v-col>
@@ -66,11 +106,88 @@
                 <v-text-field
                     rounded="xl"
                     label="Referência do calçado"
-                    type="tel"
                     v-model="pedido.relatorioCliente"
                     variant="outlined"
-                    @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
+            </v-col>
+            <v-col cols="12" v-if="!loading && pedido.totalPares > 0">
+                <h2 class="text-center text-secondary">
+                    GRADE DO PEDIDO
+                </h2>
+            </v-col>
+            <v-col 
+                col="6" 
+                md="4" 
+                v-for="(item, index) in pedido.grade" 
+                :key="index"
+                class="d-flex justify-center"
+            >
+                <CardGradePedido 
+                    :item="item"
+                    :index="index"
+                    @salvar="setNewValor($event)"
+                    @add="addNewItemGrade($event)"
+                    @remove="removeItemGrade($event)"
+                />
+            </v-col>
+            <v-col 
+                col="6" 
+                md="4" 
+                class="d-flex justify-center"
+                v-if="!loading && pedido.totalPares > 0"
+            >
+                <CardGradePedido 
+                    :plus="true"
+                    @add="addNewItemGrade($event)"
+                />
+            </v-col>
+            <v-col cols="12" v-if="!loading && pedido.modelo">
+                <v-row class="ma-0 pa-0 justify-center">
+                    <v-col cols="12" md="7" class="ma-0 pa-0">
+                        <AutoCompleteMultiple 
+                            v-if="materiais.length > 0"
+                            :label="'Materiais recebidos'"
+                            :items="materiais"
+                            :selecteds="pedido.tipoRecebido"
+                            :disabled="false"
+                            :outsideList="false"
+                            @salvar="pedido.tipoRecebido = $event"
+                        />
+                    </v-col>
+                </v-row>
+            </v-col>
+            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0" >
+                <AutoCompleteMultiple 
+                    v-if="materiais.length > 0"
+                    :label="'Metragens recebidas'"
+                    :items="[]"
+                    :selecteds="pedido.metragemRecebido"
+                    :disabled="false"
+                    :outsideList="true"
+                    :maxLength="pedido.tipoRecebido.length"
+                    @salvar="pedido.metragemRecebido = $event"
+                />
+            </v-col>
+            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0">
+                <AutoCompleteMultiple 
+                    v-if="pedido.tipoRecebido.length > 0"
+                    :label="'Metragens Finalizadas'"
+                    :items="[]"
+                    :selecteds="pedido.metragemFinalizado"
+                    :disabled="false"
+                    :outsideList="true"
+                    :maxLength="pedido.tipoRecebido.length"
+                    @salvar="pedido.metragemFinalizado = $event"
+                />
+            </v-col>
+            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0">
+                <AutoCompleteMultiple 
+                    v-if="pedido.tipoRecebido.length > 0"
+                    :label="'Rendimento por pares'"
+                    :items="[]"
+                    :selecteds="pedido.rendimentoParesMetro"
+                    :disabled="true"
+                />
             </v-col>
             <v-col cols="12" md="7" v-show="pedido.modelo">
                 <v-textarea
@@ -84,6 +201,14 @@
                     cleareble
                     maxlength="255"
                 ></v-textarea>
+            </v-col>
+            <v-col cols="12" md="7" v-show="pedido.modelo">
+                <v-text-field
+                    rounded="xl"
+                    label="Quem retirou/Assinou"
+                    v-model="pedido.quemAssinou"
+                    variant="outlined"
+                ></v-text-field>
             </v-col>
             <v-col cols="12" class="text-center">
                 <v-btn
@@ -99,6 +224,7 @@
                     color="success"
                     rounded="xl"
                     @click="validateForm()"
+                    :disabled="!pedido.modelo"
                     :loading="loading"
                 >
                     SALVAR
@@ -108,13 +234,11 @@
     </v-form>
 </template>
 <script setup>
-    import VueDatePicker from '@vuepic/vue-datepicker';
-    import '@vuepic/vue-datepicker/dist/main.css';
-
     const axios = inject("axios");
     const loading = inject("loading");
     const showToastify = inject("showToastify");
     const validForm = inject("validateForm");
+    const formatteDateDB = inject("formatteDateDB");
 
     const props = defineProps([ 'id', 'date' ]);
     const emit = defineEmits([ 'voltar' ]);
@@ -123,17 +247,26 @@
     const pedido = ref({
         client: null,
         modelo: null,
-        dataInicio: props.date,
+        dataPedido: props.date,
         dataFinalizado: null,
         dataPagamento: null,
         relatorioCliente: null,
-
+        totalDinheiro: null,
+        totalPares: null,
+        totalPecas: null,
+        grade: [],
         obs: null,
+        metragemRecebido: [],
+        metragemFinalizado: [],
+        rendimentoParesMetro: [],
+        tipoRecebido: [],
+        quemAssinou: null
     });
     const clients = ref([]);
     const clientSelected = ref(null);
     const clientsNames = ref([]);
     const modelos = ref([]);
+    const materiais = ref([]);
     const nomesColunas = ref([
         { title: 'Nome', align: 'center', key: 'tipo' },
         { title: 'preco', align: 'center', key: 'preco' },
@@ -151,11 +284,47 @@
         }).catch(err => console.error(err));
     }
 
+    const getPedido = async () => {
+        await axios.get(`/orders/${props.id}`).then(response => {
+            pedido.value.client = response.client;
+            clientSelected.value = `${response.client.nome} - ${response.client.telefone}`;
+            modelos.value.push(response.modelo);
+            pedido.value.modelo = response.modelo;
+            pedido.value.dataPedido = new Date(response.dataPedido);
+            if(response.dataPagamento) pedido.value.dataPagamento = new Date(response.dataPagamento);
+            if(response.dataFinalizado) pedido.value.dataFinalizado = new Date(response.dataFinalizado);
+            pedido.value.relatorioCliente = response.relatorioCliente;
+            pedido.value.totalDinheiro = response.totalDinheiro;
+            pedido.value.totalPecas = response.totalPecas;
+            pedido.value.totalPares = response.totalPares;
+            pedido.value.tipoRecebido = response.tipoRecebido.split(',').map(Number);
+            pedido.value.metragemRecebido = response.metragemRecebido.split(',').map(Number);
+            pedido.value.metragemFinalizado = response.metragemFinalizado ? response.metragemFinalizado.split(',').map(Number) : [];
+            pedido.value.rendimentoParesMetro = response.rendimentoParesMetro ?response.rendimentoParesMetro.split(',').map(Number) : [];
+            pedido.value.obs = response.obs;
+
+            const arrayGrade = response.grade.split(',');
+                arrayGrade.map(item => {
+                    pedido.value.grade.push({ grade: item.split(":")[0] , qtd: Number(item.split(":")[1]) });
+                });
+
+            pedido.value.quemAssinou = response.quemAssinou;
+        }).catch(e => console.error(e));
+    }
+
     const getModelos = async (idClient) => {
         await axios.get(`/models/client/${idClient}`).then(response => {
             if(response.length > 0) {
                 modelos.value = response;
-            }
+            };
+        }).catch(err => console.error(err));
+    }
+
+    const getMateriais = async () => {
+        await axios.get(`/materials/active`).then(response => {
+            if(response.length > 0) {
+                materiais.value = response;
+            };
         }).catch(err => console.error(err));
     }
 
@@ -165,56 +334,156 @@
         if(error.valid) {
             const fieldsRequired = [
                 { name: 'Client', value: pedido.value.client },
-                { name: 'DataInicio', value: pedido.value.dataInicio },
+                { name: 'dataPedido', value: pedido.value.dataPedido },
+                { name: 'gradeForm', value: pedido.value.grade },
+                { name: 'tipoRecebido', value: pedido.value.tipoRecebido },
+                { name: 'metragemRecebido', value: pedido.value.metragemRecebido },
+                { name: 'metragemFinalizado', value: pedido.value.metragemFinalizado },
             ];
     
             const errors = fieldsRequired.filter(field => !field.value);
+
+            if(pedido.value.tipoRecebido.length !== pedido.value.metragemRecebido.length || 
+            (pedido.value.metragemFinalizado.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.metragemFinalizado.length)) {
+                showToastify("Quantidade divergentes de materiais e metragens!", "warning");
+                return false;
+            }
+
+            if(!qtdParesMenorQueGrade()) return;
     
             if (errors.length > 0) {
                 showToastify("Campos obrigatórios sem preenchimento!", "error");
                 return false;
             }
-            showToastify("Sucesso", 'success');
+            
+            submitPedido();
             return true;
         }
     };
 
-    const format = (date) => {
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        const hour = date
-            .toISOString()
-            .split("T")[1]
-            .split('.')[0];
+    const formateddPrice = (key) => {
+        const price = pedido.value.totalDinheiro;
+        let priceText = String(price).replace(/\D/g, '');
+        let result = 0;
 
-        return `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year} ${hour}`;
+        if (!priceText.includes('.') && priceText.length < 3) {
+            priceText = "0" + priceText;
+        };
+        if(priceText[0] === '0' && priceText.length > 3) priceText = priceText.slice(1);
+        if (priceText.length >= 2) result = priceText.slice(0, -2) + "." + priceText.slice(-2);
+        else result = priceText;
+        result = Number(result);
+        if(key.target.value.slice(-1) === '0') result = Number(result).toFixed(2);
+        
+        pedido.value.totalDinheiro = result;
     }
-    
+
+    const calculateTotal = () => {
+        const model = modelos.value.filter(item => item.id === pedido.value.modelo);
+        pedido.value.totalDinheiro = Number(model[0].preco * Number(pedido.value.totalPares)).toFixed(2);
+    }
+
+    const setNewValor = (ev) => {
+        if(!qtdParesMenorQueGrade()) return;
+        pedido.value.grade[ev.index].grade = ev.grade;
+        pedido.value.grade[ev.index].qtd = ev.qtd;
+    }
+    const addNewItemGrade = () => {
+        if(!qtdParesMenorQueGrade()) return;
+        pedido.value.grade.push({ grade: '', qtd: null });
+    }
+    const removeItemGrade = (ev) =>{
+        pedido.value.grade.splice(ev.index, 1);
+    }
+    const qtdParesMenorQueGrade = () => {
+        const result = pedido.value.grade.reduce((total, item) => total += item.qtd, 0) < pedido.value.totalPares;
+        if(!result) showToastify("Quantidades de pares divergentes!", 'warning');
+        return result;
+    }
+
+    const submitPedido = async () => {
+        let dados = pedido.value;
+
+        dados.dataPedido = formatteDateDB(pedido.value.dataPedido);
+        dados.dataFinalizado = pedido.value.dataFinalizado ? formatteDateDB(pedido.value.dataFinalizado) : null;
+        dados.dataPagamento = pedido.value.dataPagamento ? formatteDateDB(pedido.value.dataPagamento) : null;
+        dados.tipoRecebido = pedido.value.tipoRecebido.join(",");
+        dados.metragemRecebido = pedido.value.metragemRecebido.join(",");
+        dados.metragemFinalizado = pedido.value.metragemFinalizado ? pedido.value.metragemFinalizado.join(",") : null;
+        dados.rendimentoParesMetro = pedido.value.rendimentoParesMetro ? pedido.value.rendimentoParesMetro.join(",") : null;
+        dados.totalDinheiro = Number(pedido.value.totalDinheiro);
+        dados.totalPares = Number(pedido.value.totalPares);
+        dados.totalPecas = Number(pedido.value.totalPecas);
+        
+        let gradeString = "";
+        pedido.value.grade.map((item , i) => {
+            gradeString += `${item.grade}:${item.qtd}${i < pedido.value.grade.length - 1 ? "," : ""}`;
+        });
+        dados.grade = gradeString;
+        
+        if(props.id) {
+            dados.id = props.id;
+
+            await axios.put("/orders", dados).then(response => {
+                voltar();
+            }).catch(e => console.error(e));
+        } else {
+            const model = modelos.value.filter(item => item.id === dados.modelo);
+            dados.modelo = model[0];
+
+            await axios.post("/orders/create-order", dados).then(response => {
+                voltar();
+            }).catch(e => console.error(e));
+        }
+    };
+
     const voltar = () => {
         clientSelected.value = null;
-        pedido.value.client = null;
-        pedido.value.modelo = null;
         clientsNames.value = [];
         modelos.value = [];
+        materiais.value = [];
+        pedido.value = {
+            client: null,
+            modelo: null,
+            dataPedido: props.date,
+            dataFinalizado: null,
+            dataPagamento: null,
+            relatorioCliente: null,
+            totalDinheiro: null,
+            totalPares: null,
+            totalPecas: null,
+            grade: [],
+            obs: null,
+            metragemRecebido: [],
+            metragemFinalizado: [],
+            rendimentoParesMetro: [],
+            tipoRecebido: [],
+            quemAssinou: null
+        }
         emit('voltar', false);
     };
 
-    watch(() => props.id, (nv, od) => {
-        if(nv || nv === 0) {
-            getClientes();
-        }
-    });
-
     watch(() => clientSelected.value, (nv) => {
         if(nv) {
-            const [ nome, telefone ] = clientSelected.value.split(" - ");
-            pedido.value.client = clients.value.filter(client => client.nome === nome && client.telefone === telefone);
-            getModelos(pedido.value.client[0].id);
+            if(!props.id || props.id === 0) {
+                const [ nome, telefone ] = clientSelected.value.split(" - ");
+                const clientArray = clients.value.filter(client => client.nome === nome && client.telefone === telefone);
+
+                pedido.value.client =clientArray[0];
+
+                getModelos(pedido.value.client.id);
+            }
+            getMateriais();
+
         } else {
             pedido.value.client = null;
             modelos.value = [];
         }
+    });
+
+    onMounted(() => {
+        if(props.id || props.id > 0) getPedido();
+        else getClientes();
     });
 </script>
 <style scoped>

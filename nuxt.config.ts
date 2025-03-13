@@ -58,6 +58,7 @@ export default defineNuxtConfig({
     '~/plugins/vueTheMask.js',
     '~/plugins/formattePreco.js',
     '~/plugins/validateForm.js',
+    '~/plugins/formatteDateDB.js',
   ],
   vue: {  
     compilerOptions: {

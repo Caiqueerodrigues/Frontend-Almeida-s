@@ -10,20 +10,20 @@
             <v-row class="justify-center w-100">
                 <v-col cols="12" md="4">
                     <DatePicker 
-                        format="yyyy-MM-dd"
                         name="dataListagemPedidos"
                         :date="selectedDate"
+                        :onlyDate="true"
                         @dateEmit="setDate($event)"
                     />
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="12" md="7" v-show="!loading && showForm">
+        <v-col cols="12" md="7" v-show="showForm && !loading">
             <FormPedido 
+                v-if="showForm"
                 :id="id"
                 :date="selectedDate"
-                title="SELECIONE A DATA"
-                @voltar="showForm = $event, id = null"
+                @voltar="notShowForm($event)"
             />
         </v-col>
         <v-col cols="12" md="7" class="text-center" v-show="!showForm && !loading && pedidos.length > 0">
@@ -77,6 +77,9 @@
                     totalFaturado.value += item.totalDinheiro;
                 });
                 pedidos.value = response;
+            } else {
+                totalFaturado.value = 0;
+                pedidos.value = [];
             }
         }).catch(err => console.error(err));
     }
@@ -101,6 +104,12 @@
         });
 
         return date.replace(/^\w/, (c) => c.toUpperCase()).replace(/\s\w/g, (c) => c.toUpperCase());
+    };
+
+    const notShowForm = (ev) => {
+        showForm.value = ev;
+        id.value = null;
+        getPedidos();
     };
 
     watch(() => selectedDate.value, (nv) => {
