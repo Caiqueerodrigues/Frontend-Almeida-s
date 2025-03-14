@@ -76,19 +76,6 @@
                             @input="formateddPrice($event), calculateTotal()"
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field
-                            rounded="xl"
-                            label="Total de peças"
-                            v-model="pedido.totalPecas"
-                            type="number"
-                            variant="outlined"
-                            :rules="[ 
-                                (value) => !!value || 'O total de peças é obrigatório!',
-                                (value) => (value >= (pedido.totalPares * 2)) || 'Quantidade informada inferior à quantidade de pares' 
-                            ]"
-                        ></v-text-field>
-                    </v-col>
                     <v-col cols="12">
                         <v-text-field
                             rounded="xl"
@@ -164,6 +151,7 @@
                     :selecteds="pedido.metragemRecebido"
                     :disabled="false"
                     :outsideList="true"
+                    :type="'number'"
                     :maxLength="pedido.tipoRecebido.length"
                     @salvar="pedido.metragemRecebido = $event"
                 />
@@ -171,13 +159,27 @@
             <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0">
                 <AutoCompleteMultiple 
                     v-if="pedido.tipoRecebido.length > 0"
-                    :label="'Metragens Finalizadas'"
+                    :label="'Metragens utilizadas'"
                     :items="[]"
+                    :type="'number'"
                     :selecteds="pedido.metragemFinalizado"
                     :disabled="false"
                     :outsideList="true"
                     :maxLength="pedido.tipoRecebido.length"
                     @salvar="pedido.metragemFinalizado = $event"
+                />
+            </v-col>
+            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0" >
+                <AutoCompleteMultiple 
+                    v-if="materiais.length > 0"
+                    :label="'Cores dos materiais'"
+                    :items="[]"
+                    :selecteds="pedido.cor"
+                    :disabled="false"
+                    :outsideList="true"
+                    :type="'text'"
+                    :maxLength="pedido.tipoRecebido.length"
+                    @salvar="pedido.cor = $event"
                 />
             </v-col>
             <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0">
@@ -253,13 +255,13 @@
         relatorioCliente: null,
         totalDinheiro: null,
         totalPares: null,
-        totalPecas: null,
         grade: [],
         obs: null,
         metragemRecebido: [],
         metragemFinalizado: [],
         rendimentoParesMetro: [],
         tipoRecebido: [],
+        cor: [],
         quemAssinou: null
     });
     const clients = ref([]);
@@ -295,12 +297,12 @@
             if(response.dataFinalizado) pedido.value.dataFinalizado = new Date(response.dataFinalizado);
             pedido.value.relatorioCliente = response.relatorioCliente;
             pedido.value.totalDinheiro = response.totalDinheiro;
-            pedido.value.totalPecas = response.totalPecas;
             pedido.value.totalPares = response.totalPares;
             pedido.value.tipoRecebido = response.tipoRecebido.split(',').map(Number);
             pedido.value.metragemRecebido = response.metragemRecebido.split(',').map(Number);
             pedido.value.metragemFinalizado = response.metragemFinalizado ? response.metragemFinalizado.split(',').map(Number) : [];
-            pedido.value.rendimentoParesMetro = response.rendimentoParesMetro ?response.rendimentoParesMetro.split(',').map(Number) : [];
+            pedido.value.rendimentoParesMetro = response.rendimentoParesMetro ? response.rendimentoParesMetro.split(',').map(Number) : [];
+            pedido.value.cor = response.cor ? response.cor.split(',') : [];
             pedido.value.obs = response.obs;
 
             const arrayGrade = response.grade.split(',');
@@ -349,7 +351,16 @@
                 return false;
             }
 
-            if(!qtdParesMenorQueGrade()) return;
+            if(pedido.value.cor.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.cor.length) {
+                showToastify("Quantidade divergentes de materiais e cores!", "warning");
+                return false;
+            }
+
+            const totalGrade = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
+            if(Number(pedido.value.totalPares) !== totalGrade) {
+                showToastify("Quantidade divergentes de pares e grades!", "warning");
+                return false;
+            }
     
             if (errors.length > 0) {
                 showToastify("Campos obrigatórios sem preenchimento!", "error");
@@ -379,12 +390,11 @@
     }
 
     const calculateTotal = () => {
-        const model = modelos.value.filter(item => item.id === pedido.value.modelo);
-        pedido.value.totalDinheiro = Number(model[0].preco * Number(pedido.value.totalPares)).toFixed(2);
+        const model = props.id ? pedido.value.modelo : modelos.value.find(item => item.id === pedido.value.modelo);
+        pedido.value.totalDinheiro = Number(model.preco * Number(pedido.value.totalPares)).toFixed(2);
     }
 
     const setNewValor = (ev) => {
-        if(!qtdParesMenorQueGrade()) return;
         pedido.value.grade[ev.index].grade = ev.grade;
         pedido.value.grade[ev.index].qtd = ev.qtd;
     }
@@ -396,7 +406,8 @@
         pedido.value.grade.splice(ev.index, 1);
     }
     const qtdParesMenorQueGrade = () => {
-        const result = pedido.value.grade.reduce((total, item) => total += item.qtd, 0) < pedido.value.totalPares;
+        const total = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
+        const result = total < pedido.value.totalPares;
         if(!result) showToastify("Quantidades de pares divergentes!", 'warning');
         return result;
     }
@@ -411,9 +422,9 @@
         dados.metragemRecebido = pedido.value.metragemRecebido.join(",");
         dados.metragemFinalizado = pedido.value.metragemFinalizado ? pedido.value.metragemFinalizado.join(",") : null;
         dados.rendimentoParesMetro = pedido.value.rendimentoParesMetro ? pedido.value.rendimentoParesMetro.join(",") : null;
+        dados.cor = pedido.value.cor ? pedido.value.cor.join(",") : null;
         dados.totalDinheiro = Number(pedido.value.totalDinheiro);
         dados.totalPares = Number(pedido.value.totalPares);
-        dados.totalPecas = Number(pedido.value.totalPecas);
         
         let gradeString = "";
         pedido.value.grade.map((item , i) => {
@@ -451,12 +462,12 @@
             relatorioCliente: null,
             totalDinheiro: null,
             totalPares: null,
-            totalPecas: null,
             grade: [],
             obs: null,
             metragemRecebido: [],
             metragemFinalizado: [],
             rendimentoParesMetro: [],
+            cor: [],
             tipoRecebido: [],
             quemAssinou: null
         }

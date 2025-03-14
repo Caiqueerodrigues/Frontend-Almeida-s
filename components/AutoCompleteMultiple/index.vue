@@ -12,9 +12,11 @@
         multiple
         variant="outlined"
         rounded="xl"
+        :type="props.type"
         :no-data-text="msgNoData"
         @keydown.enter="setNewValue"
         @keydown.space="setNewValue"
+        @change="setNewValue"
     >
         <template v-slot:chip="{ props, item }">
             <v-chip
@@ -27,7 +29,7 @@
 </template>
 
 <script setup>
-    const props = defineProps([ 'items', 'label', 'selecteds', 'disabled', 'outsideList', 'maxLength' ]);
+    const props = defineProps([ 'items', 'label', 'selecteds', 'disabled', 'outsideList', 'maxLength', 'type' ]);
     const emit = defineEmits([ 'salvar' ]);
 
     const msgNoData = ref('Sem dados');

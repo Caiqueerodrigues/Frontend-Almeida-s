@@ -33,7 +33,7 @@ input[type="number"] {
 
 .v-text-field input, .v-field, .color-default {
     font-weight: bold;
-    color: #C0812D !important;
+    color: #eeff00 !important;
 }
 .v-input--error .v-input__append-inner .v-icon {
     color: #eeff00 !important; 

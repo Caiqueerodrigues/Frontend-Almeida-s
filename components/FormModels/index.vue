@@ -51,6 +51,17 @@
             <v-col cols="12" md="7" class="pl-7">
                 <v-text-field
                     rounded="xl"
+                    label="Quantidade de peças ao par"
+                    v-model="modelo.qtdPar"
+                    variant="outlined"
+                    type="number"
+                    :rules="[ (value) => !!value || 'A quantidade é obrigatório!' ]"
+                    @keydown.enter="handleEnterKey($event)"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="7" class="pl-7">
+                <v-text-field
+                    rounded="xl"
                     label="Rendimento por M²"
                     v-model="modelo.rendimento"
                     disabled
@@ -259,6 +270,7 @@
         await axios.get(`/models/${props.idModelo}`).then(response => {
             if(response.fotos.length > 0) response.fotos.map(foto => foto.nomeFile = foto.nomeFile.split("_")[0]);
             response.preco = Number(response.preco).toFixed(2);
+            response.qtdPar = Number(response.qtdPar).toFixed(2);
             response.fotos.map( foto => idsFotos.value.push(foto.id));
 
             modelo.value = response;

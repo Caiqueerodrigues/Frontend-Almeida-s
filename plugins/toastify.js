@@ -8,7 +8,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             toast(message, {
                 theme: 'colored',
                 type: type,
-                autoClose: 3000,
+                autoClose: 6000,
                 dangerouslyHTMLString: true
             });
         };

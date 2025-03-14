@@ -23,8 +23,11 @@
             />
         </v-col>
         <v-col cols="12" md="7" v-show="!showForm">
+            <h2 class="text-center text-secondary" v-if="clientComplete && modelos.length === 0">
+                Não existem modelos cadastrados para este cliente
+            </h2>
             <DataTable 
-                v-show="clientComplete && modelos.length > 0"
+                v-if="clientComplete && modelos.length > 0"
                 title="Listagem de modelos"
                 :items="modelos"
                 :headers="nomesColunas" 

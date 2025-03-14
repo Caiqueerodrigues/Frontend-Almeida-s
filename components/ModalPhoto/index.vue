@@ -3,7 +3,7 @@
         <v-col>
             <v-dialog 
                 max-width="100%" 
-                max-height="100%" 
+                max-height="95%" 
                 v-model="props.isActiveModal"
                 persistent
             >

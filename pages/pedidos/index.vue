@@ -26,7 +26,7 @@
                 @voltar="notShowForm($event)"
             />
         </v-col>
-        <v-col cols="12" md="7" class="text-center" v-show="!showForm && !loading && pedidos.length > 0">
+        <v-col cols="12" md="7" class="text-center" v-if="!showForm && !loading && pedidos.length > 0">
             <DataTable 
                 title="Listagem de Pedidos"
                 :items="pedidos"
@@ -52,6 +52,7 @@
     const loading = inject("loading");
     const axios = inject("axios");
     const formattePrice = inject("formattePrice");
+    const formatteDateDB = inject("formatteDateDB");
 
     const showForm = ref(false);
     const id = ref(null);
@@ -67,7 +68,7 @@
 
     const getPedidos = async () => {
         let date = new Date(selectedDate.value);
-        const dateFormatted = `${date.toISOString().split("T")[0]}T00:00:00`
+        const dateFormatted = formatteDateDB(date);
         const dados = { date: dateFormatted };
 
         await axios.post('/orders/date', dados).then(response => {
