@@ -53,14 +53,14 @@
     :deep(.dp__input) {
         background-color: #A60014;
         border-radius: 20px;
-        border-color: #D96429;
-        color: #D96429;
+        border-color: #eeff00;
+        color: #eeff00;
         font-weight: bold;
     }
 
     :deep(.dp__menu) {
         border-radius: 20px;
-        border-color: #D96429;
+        border-color: #eeff00;
         font-weight: bold;
         padding-bottom: 20px;
     }

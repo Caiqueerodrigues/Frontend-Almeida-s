@@ -1,0 +1,242 @@
+<template>
+    <v-row>
+        <v-col>
+            <v-dialog 
+                max-width="100%" 
+                min-height="95%" 
+                v-model="props.isActiveModal"
+                persistent
+            >
+                <template v-slot:default="{ isActive }">
+                    <v-card
+                        class="text-surface bg-primary text-center "
+                        prepend-icon="mdi-finance"
+                        :title="`Relatórios`"
+                    >
+                        <template #append>
+                            <v-icon
+                                @click="setInactiveModal()"
+                                size="30"
+                            >
+                                mdi-close
+                            </v-icon>
+                        </template>
+                        <v-card-text class="px-0 pb-0">
+                            <v-row class="justify-space-evenly">
+                                <v-col cols="12" class="px-0 mb-1">
+                                    <v-divider :thickness="4" color="white" />
+                                </v-col>
+                                <v-col cols="10" md="2" class="pa-0 text-center">
+                                    <v-select
+                                        chips
+                                        label="Tipo de filtro"
+                                        v-model="filters.firstFilter"
+                                        :items="[ 'CLIENTE', 'PERÍODO', 'CLIENTE E PERÍODO', 'SITUAÇÃO', 'MENSAL' ]"
+                                        variant="outlined"
+                                        rounded="xl"
+                                    ></v-select>
+                                </v-col>
+                                <v-col 
+                                    cols="10" 
+                                    md="4" 
+                                    class="pa-0 text-center" 
+                                    v-if="filters.firstFilter === 'CLIENTE' || filters.firstFilter === 'CLIENTE E PERÍODO'"
+                                >
+                                    <v-select
+                                        chips
+                                        label="Cliente"
+                                        v-model="filters.client"
+                                        :items="clientes"
+                                        item-title="nome"
+                                        item-value="id"
+                                        variant="outlined"
+                                        rounded="xl"
+                                    ></v-select>
+                                </v-col>
+                                <v-col 
+                                    cols="10" 
+                                    md="2" 
+                                    class="pa-0 text-center" 
+                                    v-if="filters.firstFilter"
+                                >
+                                    <v-select
+                                        chips
+                                        label="Tipo de situação"
+                                        v-model="filters.situation"
+                                        :items="[ 'TODOS', 'PAGOS', 'DEVIDOS' ]"
+                                        variant="outlined"
+                                        rounded="xl"
+                                    ></v-select>
+                                </v-col>
+                                <v-col 
+                                    cols="10" 
+                                    md="3" 
+                                    class="pa-0 text-center mb-6" 
+                                    v-if="filters.firstFilter === 'CLIENTE E PERÍODO' || filters.firstFilter === 'PERÍODO' || filters.firstFilter === 'MENSAL'"
+                                >
+                                    <VueDatePicker 
+                                        v-model="filters.period" 
+                                        range 
+                                        autoApply
+                                        dark
+                                        format="dd/MM/yyyy"
+                                        :clearable="false"
+                                        :min-date="new Date('2000-01-01')"
+                                        :max-date="new Date()"
+                                    />
+                                </v-col>
+                                <v-col 
+                                    cols="10" 
+                                    md="3" 
+                                    class="pa-0 text-center" 
+                                    v-if="filters.firstFilter && (filters.period || filter.client)"
+                                >
+                                    <v-select
+                                        chips
+                                        label="Tipo de relatório"
+                                        v-model="filters.report"
+                                        :items="[ 'COMPLETO', 'FICHA DE CORTE', 'FECHAMENTO CLIENTE' ]"
+                                        variant="outlined"
+                                        rounded="xl"
+                                    ></v-select>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                        <template v-slot:actions>
+                            <v-col cols="12">
+                                <v-btn
+                                    class="text-white font-weight-bold rounded-xl mr-3"
+                                    size="large"
+                                    variant="outlined"
+                                    @click="setInactiveModal()"
+                                >
+                                    Fechar
+                                </v-btn>
+                                <v-btn
+                                    class="text-white bg-blue font-weight-bold rounded-xl mr-3"
+                                    size="large"
+                                    variant="flat"
+                                    @click="clearFilters()"
+                                >
+                                    Limpar
+                                </v-btn>
+                                <v-btn
+                                    class="bg-success text-primary font-weight-bold rounded-xl"
+                                    size="large"
+                                    variant="outlined"
+                                    @click="validateFilters()"
+                                >
+                                    Buscar
+                                </v-btn>
+                            </v-col>
+                        </template>
+                    </v-card>
+                </template>
+            </v-dialog>
+        </v-col>
+    </v-row>
+</template>
+<script setup>
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css';
+
+    const axios = inject('axios');
+    const showToastify = inject('showToastify');
+
+    const emit = defineEmits(['setInactiveModal'])
+    const props = defineProps([ 'isActiveModal', 'date']);
+
+    const filters = ref(
+        {
+            firstFilter: null,
+            client: null,
+            period: props.date,
+            report: null,
+            situation: null,
+        }
+    );
+
+    const clientes = ref([]);
+
+    const getClientes= async () => {
+        await axios.get('clients/active').then(response => {
+            response.map(item => {
+                clientes.value.push({ id: item.id, nome: item.nome });
+            });
+        }).catch(e => console.error(e));
+    }
+
+    const validateFilters = () => {
+        let showMessage = false;
+        if(!filters.value.report || !filters.value.situation || (filters.value.firstFilter === "CLIENTE" && !filters.value.client)){
+            showMessage = true;
+        }
+        if((filters.value.firstFilter === "PERÍODO" || filters.value.firstFilter === "CLIENTE E PERÍODO" || filters.value.firstFilter === "MENSAL") && filters.value.period.length !== 2) showMessage = true;
+
+        if(showMessage) showToastify("Campo(s) Obrigatório(s) sem preenchimento!", "info");
+        else getReport();
+    }
+
+    const getReport = async () => {
+        let data = { ...filters.value };
+            data.firstFilter = data.firstFilter.replaceAll(" ", "_");
+            data.report = data.report.replaceAll(" ", "_");
+
+        await axios.post("/report/generate", data).then(response => {
+            
+        }).then(e => console.error(e));
+    } 
+
+    const clearFilters= () => {
+        date.value = props.date;
+        filters.value = 
+        {
+            firstFilter: null,
+            client: null,
+            period: [],
+            report: null,
+            situation: null,
+        };
+    }
+
+    const setInactiveModal = () => {
+        filters.value = 
+        {
+            firstFilter: null,
+            client: null,
+            period: [],
+            report: null,
+            situation: null,
+        };
+        emit('setInactiveModal', false);
+    }
+
+    watch(() => filters.value.firstFilter, (nv, ov) => {
+        if(ov !== 'CLIENTE' && ov !== 'CLIENTE E PERÍODO' && (nv === 'CLIENTE' || nv === 'CLIENTE E PERÍODO') && clientes.value.length === 0) {
+            getClientes();
+        }
+        filters.value.client = null;
+        if(nv === "MENSAL") filters.value.period = [];
+    });
+</script>
+<style scoped>
+    :deep(.v-overlay__scrim) {
+        background: #000000;
+        opacity: .8;
+    }
+
+    :deep(.dp__input) {
+        background-color: #A60014;
+        border-radius: 20px;
+        border-color: #eeff00;
+        color: #eeff00;
+        font-weight: bold;
+        padding-block: 15px;
+    }
+
+    :deep(.dp__menu) {
+        border-radius: 20px;
+        border-color: #eeff00;
+        font-weight: bold;
+    }
+</style>

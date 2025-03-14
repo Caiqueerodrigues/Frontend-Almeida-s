@@ -21,16 +21,19 @@ export default defineNuxtConfig({
         ],
     },
   },
+
   alias: {
     'svg': resolve(__dirname, './assets/images/svg'),
     'node_modules': resolve(__dirname, './node_modules'),
     './': resolve( './*')
   },
+
   vue: {
     config: {
       silent: true
     }
   },
+
   runtimeConfig: {
     API_BACKEND: process.env.API_BACKEND,
 
@@ -38,20 +41,25 @@ export default defineNuxtConfig({
       API_BACKEND: process.env.API_BACKEND
     }
   },
+
   css: [
     "@/assets/class.css",
   ],
+
   buildModules: [
     "@nuxtjs/dotenv"
   ],
+
   build: {        
     transpile: ['vuetify'], 
   },
+
   vite: {    
     define: {        
       'process.env.DEBUG': false,    
     },  
   },
+
   plugins: [  
     '~/plugins/toastify.js',
     '~/plugins/axios.js',
@@ -60,14 +68,19 @@ export default defineNuxtConfig({
     '~/plugins/validateForm.js',
     '~/plugins/formatteDateDB.js',
   ],
+
   vue: {  
     compilerOptions: {
       isCustomElement: (tag) => ['lite-youtube'].includes(tag),
     },
   },
+
   devtools: { enabled: true },
+
   components: [
     {path: '~/components', extensions: ['.vue'], }, 
     {path: '~/layouts', extensions: ['.vue'], },
   ],
+
+  compatibilityDate: '2025-03-14',
 })

@@ -1,6 +1,6 @@
 <template>
     <v-row class="justify-center align-center h-100">
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="6">
             <h2 class="text-secondary text-center py-12">
                 {{ props.title }}
             </h2>
@@ -18,11 +18,18 @@
                     </v-chip>
                 </template>
 
+                <template v-slot:[`item.nome`]="{ item }">
+                    {{ item.nome }}
+                </template>
+                <template v-slot:[`item.dia`]="{ item }">
+                    {{ item.dia }}
+                </template>
+
                 <template v-slot:[`item.preco`]="{ item }">
-                    {{ formattePrice(item.preco) }}
+                    R$ {{ formattePrice(item.preco) }}
                 </template>
                 <template v-slot:[`item.totalDinheiro`]="{ item }">
-                    {{ formattePrice(item.totalDinheiro) }}
+                    R$ {{ formattePrice(item.totalDinheiro) }}
                 </template>
 
                 <template v-slot:[`item.ver`]="{ item }">

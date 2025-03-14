@@ -347,18 +347,18 @@
 
             if(pedido.value.tipoRecebido.length !== pedido.value.metragemRecebido.length || 
             (pedido.value.metragemFinalizado.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.metragemFinalizado.length)) {
-                showToastify("Quantidade divergentes de materiais e metragens!", "warning");
+                showToastify("Quantidade divergentes de materiais e metragens!", "info");
                 return false;
             }
 
             if(pedido.value.cor.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.cor.length) {
-                showToastify("Quantidade divergentes de materiais e cores!", "warning");
+                showToastify("Quantidade divergentes de materiais e cores!", "info");
                 return false;
             }
 
             const totalGrade = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
             if(Number(pedido.value.totalPares) !== totalGrade) {
-                showToastify("Quantidade divergentes de pares e grades!", "warning");
+                showToastify("Quantidade divergentes de pares e grades!", "info");
                 return false;
             }
     
@@ -408,7 +408,7 @@
     const qtdParesMenorQueGrade = () => {
         const total = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
         const result = total < pedido.value.totalPares;
-        if(!result) showToastify("Quantidades de pares divergentes!", 'warning');
+        if(!result) showToastify("Quantidades de pares divergentes!", 'info');
         return result;
     }
 
