@@ -5,11 +5,12 @@
                 SELECIONE O DIA OU PERÍODO
             </span>
         </v-col>
-        <v-col cols="12" md="7" v-if="!isloading">
+        <v-col cols="12" md="7" v-if="!loading">
             <VueDatePicker 
                 v-model="date" 
                 range 
                 autoApply
+                locale="pt-BR"
                 dark
                 format="dd/MM/yyyy"
                 :clearable="false"
@@ -17,7 +18,7 @@
                 :max-date="new Date()"
             />
         </v-col>
-        <v-col cols="12" class="text-center" v-if="!isloading && pedidos.length  > 0">
+        <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  > 0">
             <DataTable
                 title="Listagem de pedidos"
                 :items="pedidos"
@@ -38,7 +39,7 @@
                 </v-btn>
             </v-col>
         </v-col>
-        <v-col cols="12" class="text-center" v-if="!isloading && pedidos.length  === 0">
+        <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  === 0">
             <span class="text-secondary text-h5 font-weight-bold">
                 NÂO EXISTEM PEDIDOS PARA ESTE PERÍODO
             </span>

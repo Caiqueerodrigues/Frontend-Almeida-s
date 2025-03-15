@@ -32,6 +32,10 @@ export default defineNuxtPlugin((nuxtApp) => {
         // if(!response.config.url.includes('login'))  {
         //     sessionStorage.setItem('token', response?.headers?.get('Authorization').split(" ")[1]);
         // }
+        if (response.config.url.includes('/report/generate')) {
+            if(response.data.MsgAlerta !== "" && response.data.response === "" ) return showToastfy(response.data.msgAlerta, "warning");
+            return response.data
+        };
         if(response.data.msgSucesso !== "") showToastfy(response.data.msgSucesso, "success");
         else if(response.data.msgAlerta !== "") showToastfy(response.data.msgAlerta, "warning");
         return response.data.response;

@@ -56,6 +56,8 @@
         }
     });
 
+    const isClient = ref(false);
+
     const randomColors = () => {
         const options = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", 'E', "F"];
         const length = dataChart.value.labels.length;
@@ -73,5 +75,8 @@
         }
     }
 
-    onMounted(() => randomColors())
+    onMounted(() => {
+        isClient.value = true;
+        randomColors()
+    });
 </script>

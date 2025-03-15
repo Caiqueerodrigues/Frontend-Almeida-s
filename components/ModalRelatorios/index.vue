@@ -101,6 +101,16 @@
                                     ></v-select>
                                 </v-col>
                             </v-row>
+                            <v-row v-if="pdf">
+                                <v-col>
+                                    <embed v-if="!mobile" :src="pdf" type="application/pdf" width="90%" height="900px" />
+                                    <ViewerPDF 
+                                        v-if="mobile"
+                                        :pdf="pdf"
+                                        :nomeFile="filters.report" 
+                                    />
+                                </v-col>
+                            </v-row>
                         </v-card-text>
                         <template v-slot:actions>
                             <v-col cols="12">
@@ -146,6 +156,7 @@
     const emit = defineEmits(['setInactiveModal'])
     const props = defineProps([ 'isActiveModal', 'date']);
 
+    const mobile = ref(false);
     const filters = ref(
         {
             firstFilter: null,
@@ -157,6 +168,7 @@
     );
 
     const clientes = ref([]);
+    const pdf = ref(false);
 
     const getClientes= async () => {
         await axios.get('clients/active').then(response => {
@@ -177,18 +189,22 @@
         else getReport();
     }
 
+    const checkMobile = () => {
+        mobile.value = window.innerWidth <= 768;
+    };
+
     const getReport = async () => {
         let data = { ...filters.value };
             data.firstFilter = data.firstFilter.replaceAll(" ", "_");
             data.report = data.report.replaceAll(" ", "_");
-
+        
         await axios.post("/report/generate", data).then(response => {
-            
-        }).then(e => console.error(e));
+            pdf.value = `data:application/pdf;base64,${response}`;
+        }).catch(e => console.error(e));
     } 
 
     const clearFilters= () => {
-        date.value = props.date;
+        pdf.value = false;
         filters.value = 
         {
             firstFilter: null,
@@ -200,14 +216,7 @@
     }
 
     const setInactiveModal = () => {
-        filters.value = 
-        {
-            firstFilter: null,
-            client: null,
-            period: [],
-            report: null,
-            situation: null,
-        };
+        clearFilters();
         emit('setInactiveModal', false);
     }
 
@@ -217,6 +226,15 @@
         }
         filters.value.client = null;
         if(nv === "MENSAL") filters.value.period = [];
+    });
+
+    onMounted(() => {
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+    });
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', checkMobile);
     });
 </script>
 <style scoped>
