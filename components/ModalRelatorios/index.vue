@@ -26,7 +26,7 @@
                                 <v-col cols="12" class="px-0 mb-1">
                                     <v-divider :thickness="4" color="white" />
                                 </v-col>
-                                <v-col cols="10" md="2" class="pa-0 text-center">
+                                <v-col cols="10" md="5" class="pa-0 text-center">
                                     <v-select
                                         chips
                                         label="Tipo de filtro"
@@ -34,11 +34,12 @@
                                         :items="[ 'CLIENTE', 'PERÍODO', 'CLIENTE E PERÍODO', 'SITUAÇÃO', 'MENSAL' ]"
                                         variant="outlined"
                                         rounded="xl"
+                                        :disabled="pdf"
                                     ></v-select>
                                 </v-col>
                                 <v-col 
                                     cols="10" 
-                                    md="4" 
+                                    md="5" 
                                     class="pa-0 text-center" 
                                     v-if="filters.firstFilter === 'CLIENTE' || filters.firstFilter === 'CLIENTE E PERÍODO'"
                                 >
@@ -51,11 +52,12 @@
                                         item-value="id"
                                         variant="outlined"
                                         rounded="xl"
+                                        :disabled="pdf"
                                     ></v-select>
                                 </v-col>
                                 <v-col 
                                     cols="10" 
-                                    md="2" 
+                                    md="5" 
                                     class="pa-0 text-center" 
                                     v-if="filters.firstFilter"
                                 >
@@ -66,11 +68,27 @@
                                         :items="[ 'TODOS', 'PAGOS', 'DEVIDOS' ]"
                                         variant="outlined"
                                         rounded="xl"
+                                        :disabled="pdf"
                                     ></v-select>
                                 </v-col>
                                 <v-col 
                                     cols="10" 
-                                    md="3" 
+                                    md="5" 
+                                    class="pa-0 text-center" 
+                                    v-if="filters.firstFilter && (filters.period || filter.client)"
+                                >
+                                    <v-select
+                                        chips
+                                        label="Tipo de relatório"
+                                        v-model="filters.report"
+                                        :items="[ 'COMPLETO', 'FICHA DE CORTE', 'FECHAMENTO CLIENTE' ]"
+                                        variant="outlined"
+                                        rounded="xl"
+                                        :disabled="pdf"
+                                    ></v-select>
+                                </v-col>
+                                <v-col 
+                                    cols="11" 
                                     class="pa-0 text-center mb-6" 
                                     v-if="filters.firstFilter === 'CLIENTE E PERÍODO' || filters.firstFilter === 'PERÍODO' || filters.firstFilter === 'MENSAL'"
                                 >
@@ -83,22 +101,8 @@
                                         :clearable="false"
                                         :min-date="new Date('2000-01-01')"
                                         :max-date="new Date()"
+                                        :disabled="pdf"
                                     />
-                                </v-col>
-                                <v-col 
-                                    cols="10" 
-                                    md="3" 
-                                    class="pa-0 text-center" 
-                                    v-if="filters.firstFilter && (filters.period || filter.client)"
-                                >
-                                    <v-select
-                                        chips
-                                        label="Tipo de relatório"
-                                        v-model="filters.report"
-                                        :items="[ 'COMPLETO', 'FICHA DE CORTE', 'FECHAMENTO CLIENTE' ]"
-                                        variant="outlined"
-                                        rounded="xl"
-                                    ></v-select>
                                 </v-col>
                             </v-row>
                             <v-row v-if="pdf">
@@ -199,7 +203,8 @@
             data.report = data.report.replaceAll(" ", "_");
         
         await axios.post("/report/generate", data).then(response => {
-            pdf.value = `data:application/pdf;base64,${response}`;
+            if(response) pdf.value = `data:application/pdf;base64,${response}`;
+            else pdf.value = null;
         }).catch(e => console.error(e));
     } 
 
