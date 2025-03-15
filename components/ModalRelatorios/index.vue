@@ -115,7 +115,7 @@
                         <template v-slot:actions>
                             <v-col cols="12">
                                 <v-btn
-                                    class="text-white font-weight-bold rounded-xl mr-3"
+                                    class="text-white font-weight-bold rounded-xl mr-3 mb-2"
                                     size="large"
                                     variant="outlined"
                                     @click="setInactiveModal()"
@@ -123,7 +123,7 @@
                                     Fechar
                                 </v-btn>
                                 <v-btn
-                                    class="text-white bg-blue font-weight-bold rounded-xl mr-3"
+                                    class="text-white bg-blue font-weight-bold rounded-xl mr-3 mb-2"
                                     size="large"
                                     variant="flat"
                                     @click="clearFilters()"
@@ -131,7 +131,7 @@
                                     Limpar
                                 </v-btn>
                                 <v-btn
-                                    class="bg-success text-primary font-weight-bold rounded-xl"
+                                    class="bg-success text-primary font-weight-bold rounded-xl mb-2"
                                     size="large"
                                     variant="outlined"
                                     @click="validateFilters()"
