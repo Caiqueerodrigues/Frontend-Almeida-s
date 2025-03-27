@@ -52,7 +52,7 @@
                 <v-text-field
                     rounded="xl"
                     label="Quantidade de peças ao par"
-                    v-model="modelo.qtdPar"
+                    v-model="modelo.qtdPecasPar"
                     variant="outlined"
                     type="number"
                     :rules="[ (value) => !!value || 'A quantidade é obrigatório!' ]"
@@ -129,7 +129,7 @@
                     rounded="xl"
                     v-if="foto.routeFile"
                     label="Qtd ao par"
-                    v-model="foto.qtdPar"
+                    v-model="foto.qtdPecasPar"
                     type="number"
                     class="ma-2"
                     :rules="[(value) => !!value || 'A QTD ao par é obrigatório!']"
@@ -226,7 +226,7 @@
     const modelo = ref({
         tipo: "",
         preco: 0,
-        qtdPar: 2,
+        qtdPecasPar: 2,
         refOrdem: "",
         fotos: '',
         qtdFaca: 0,
@@ -270,7 +270,7 @@
         await axios.get(`/models/${props.idModelo}`).then(response => {
             if(response.fotos.length > 0) response.fotos.map(foto => foto.nomeFile = foto.nomeFile.split("_")[0]);
             response.preco = Number(response.preco).toFixed(2);
-            response.qtdPar = Number(response.qtdPar).toFixed(2);
+            response.qtdPecasPar = Number(response.qtdPecasPar).toFixed(2);
             response.fotos.map( foto => idsFotos.value.push(foto.id));
 
             modelo.value = response;
@@ -299,7 +299,7 @@
         modelo.value.client = props.client[0];
 
         modelo.value.preco = Number(modelo.value.preco);
-        modelo.value.qtdPecasPar = Number(modelo.value.qtdPar);
+        modelo.value.qtdPecasPar = Number(modelo.value.qtdPecasPar);
         modelo.value.fotos = '';
 
         await axios.post(`/models`, modelo.value).then(response => {
@@ -318,7 +318,7 @@
                     formData.append(`files[]`, fileInput.files[0] ?? fileFake);
                     formData.append(`nomePeca[]`, foto.nomePeca);
                     formData.append(`propriedadeFaca[]`, foto.propriedadeFaca);
-                    formData.append("pecaPar[]", foto.qtdPar);
+                    formData.append("pecaPar[]", foto.qtdPecasPar);
                     formData.append("precoFaca[]", foto.precoFaca);
                     formData.append("obs[]", foto.obs.length > 0 ? foto.obs : " ");
                     formData.append("idsFotos[]", idsFotos.value[index]);
@@ -338,7 +338,7 @@
 
     const adcFoto = () => {
         alterouFotos.value = true;
-        modelo.value.fotos.push({ nomePeca: "", nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPar: "", propriedadeFaca: "", obs: '' });
+        modelo.value.fotos.push({ nomePeca: "", nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPecasPar: "", propriedadeFaca: "", obs: '' });
         idsFotos.value.push(0);
 
         setTimeout(() => {
@@ -395,7 +395,7 @@
         modelo.value = {
             tipo: "",
             preco: 0,
-            qtdPar: 2,
+            qtdPecasPar: 2,
             refOrdem: "",
             fotos: '',
             qtdFaca: 0,
