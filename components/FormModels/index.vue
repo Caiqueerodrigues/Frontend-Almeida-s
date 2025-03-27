@@ -129,7 +129,7 @@
                     rounded="xl"
                     v-if="foto.routeFile"
                     label="Qtd ao par"
-                    v-model="foto.qtdPecasPar"
+                    v-model="foto.qtdPar"
                     type="number"
                     class="ma-2"
                     :rules="[(value) => !!value || 'A QTD ao par é obrigatório!']"
@@ -270,7 +270,7 @@
         await axios.get(`/models/${props.idModelo}`).then(response => {
             if(response.fotos.length > 0) response.fotos.map(foto => foto.nomeFile = foto.nomeFile.split("_")[0]);
             response.preco = Number(response.preco).toFixed(2);
-            response.qtdPecasPar = Number(response.qtdPecasPar).toFixed(2);
+            response.qtdPecasPar = response.qtdPecasPar;
             response.fotos.map( foto => idsFotos.value.push(foto.id));
 
             modelo.value = response;
@@ -318,7 +318,7 @@
                     formData.append(`files[]`, fileInput.files[0] ?? fileFake);
                     formData.append(`nomePeca[]`, foto.nomePeca);
                     formData.append(`propriedadeFaca[]`, foto.propriedadeFaca);
-                    formData.append("pecaPar[]", foto.qtdPecasPar);
+                    formData.append("pecaPar[]", foto.qtdPar);
                     formData.append("precoFaca[]", foto.precoFaca);
                     formData.append("obs[]", foto.obs.length > 0 ? foto.obs : " ");
                     formData.append("idsFotos[]", idsFotos.value[index]);
@@ -338,7 +338,7 @@
 
     const adcFoto = () => {
         alterouFotos.value = true;
-        modelo.value.fotos.push({ nomePeca: "", nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPecasPar: "", propriedadeFaca: "", obs: '' });
+        modelo.value.fotos.push({ nomePeca: "", nomeFile: "", routeFile: "", precoFaca: 0.15, qtdPar: "", propriedadeFaca: "", obs: '' });
         idsFotos.value.push(0);
 
         setTimeout(() => {
