@@ -212,6 +212,16 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
+            <v-col cols="12" md="7" class="mt-n6" v-if="pedido.modelo">
+                <DatePicker 
+                    :range="false"
+                    title="DATA DE RETIRADA"
+                    name="dataRetirada"
+                    :date="pedido.dataRetirada"
+                    :clearable="true"
+                    @dateEmit="pedido.dataRetirada = $event"
+                />
+            </v-col>
             <v-col cols="12" class="text-center">
                 <v-btn
                     variant="outlined"
@@ -220,6 +230,17 @@
                     @click="voltar()"
                 >
                     VOLTAR
+                </v-btn>
+                <v-btn
+                    variant="outlined"
+                    color="success"
+                    rounded="xl"
+                    class="mr-4"
+                    @click="showModalReport = true"
+                    :disabled="!props.id"
+                    :loading="loading"
+                >
+                    IMPRIMIR
                 </v-btn>
                 <v-btn
                     variant="flat"
@@ -234,6 +255,13 @@
             </v-col>
         </v-row>
     </v-form>
+
+    <ModalRelatorios 
+        :withOutFilter="true"
+        :idPedido="props.id"
+        :isActiveModal="showModalReport"
+        @setInactiveModal="showModalReport = $event"
+    />
 </template>
 <script setup>
     const axios = inject("axios");
@@ -241,6 +269,7 @@
     const showToastify = inject("showToastify");
     const validForm = inject("validateForm");
     const formatteDateDB = inject("formatteDateDB");
+    const showModalReport = ref(false);
 
     const props = defineProps([ 'id', 'date' ]);
     const emit = defineEmits([ 'voltar' ]);
@@ -262,7 +291,8 @@
         rendimentoParesMetro: [],
         tipoRecebido: [],
         cor: [],
-        quemAssinou: null
+        quemAssinou: null,
+        dataRetirada: null,
     });
     const clients = ref([]);
     const clientSelected = ref(null);
@@ -304,12 +334,13 @@
             pedido.value.rendimentoParesMetro = response.rendimentoParesMetro ? response.rendimentoParesMetro.split(',').map(Number) : [];
             pedido.value.cor = response.cor ? response.cor.split(',') : [];
             pedido.value.obs = response.obs;
-
+            
             const arrayGrade = response.grade.split(',');
-                arrayGrade.map(item => {
-                    pedido.value.grade.push({ grade: item.split(":")[0] , qtd: Number(item.split(":")[1]) });
-                });
-
+            arrayGrade.map(item => {
+                pedido.value.grade.push({ grade: item.split(":")[0] , qtd: Number(item.split(":")[1]) });
+            });
+            
+            if(response.dataRetirada) pedido.value.dataRetirada = new Date(response.dataRetirada);
             pedido.value.quemAssinou = response.quemAssinou;
         }).catch(e => console.error(e));
     }
@@ -418,6 +449,7 @@
         dados.dataPedido = formatteDateDB(pedido.value.dataPedido);
         dados.dataFinalizado = pedido.value.dataFinalizado ? formatteDateDB(pedido.value.dataFinalizado) : null;
         dados.dataPagamento = pedido.value.dataPagamento ? formatteDateDB(pedido.value.dataPagamento) : null;
+        dados.dataRetirada = pedido.value.dataRetirada ? formatteDateDB(pedido.value.dataRetirada) : null;
         dados.tipoRecebido = pedido.value.tipoRecebido.join(",");
         dados.metragemRecebido = pedido.value.metragemRecebido.join(",");
         dados.metragemFinalizado = pedido.value.metragemFinalizado ? pedido.value.metragemFinalizado.join(",") : null;

@@ -26,7 +26,7 @@
                                 <v-col cols="12" class="px-0 mb-1">
                                     <v-divider :thickness="4" color="white" />
                                 </v-col>
-                                <v-col cols="10" md="5" class="pa-0 text-center">
+                                <v-col cols="10" md="5" class="pa-0 text-center" v-if="!props.withOutFilter">
                                     <v-select
                                         chips
                                         label="Tipo de filtro"
@@ -75,13 +75,15 @@
                                     cols="10" 
                                     md="5" 
                                     class="pa-0 text-center" 
-                                    v-if="filters.firstFilter && (filters.period || filter.client)"
+                                    v-if="(filters.firstFilter && (filters.period || filters.client)) || props.withOutFilter"
                                 >
                                     <v-select
                                         chips
                                         label="Tipo de relatório"
                                         v-model="filters.report"
-                                        :items="[ 'COMPLETO', 'FICHA DE CORTE', 'FECHAMENTO CLIENTE' ]"
+                                        :items="!props.withOutFilter ? 
+                                            [ 'COMPLETO', 'FECHAMENTO CLIENTE' ] :
+                                            [ 'CLIENTE', 'FICHA DE CORTE' ]"
                                         variant="outlined"
                                         rounded="xl"
                                         :disabled="pdf"
@@ -96,6 +98,7 @@
                                         v-model="filters.period" 
                                         range 
                                         autoApply
+                                        locale="pt-BR"
                                         dark
                                         format="dd/MM/yyyy"
                                         :clearable="false"
@@ -138,6 +141,8 @@
                                     class="bg-success text-primary font-weight-bold rounded-xl mb-2"
                                     size="large"
                                     variant="outlined"
+                                    :loading="loading"
+                                    :disabled="pdf"
                                     @click="validateFilters()"
                                 >
                                     Buscar
@@ -156,9 +161,10 @@
 
     const axios = inject('axios');
     const showToastify = inject('showToastify');
+    const loading = ref(false);
 
     const emit = defineEmits(['setInactiveModal'])
-    const props = defineProps([ 'isActiveModal', 'date']);
+    const props = defineProps([ 'isActiveModal', 'date', 'withOutFilter', 'idPedido' ]);
 
     const mobile = ref(false);
     const filters = ref(
@@ -184,10 +190,14 @@
 
     const validateFilters = () => {
         let showMessage = false;
-        if(!filters.value.report || !filters.value.situation || (filters.value.firstFilter === "CLIENTE" && !filters.value.client)){
-            showMessage = true;
+        if(!props.withOutFilter) {
+            if(!filters.value.report || !filters.value.situation || (filters.value.firstFilter === "CLIENTE" && !filters.value.client)){
+                showMessage = true;
+            }
+            if((filters.value.firstFilter === "PERÍODO" || filters.value.firstFilter === "CLIENTE E PERÍODO" || filters.value.firstFilter === "MENSAL") && filters.value.period.length !== 2) showMessage = true;
+        } else {
+            if(!filters.value.report) showMessage = true;
         }
-        if((filters.value.firstFilter === "PERÍODO" || filters.value.firstFilter === "CLIENTE E PERÍODO" || filters.value.firstFilter === "MENSAL") && filters.value.period.length !== 2) showMessage = true;
 
         if(showMessage) showToastify("Campo(s) Obrigatório(s) sem preenchimento!", "info");
         else getReport();
@@ -199,17 +209,29 @@
 
     const getReport = async () => {
         let data = { ...filters.value };
-            data.firstFilter = data.firstFilter.replaceAll(" ", "_");
+            if(!props.withOutFilter) {
+                data.firstFilter = data.firstFilter.replaceAll(" ", "_");
+            } else {
+                data.idPedido = props.idPedido;
+                data.period = [];
+            }
             data.report = data.report.replaceAll(" ", "_");
+            
         
+        loading.value = true;
         await axios.post("/report/generate", data).then(response => {
             if(response) pdf.value = `data:application/pdf;base64,${response}`;
             else pdf.value = null;
-        }).catch(e => console.error(e));
+            loading.value = false;
+        }).catch(e => {
+            loading.value = false;
+            console.error(e) 
+        });
     } 
 
     const clearFilters= () => {
         pdf.value = false;
+        loading.value = false;
         filters.value = 
         {
             firstFilter: null,
@@ -234,7 +256,11 @@
     });
 
     onMounted(() => {
-        checkMobile();
+        if(!props.withOutFilter) {
+            checkMobile();
+        } else {
+            pdf.value = props.pdf;
+        }
         window.addEventListener('resize', checkMobile);
     });
 
