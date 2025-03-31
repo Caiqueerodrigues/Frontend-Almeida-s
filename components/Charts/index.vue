@@ -15,11 +15,6 @@
 </template>
 
 <script setup>
-    import { DoughnutChart } from 'vue-chart-3';
-    import { Chart, registerables } from 'chart.js/auto';
-
-    Chart.register(...registerables);
-
     const props = defineProps(['labels', 'data', 'headers', 'acaoVer']);
 
     const dataChart = ref({
@@ -75,8 +70,16 @@
         }
     }
 
-    onMounted(() => {
-        isClient.value = true;
-        randomColors()
+    onMounted(async () => {
+        if (typeof window !== 'undefined') {
+            isClient.value = true;
+
+            const { DoughnutChart: LoadedDoughnutChart } = await import('vue-chart-3');
+            const { Chart, registerables } = await import('chart.js');
+            Chart.register(...registerables);
+
+            DoughnutChart.value = LoadedDoughnutChart;
+        }
+        randomColors();
     });
 </script>
