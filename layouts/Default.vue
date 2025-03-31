@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <Loading v-if="loading || !mounted"/>
-        <v-layout>
+        <v-layout v-if="route.path !== '/login'">
             <v-app-bar color="#000" class="pr-4">
                 <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" :disabled="loading"></v-app-bar-nav-icon>
 
@@ -16,14 +16,6 @@
                         <v-col cols="1" md="0"></v-col>
                     </v-row>
                 </v-toolbar-title>
-
-                <!-- <template v-if="$vuetify.display.mdAndUp">
-                <v-btn icon="mdi-magnify" variant="text"></v-btn>
-
-                <v-btn icon="mdi-filter" variant="text"></v-btn>
-                </template>
-
-                <v-btn icon="mdi-dots-vertical" variant="text"></v-btn> -->
             </v-app-bar>
 
             <v-navigation-drawer
@@ -55,6 +47,9 @@
             <v-main class="h-100 px-5 bg-primary text-white">
                 <NuxtPage />
             </v-main>
+        </v-layout>
+        <v-layout v-else>
+            <NuxtPage />
         </v-layout>
     </v-card>
 </template>

@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+    const DoughnutChart = ref(null);
     const props = defineProps(['labels', 'data', 'headers', 'acaoVer']);
 
     const dataChart = ref({
