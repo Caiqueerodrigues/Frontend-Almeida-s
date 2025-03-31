@@ -15,8 +15,8 @@
 </template>
 
 <script setup>
-    import ChartJS from 'chart.js';
-    const { Chart, registerables } = ChartJS;
+    import { DoughnutChart } from 'vue-chart-3';
+    import { Chart, registerables } from 'chart.js/auto';
 
     Chart.register(...registerables);
 
