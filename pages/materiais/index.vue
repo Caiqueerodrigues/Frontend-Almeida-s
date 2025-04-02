@@ -6,17 +6,31 @@
                 @voltar="voltarListagemMateriais($event)"
             />
         </v-col>
+        <v-col cols="12" md="6" v-if="!idMaterial && !showMaterialForm">
+            <v-text-field
+                v-model="search"
+                rounded="xl"
+                class="mt-12"
+                variant="outlined"
+                type="tel"
+                label="PESQUISAR"
+                :hide-details="true"
+            ></v-text-field>
+        </v-col>
         <v-col cols="12" v-show="!idMaterial && !showMaterialForm">
             <DataTable 
                 v-show="materiais.length > 0"
                 title="Listagem de materiais cadastrados"
-                :items="materiais"
+                :items="filteredMateriais"
                 :headers="nomesColunas" 
                 :acaoVer="true"
                 @verId="showForm($event)"
             />
         </v-col>
 
+        <v-col cols="12" class="text-center" v-if="!showMaterialForm && !loading && materiais.length === 0">
+            <h2 class="text-secondary text-h4">Não existem materiais cadastrados</h2>
+        </v-col>
         <v-col cols="12" class="text-center pb-12" v-if="!showMaterialForm && !loading">
             <v-btn 
                 variant="flat"
@@ -40,6 +54,7 @@
         { title: 'Ação', align: 'center', key: 'ver' }, 
     ]);
     const materiais = ref([]);
+    const search = ref(null);
 
     const getMateriais = async () => {
         await axios.get("/materials").then(response => {
@@ -50,6 +65,16 @@
             materiais.value = response;
         }).catch(err => console.error(err));
     }
+
+    const filteredMateriais = computed(() => {
+        if (!search.value) {
+            return materiais.value;
+        }
+        return materiais.value.filter(material => 
+            material.nome.toLowerCase().includes(search.value.toLowerCase()) || 
+            material.situacao.toLowerCase().includes(search.value.toLowerCase())
+        );
+    });
 
     const showForm = (ev) => {
         idMaterial.value = ev; 

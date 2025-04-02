@@ -20,6 +20,7 @@
     "@vuepic/vue-datepicker": "^11.0.1",
     "axios": "^1.6.7",
     "chart.js": "^3.9.1",
+    "jose": "^6.0.10",
     "vue-chart-3": "^3.1.8",
     "vue-the-mask": "^0.11.1",
     "vue3-pdfjs": "^0.1.6",

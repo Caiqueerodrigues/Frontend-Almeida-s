@@ -23,6 +23,7 @@
                 class="bg-black"
                 temporary
             >
+            <p class="font-weight-bold ml-2 text-center text-secondary my-4">Bem vindo {{ nomeUser }}</p>
             <v-list>
                 <v-list-item 
                     v-for="item in items" 
@@ -55,6 +56,7 @@
 </template>
 <script setup>
     const loading = inject("loading");
+    const nomeUser = inject("nomeUser");
     const route = useRoute()
     const drawer = ref(false);
     const items = ref([
@@ -75,13 +77,18 @@
         },
         {
             title: 'Pedidos',
-            route: '/pedidos',
+            route: '/pedidos/0',
             icon: 'mdi-currency-usd',
         },
         {
             title: 'Relatórios',
             route: '/relatorios',
             icon: 'mdi-file-pdf-box',
+        },
+        {
+            title: 'Sair',
+            route: '/login',
+            icon: 'mdi-power',
         },
     ]);
     const itemSelected = ref(null);
@@ -91,6 +98,10 @@
         drawer.value = !drawer.value;
         itemSelected.value = route;
         
+        if(route === '/login') {
+            sessionStorage.removeItem('user');
+        }
+
         navigateTo(route);
     };
 

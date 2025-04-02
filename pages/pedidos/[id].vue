@@ -21,7 +21,7 @@
         <v-col cols="12" md="7" v-show="showForm && !loading">
             <FormPedido 
                 v-if="showForm"
-                :id="id"
+                :id="idPedido"
                 :date="selectedDate"
                 @voltar="notShowForm($event)"
             />
@@ -54,8 +54,11 @@
     const formattePrice = inject("formattePrice");
     const formatteDateDB = inject("formatteDateDB");
 
+    const route = useRoute();
+    const router = useRouter();
+    const idPedido = ref(route.params.id);
+
     const showForm = ref(false);
-    const id = ref(null);
     const nomesColunas = ref([
         { title: 'Cliente', align: 'center', key: 'nomeCliente' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
@@ -72,6 +75,7 @@
         const dados = { date: dateFormatted };
 
         await axios.post('/orders/date', dados).then(response => {
+            totalFaturado.value = 0;
             if(response.length > 0) {
                 response.forEach(item => {
                     item.nomeCliente = item.client.nome;
@@ -86,8 +90,9 @@
     }
 
     const showFormFunc = (ev) => {
-        id.value = ev;
+        idPedido.value = ev;
         showForm.value = true;
+        router.push(`/pedidos/${ev}`);
     };
 
     const setDate = (ev) => {
@@ -109,19 +114,23 @@
 
     const notShowForm = (ev) => {
         showForm.value = ev;
-        id.value = null;
-        getPedidos();
+        idPedido.value = 0;
+        router.push(`/pedidos/${0}`);
     };
 
     watch(() => selectedDate.value, (nv) => {
-        if(nv) {
+        if(nv && idPedido.value === '0') {
             textDate.value = getDateAtualBrasilia(nv); 
             getPedidos();
         }
     });
     
     onMounted(() => {
-        getPedidos();
+        if(idPedido.value !== '0') {
+            showForm.value = true;
+        } else {
+            getPedidos();
+        }
         textDate.value = getDateAtualBrasilia();
     });
 </script>

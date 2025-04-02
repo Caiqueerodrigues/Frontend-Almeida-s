@@ -525,7 +525,7 @@
     });
 
     onMounted(() => {
-        if(props.id || props.id > 0) getPedido();
+        if(props.id && props.id !== '0') getPedido();
         else getClientes();
     });
 </script>

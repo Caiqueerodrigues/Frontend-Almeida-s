@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     'node_modules': resolve(__dirname, './node_modules'),
     './': resolve( './*')
   },
+
   vue: {
     config: {
       silent: true

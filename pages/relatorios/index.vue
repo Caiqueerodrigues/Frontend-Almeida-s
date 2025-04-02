@@ -23,7 +23,8 @@
                 title="Listagem de pedidos"
                 :items="pedidos"
                 :headers="nomesColunas"
-                :acaoVer="false"
+                :acaoVer="true"
+                :redirect="true"
                 class="mb-2"
             />
             <span class="text-h5 text-secondary font-weight-bold">
@@ -33,23 +34,23 @@
                 :labels="dataChart.labels"
                 :data="dataChart.data"
             />
-            <v-col col="12">
-                <v-btn variant="flat" color="success" rounded="xl" @click="showModalRelatorios = true">
-                    GERAR RELATÓRIOS
-                </v-btn>
-            </v-col>
         </v-col>
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  === 0">
             <span class="text-secondary text-h5 font-weight-bold">
                 NÂO EXISTEM PEDIDOS PARA ESTE PERÍODO
             </span>
         </v-col>
-        <ModalRelatorios 
-            :isActiveModal="showModalRelatorios"
-            :date="date"
-            @setInactiveModal="showModalRelatorios = $event"
-        />
+        <v-col col="12" class="text-center">
+            <v-btn variant="flat" color="success" rounded="xl" @click="showModalRelatorios = true">
+                GERAR RELATÓRIOS
+            </v-btn>
+        </v-col>
     </v-row>
+    <ModalRelatorios 
+        :isActiveModal="showModalRelatorios"
+        :date="date"
+        @setInactiveModal="showModalRelatorios = $event"
+    />
 </template>
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
@@ -91,7 +92,7 @@
                     }
 
                     pedidos.value.push(
-                        { totalDinheiro: item.totalDinheiro, dia: `${dia}-${mes}-${ano}` , nome: item.client.nome  }
+                        { totalDinheiro: item.totalDinheiro, dia: `${dia}-${mes}-${ano}` , nome: item.client.nome, id: item.id  }
                     );
                 });
                 total.value = Number(pedidos.value.reduce((total, item) => total += item.totalDinheiro, 0)).toFixed(2);

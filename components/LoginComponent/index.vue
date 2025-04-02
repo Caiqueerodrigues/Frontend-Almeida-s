@@ -1,6 +1,6 @@
 <template>
     <v-row class="justify-center align-center bg-black py-12 container">
-        <v-col cols="10" md="6" class="bg-primary rounded-xl shadow">
+        <v-col cols="10" md="4" class="bg-primary rounded-xl shadow">
                 <v-form :ref="form">
                     <v-row class="ma-0 pa-0 flex-column">
                         <v-col cols="12" class="ma-0 pa-0 d-flex justify-center">
@@ -15,10 +15,11 @@
                                 type="text"
                                 label="Insira seu usuário"
                                 :rules="[(value) => !!value || 'O usuário é obrigatório!']"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="mt-0  pt-0">
-                            <v-text-field
+                                @keydown.enter="submit()"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="mt-0  pt-0">
+                                <v-text-field
                                 v-model="user.password"
                                 rounded="xl"
                                 class="mb-2"
@@ -28,6 +29,7 @@
                                 :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                                 :type="visible ? 'text' : 'password'"
                                 @click:append-inner="visible = !visible"
+                                @keydown.enter="submit()"
                             >
                         </v-text-field>
                         </v-col>
@@ -59,12 +61,18 @@
     const user = ref({ user: null, password: null });
 
     const submit = async () => {
+        if(!user.value.user || !user.value.password) {
+            showToastify('Campos sem preenchimento', 'info');
+            return;
+        }
+
         loading.value = true;
 
+        user.value.user = user.value.user.toLowerCase().trim() 
         axios.post('/users', user.value).then(response => {
             loading.value = false;
-            sessionStorage.setItem('user', JSON.stringify(response.token));
-            router.push('/pedidos');
+            sessionStorage.setItem('user', response.response);
+            router.push('/pedidos/0');
         }).catch(err => {
             loading.value = false;
             console.error(err);
@@ -77,7 +85,7 @@
     }
 
     img {
-        width: 60%;
+        width: 30%;
         height: 10%;
         border-radius: 20px;
     }

@@ -9,6 +9,8 @@
                 :headers="headers"
                 :items="items"
                 item-value="name"
+                :no-data-text="'Sem dados para mostrar'"
+                @click:row="handleRowClick"
             >
                 <template v-slot:[`item.situacao`]="{ item }">
                     <v-chip :color="item.ativo ? 'success' : 'primary'" text-color="white">
@@ -42,19 +44,32 @@
                         </v-icon>
                     </v-btn>
                 </template>
+
             </v-data-table-virtual>
         </v-col>
     </v-row>
 </template>
 <script setup>
-    const props = defineProps([ 'title', 'items', 'headers', 'acaoVer' ]);
+    const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect' ]);
     const emit = defineEmits([ 'verId' ]);
     const formattePrice = inject('formattePrice');
     const selectedItem = ref(false);
+    const router = useRouter()
 
     const emitId = (item) => {
         selectedItem.value = item;
         emit('verId', item.id);
+    };
+
+    const handleRowClick = (event, { item }) => {
+        if (props.redirect) {
+            redirect(item);
+        }
+    };
+
+
+    const redirect = (item) => {
+        router.push(`/pedidos/${item.id}`)
     };
 
     onMounted(() => {
