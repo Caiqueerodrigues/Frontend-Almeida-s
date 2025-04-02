@@ -6,6 +6,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 onBeforeMount(() => {
-  router.replace('/pedidos');
+  router.replace('/login');
 });
 </script>

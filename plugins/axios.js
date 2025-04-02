@@ -21,6 +21,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         
         if (!token && !config.url.includes('/users')) {
             showToastfy("Por favor, efetue o login!", "error");
+            router.push('/login')
             loading.value = false;
             return Promise.reject('Token não encontrado, redirecionando para o login');
         }
