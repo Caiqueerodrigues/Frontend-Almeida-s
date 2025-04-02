@@ -508,7 +508,7 @@
 
     watch(() => clientSelected.value, (nv) => {
         if(nv) {
-            if(!props.id || props.id === 0) {
+            if(!props.id || props.id === '0') {
                 const [ nome, telefone ] = clientSelected.value.split(" - ");
                 const clientArray = clients.value.filter(client => client.nome === nome && client.telefone === telefone);
 
