@@ -77,7 +77,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             sessionStorage.removeItem('user');
             setTimeout(() => {
                 router.push('/login');
-            }, 1000);
+            }, 1000 * 5);
         }
         
         return Promise.reject(error);

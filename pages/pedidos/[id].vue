@@ -116,6 +116,7 @@
         showForm.value = ev;
         idPedido.value = 0;
         router.push(`/pedidos/${0}`);
+        getPedidos();
     };
 
     watch(() => selectedDate.value, (nv) => {

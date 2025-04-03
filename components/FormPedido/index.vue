@@ -421,8 +421,8 @@
     }
 
     const calculateTotal = () => {
-        const model = props.id ? pedido.value.modelo : modelos.value.find(item => item.id === pedido.value.modelo);
-        pedido.value.totalDinheiro = Number(model.preco * Number(pedido.value.totalPares)).toFixed(2);
+        const model = props.id !== '0' ? pedido.value.modelo : modelos.value.find(item => item.id === pedido.value.modelo);
+        pedido.value.totalDinheiro = Number(Number(model.preco) * Number(pedido.value.totalPares)).toFixed(2);
     }
 
     const setNewValor = (ev) => {
@@ -464,18 +464,22 @@
         });
         dados.grade = gradeString;
         
-        if(props.id) {
+        if(props.id !== '0') {
             dados.id = props.id;
 
             await axios.put("/orders", dados).then(response => {
-                voltar();
+                setTimeout(() => {
+                    voltar(); 
+                }, 1000);
             }).catch(e => console.error(e));
         } else {
             const model = modelos.value.filter(item => item.id === dados.modelo);
             dados.modelo = model[0];
 
             await axios.post("/orders/create-order", dados).then(response => {
-                voltar();
+                setTimeout(() => {
+                    voltar(); 
+                }, 1000);
             }).catch(e => console.error(e));
         }
     };
