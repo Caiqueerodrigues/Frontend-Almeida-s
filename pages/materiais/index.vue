@@ -12,7 +12,6 @@
                 rounded="xl"
                 class="mt-12"
                 variant="outlined"
-                type="tel"
                 label="PESQUISAR"
                 :hide-details="true"
             ></v-text-field>

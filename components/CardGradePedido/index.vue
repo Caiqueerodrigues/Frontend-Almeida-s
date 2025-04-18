@@ -52,7 +52,7 @@
         let gradeText = String(item.value.grade).replace(/\D/g, '');
         let result = '';
 
-        if (gradeText[0] === '0') gradeText = gradeText.slice(1);
+        // if (gradeText[0] === '0') gradeText = gradeText.slice(1);
 
         if (gradeText.length > 4) {
             result = gradeText.slice(0, 2) + "/" + gradeText.slice(2, 4) + "/" + gradeText.slice(4, 6);
