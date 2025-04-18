@@ -90,7 +90,7 @@
                                     ></v-select>
                                 </v-col>
                                 <v-col 
-                                    cols="11" 
+                                    cols="10" 
                                     class="pa-0 text-center mb-6" 
                                     v-if="filters.firstFilter === 'CLIENTE E PERÍODO' || filters.firstFilter === 'PERÍODO' || filters.firstFilter === 'MENSAL'"
                                 >
