@@ -1,12 +1,12 @@
 <template>
-    <v-row v-show="!loading" class="h-100 justify-center align-center">
-        <v-col cols="12" class="text-center"  v-show="!showForm">
+    <v-row class="h-100 justify-center align-center">
+        <v-col cols="12" class="text-center">
             <h2 class="text-center text-secondary">
                 LISTAGEM DE PEDIDOS <br>
                 {{ textDate }}
             </h2>
         </v-col>
-        <v-col cols="12" v-show="!loading && !showForm">
+        <v-col cols="12">
             <v-row class="justify-center w-100">
                 <v-col cols="12" md="4">
                     <DatePicker 
@@ -18,47 +18,35 @@
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="12" md="7" v-show="showForm && !loading">
-            <FormPedido 
-                v-if="showForm"
-                :id="idPedido"
-                :date="selectedDate"
-                @voltar="notShowForm($event)"
-            />
-        </v-col>
-        <v-col cols="12" md="7" class="text-center" v-if="!showForm && !loading && pedidos.length > 0">
+        <v-col cols="12" md="7" class="text-center" v-if="pedidos.length > 0">
             <DataTable 
                 title="Listagem de Pedidos"
                 :items="pedidos"
                 :headers="nomesColunas" 
                 :acaoVer="true"
                 @verId="showFormFunc($event)"
-                />
+            />
             <span class="text-secondary text-h6 font-weight-bold">TOTAL FATURADO R$ {{ formattePrice(totalFaturado) }}</span>
         </v-col>
-        <v-col cols="12" v-show="!showForm && !loading && pedidos.length === 0">
+        <v-col cols="12" v-if="pedidos.length === 0">
             <h1 class="text-center text-secondary">
                 Não existem pedidos <br> para a data selecionada
             </h1>
         </v-col>
-        <v-col cols="12" class="text-center z-1" v-show="!showForm && !loading">
-            <v-btn variant="flat" class="rounded-xl" color="success" @click="showForm = true, id = 0">
+        <v-col cols="12" class="text-center z-1">
+            <v-btn variant="flat" class="rounded-xl" color="success" @click="showFormFunc()">
                 CADASTRAR PEDIDO
             </v-btn>
         </v-col>
     </v-row>
 </template>
 <script setup>
-    const loading = inject("loading");
     const axios = inject("axios");
     const formattePrice = inject("formattePrice");
     const formatteDateDB = inject("formatteDateDB");
 
-    const route = useRoute();
     const router = useRouter();
-    const idPedido = ref(route.params.id);
 
-    const showForm = ref(false);
     const nomesColunas = ref([
         { title: 'Cliente', align: 'center', key: 'nomeCliente' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
@@ -73,7 +61,7 @@
         let date = new Date(selectedDate.value);
         const dateFormatted = formatteDateDB(date);
         const dados = { date: dateFormatted };
-
+        
         await axios.post('/orders/date', dados).then(response => {
             totalFaturado.value = 0;
             if(response.length > 0) {
@@ -89,10 +77,8 @@
         }).catch(err => console.error(err));
     }
 
-    const showFormFunc = (ev) => {
-        idPedido.value = ev;
-        showForm.value = true;
-        router.push(`/pedidos/${ev}`);
+    const showFormFunc = (ev = 0) => {
+        router.push(`/pedido/${ev}`);
     };
 
     const setDate = (ev) => {
@@ -112,26 +98,15 @@
         return date.replace(/^\w/, (c) => c.toUpperCase()).replace(/\s\w/g, (c) => c.toUpperCase());
     };
 
-    const notShowForm = (ev) => {
-        showForm.value = ev;
-        idPedido.value = 0;
-        router.push(`/pedidos/${0}`);
-        getPedidos();
-    };
-
     watch(() => selectedDate.value, (nv) => {
-        if(nv && idPedido.value === '0') {
+        if(nv) {
             textDate.value = getDateAtualBrasilia(nv); 
             getPedidos();
         }
     });
     
     onMounted(() => {
-        if(idPedido.value !== '0') {
-            showForm.value = true;
-        } else {
-            getPedidos();
-        }
+        getPedidos();
         textDate.value = getDateAtualBrasilia();
     });
 </script>

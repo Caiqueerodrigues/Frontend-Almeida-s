@@ -72,9 +72,7 @@
         axios.post('/users', user.value).then(response => {
             loading.value = false;
             sessionStorage.setItem('user', response.response);
-            setTimeout(() => {
-                router.push('/pedidos/0');
-            }, 1000);
+            router.push('/pedidos');
         }).catch(err => {
             loading.value = false;
             console.error(err);

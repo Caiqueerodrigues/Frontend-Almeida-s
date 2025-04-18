@@ -77,7 +77,7 @@
         },
         {
             title: 'Pedidos',
-            route: '/pedidos/0',
+            route: '/pedidos',
             icon: 'mdi-currency-usd',
         },
         {

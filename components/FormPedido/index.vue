@@ -44,7 +44,7 @@
                     <v-col cols="12" md="6">
                         <DatePicker 
                             :range="false"
-                            title="DATA DE CONCLUSÃO"
+                            title="CONCLUSÃO"
                             name="dataConclusao"
                             :date="pedido.dataFinalizado"
                             :clearable="true"
@@ -237,7 +237,7 @@
                     rounded="xl"
                     class="mr-4"
                     @click="showModalReport = true"
-                    :disabled="!props.id"
+                    :disabled="!props.id || props.id === '0'"
                     :loading="loading"
                 >
                     IMPRIMIR
@@ -268,17 +268,18 @@
     const loading = inject("loading");
     const showToastify = inject("showToastify");
     const validForm = inject("validateForm");
+    const router = useRouter();
     const formatteDateDB = inject("formatteDateDB");
-    const showModalReport = ref(false);
 
-    const props = defineProps([ 'id', 'date' ]);
-    const emit = defineEmits([ 'voltar' ]);
+    const props = defineProps([ 'id' ]);
+    
+    const showModalReport = ref(false);
 
     const form = ref(null);
     const pedido = ref({
         client: null,
         modelo: null,
-        dataPedido: props.date,
+        dataPedido: null,
         dataFinalizado: null,
         dataPagamento: null,
         relatorioCliente: null,
@@ -431,6 +432,10 @@
     }
     const addNewItemGrade = () => {
         if(!qtdParesMenorQueGrade()) return;
+        else if (pedido.value.grade.length > 0 && pedido.value.grade[pedido.value.grade.length - 1].qtd === null) {
+            showToastify('Preencha a o item anterior', 'info');
+            return;
+        };
         pedido.value.grade.push({ grade: '', qtd: null });
     }
     const removeItemGrade = (ev) =>{
@@ -492,7 +497,7 @@
         pedido.value = {
             client: null,
             modelo: null,
-            dataPedido: props.date,
+            dataPedido: null,
             dataFinalizado: null,
             dataPagamento: null,
             relatorioCliente: null,
@@ -507,7 +512,8 @@
             tipoRecebido: [],
             quemAssinou: null
         }
-        emit('voltar', false);
+        
+        router.push('/pedidos')
     };
 
     watch(() => clientSelected.value, (nv) => {

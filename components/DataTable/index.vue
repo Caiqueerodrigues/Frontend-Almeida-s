@@ -69,7 +69,7 @@
 
 
     const redirect = (item) => {
-        router.push(`/pedidos/${item.id}`)
+        router.push(`/pedido/${item.id}`)
     };
 
     onMounted(() => {
