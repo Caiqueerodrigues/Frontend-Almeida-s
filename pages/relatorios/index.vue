@@ -95,7 +95,7 @@
                         { totalDinheiro: item.totalDinheiro, dia: `${dia}-${mes}-${ano}` , nome: item.client.nome, id: item.id  }
                     );
                 });
-                total.value = Number(pedidos.value.reduce((total, item) => total += item.totalDinheiro, 0)).toFixed(2);
+                total.value = Number(pedidos.value.reduce((total, item) => total += item.totalDinheiro, 0)).toFixed(3);
             }
         }).catch(e => console.error(e));
     }

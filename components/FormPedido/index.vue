@@ -416,14 +416,14 @@
         if (priceText.length >= 2) result = priceText.slice(0, -2) + "." + priceText.slice(-2);
         else result = priceText;
         result = Number(result);
-        if(key.target.value.slice(-1) === '0') result = Number(result).toFixed(2);
+        if(key.target.value.slice(-1) === '0') result = Number(result).toFixed(3);
         
         pedido.value.totalDinheiro = result;
     }
 
     const calculateTotal = () => {
         const model = props.id !== '0' ? pedido.value.modelo : modelos.value.find(item => item.id === pedido.value.modelo);
-        pedido.value.totalDinheiro = Number(Number(model.preco) * Number(pedido.value.totalPares)).toFixed(2);
+        pedido.value.totalDinheiro = Number(Number(model.preco) * Number(pedido.value.totalPares)).toFixed(3);
     }
 
     const setNewValor = (ev) => {

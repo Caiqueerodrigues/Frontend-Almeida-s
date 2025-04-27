@@ -267,7 +267,7 @@
 
         await axios.get(`/models/${props.idModelo}`).then(response => {
             if(response.fotos.length > 0) response.fotos.map(foto => foto.nomeFile = foto.nomeFile.split("_")[0]);
-            response.preco = Number(response.preco).toFixed(2);
+            response.preco = Number(response.preco).toFixed(3);
             response.qtdPecasPar = response.qtdPecasPar;
             response.fotos.map( foto => idsFotos.value.push(foto.id));
 
