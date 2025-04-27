@@ -64,7 +64,6 @@
                     rounded="xl"
                     label="Rendimento por M²"
                     v-model="modelo.rendimento"
-                    disabled
                     type="number"
                     variant="outlined"
                 ></v-text-field>
@@ -75,7 +74,6 @@
                     label="Cronometragem por Hr"
                     v-model="modelo.cronometragem"
                     type="number"
-                    disabled
                     variant="outlined"
                 ></v-text-field>
             </v-col>
