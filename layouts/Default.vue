@@ -34,7 +34,7 @@
                         <v-list-item-title 
                             @click="!loading && goTo(item.route)" 
                             class="text-surface font-weight-bold text-center py-4"             
-                            :class="itemSelected === item.route || (item.route.includes('pedido') && itemSelected.includes('pedido')) ? 'selected' : ''"
+                            :class="itemSelected === item.route || (item.route.includes('pedido') && itemSelected?.includes('pedido')) ? 'selected' : ''"
                         >
                             <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
                             {{ item.title }}
