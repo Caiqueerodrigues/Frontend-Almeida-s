@@ -31,7 +31,7 @@
                 />
             </v-col>
             <v-col cols="12" md="7" v-if="!loading && pedido.modelo">
-                <v-row class="justify-center">
+                <v-row class="justify-center" v-if="dateSelected">
                     <v-col col="12" md="6">
                         <DatePicker 
                             :range="false"
@@ -41,7 +41,7 @@
                             @dateEmit="pedido.dataPedido = $event"
                         />
                     </v-col>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="6" v-if="dateSelected">
                         <DatePicker 
                             :range="false"
                             title="CONCLUSÃO"
@@ -276,6 +276,7 @@
     const showModalReport = ref(false);
 
     const form = ref(null);
+    const dateSelected = ref(new Date(router.currentRoute.value.query.date))
     const pedido = ref({
         client: null,
         modelo: null,
@@ -536,7 +537,11 @@
 
     onMounted(() => {
         if(props.id && props.id !== '0') getPedido();
-        else getClientes();
+        else {
+            getClientes();
+            pedido.value.dataPedido = dateSelected.value;
+            pedido.value.dataFinalizado = dateSelected.value;
+        }
     });
 </script>
 <style scoped>

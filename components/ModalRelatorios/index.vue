@@ -108,6 +108,23 @@
                                     />
                                 </v-col>
                             </v-row>
+                            <v-row v-if="filters.firstFilter || props.withOutFilter" class="justify-center">
+                                <v-col 
+                                    cols="10"
+                                    md="6"
+                                    class="pa-0 text-center" 
+                                >
+                                <v-text-field
+                                    v-model="filters.quantidadeVias"
+                                    type="number"
+                                    rounded="xl"
+                                    variant="outlined"
+                                    label="Quantidade de vias"
+                                    :disabled="pdf"
+                                    :rules="[(value) => !!value || 'A quantidade é obrigatório!']"
+                                ></v-text-field>
+                            </v-col>
+                            </v-row>
                             <v-row v-if="pdf">
                                 <v-col>
                                     <embed v-if="!mobile" :src="pdf" type="application/pdf" width="90%" height="900px" />
@@ -174,6 +191,7 @@
             period: props.date,
             report: null,
             situation: null,
+            quantidadeVias: 1
         }
     );
 
@@ -239,6 +257,7 @@
             period: [],
             report: null,
             situation: null,
+            quantidadeVias: 1,
         };
     }
 

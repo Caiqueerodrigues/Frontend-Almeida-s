@@ -78,7 +78,7 @@
     }
 
     const showFormFunc = (ev = 0) => {
-        router.push(`/pedido/${ev}`);
+        router.push(`/pedido/${ev}${ev === 0 ? '?date=' + selectedDate.value.toISOString() : ''}`);
     };
 
     const setDate = (ev) => {
