@@ -146,32 +146,6 @@
             <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0" >
                 <AutoCompleteMultiple 
                     v-if="materiais.length > 0"
-                    :label="'Metragens recebidas'"
-                    :items="[]"
-                    :selecteds="pedido.metragemRecebido"
-                    :disabled="false"
-                    :outsideList="true"
-                    :type="'number'"
-                    :maxLength="pedido.tipoRecebido.length"
-                    @salvar="pedido.metragemRecebido = $event"
-                />
-            </v-col>
-            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0">
-                <AutoCompleteMultiple 
-                    v-if="pedido.tipoRecebido.length > 0"
-                    :label="'Metragens utilizadas'"
-                    :items="[]"
-                    :type="'number'"
-                    :selecteds="pedido.metragemFinalizado"
-                    :disabled="false"
-                    :outsideList="true"
-                    :maxLength="pedido.tipoRecebido.length"
-                    @salvar="pedido.metragemFinalizado = $event"
-                />
-            </v-col>
-            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0" >
-                <AutoCompleteMultiple 
-                    v-if="materiais.length > 0"
                     :label="'Cores dos materiais'"
                     :items="[]"
                     :selecteds="pedido.cor"
@@ -188,7 +162,6 @@
                     :label="'Rendimento por pares'"
                     :items="[]"
                     :selecteds="pedido.rendimentoParesMetro"
-                    :disabled="true"
                 />
             </v-col>
             <v-col cols="12" md="7" v-show="pedido.modelo">
@@ -288,8 +261,6 @@
         totalPares: null,
         grade: [],
         obs: null,
-        metragemRecebido: [],
-        metragemFinalizado: [],
         rendimentoParesMetro: [],
         tipoRecebido: [],
         cor: [],
@@ -331,8 +302,6 @@
             pedido.value.totalDinheiro = response.totalDinheiro;
             pedido.value.totalPares = response.totalPares;
             pedido.value.tipoRecebido = response.tipoRecebido.split(',').map(Number);
-            pedido.value.metragemRecebido = response.metragemRecebido.split(',').map(Number);
-            pedido.value.metragemFinalizado = response.metragemFinalizado ? response.metragemFinalizado.split(',').map(Number) : [];
             pedido.value.rendimentoParesMetro = response.rendimentoParesMetro ? response.rendimentoParesMetro.split(',').map(Number) : [];
             pedido.value.cor = response.cor ? response.cor.split(',') : [];
             pedido.value.obs = response.obs;
@@ -356,7 +325,7 @@
     }
 
     const getMateriais = async () => {
-        await axios.get(`/materials/active`).then(response => {
+        await axios.get(`/materials`).then(response => {
             if(response.length > 0) {
                 materiais.value = response;
             };
@@ -372,17 +341,9 @@
                 { name: 'dataPedido', value: pedido.value.dataPedido },
                 { name: 'gradeForm', value: pedido.value.grade },
                 { name: 'tipoRecebido', value: pedido.value.tipoRecebido },
-                { name: 'metragemRecebido', value: pedido.value.metragemRecebido },
-                { name: 'metragemFinalizado', value: pedido.value.metragemFinalizado },
             ];
     
             const errors = fieldsRequired.filter(field => !field.value);
-
-            if(pedido.value.tipoRecebido.length !== pedido.value.metragemRecebido.length || 
-            (pedido.value.metragemFinalizado.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.metragemFinalizado.length)) {
-                showToastify("Quantidade divergentes de materiais e metragens!", "info");
-                return false;
-            }
 
             if(pedido.value.cor.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.cor.length) {
                 showToastify("Quantidade divergentes de materiais e cores!", "info");
@@ -457,8 +418,6 @@
         dados.dataPagamento = pedido.value.dataPagamento ? formatteDateDB(pedido.value.dataPagamento) : null;
         dados.dataRetirada = pedido.value.dataRetirada ? formatteDateDB(pedido.value.dataRetirada) : null;
         dados.tipoRecebido = pedido.value.tipoRecebido.join(",");
-        dados.metragemRecebido = pedido.value.metragemRecebido.join(",");
-        dados.metragemFinalizado = pedido.value.metragemFinalizado ? pedido.value.metragemFinalizado.join(",") : null;
         dados.rendimentoParesMetro = pedido.value.rendimentoParesMetro ? pedido.value.rendimentoParesMetro.join(",") : null;
         dados.cor = pedido.value.cor ? pedido.value.cor.join(",") : null;
         dados.totalDinheiro = Number(pedido.value.totalDinheiro);
@@ -506,8 +465,6 @@
             totalPares: null,
             grade: [],
             obs: null,
-            metragemRecebido: [],
-            metragemFinalizado: [],
             rendimentoParesMetro: [],
             cor: [],
             tipoRecebido: [],

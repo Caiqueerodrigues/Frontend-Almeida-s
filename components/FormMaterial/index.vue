@@ -16,12 +16,6 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="text-center">
-                <FormAtivo 
-                    :valueInicial="material.ativo"
-                    @setValue="material.ativo = $event"
-                />
-            </v-col>
             <v-col cols="12" class="text-center">
                 <v-btn
                     variant="outlined"
@@ -54,7 +48,6 @@
 
     const material = ref({
         nome: "",
-        ativo: true,
         id: null,
     });
 

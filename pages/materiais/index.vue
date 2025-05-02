@@ -49,7 +49,6 @@
     const idMaterial = ref(false);
     const nomesColunas = ref([
         { title: 'Nome', align: 'center', key: 'nome' }, 
-        { title: 'Ativo', align: 'center', key: 'situacao' }, 
         { title: 'Ação', align: 'center', key: 'ver' }, 
     ]);
     const materiais = ref([]);
