@@ -6,7 +6,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     const baseURL = useRuntimeConfig().public.API_BACKEND;
     const showToastfy = inject("showToastify");
     const router = useRouter();
-    const route = useRoute();
     const loading = useState('loading', () => false);
     const nomeUser = useState('nomeUser', () => "");
 
@@ -19,34 +18,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         loading.value = true; 
         
         const token = sessionStorage.getItem('user');
-        
-        if (!token && !config.url.includes('/users')) {
-            showToastfy("Por favor, efetue o login!", "error");
-            router.push('/login')
-            loading.value = false;
-            return Promise.reject('Token não encontrado, redirecionando para o login');
-        }
 
         if (token) {
-            const token = sessionStorage.getItem('user');
-
-            try {
-                const decoded = decodeJwt(token);;
-
-                nomeUser.value = decoded.name;
-                
-                // Verifique a expiração do token
-                if (decoded.exp && decoded.exp < Date.now() / 1000 && decoded.refresh_token < Date.now() / 1000) {
-                    sessionStorage.removeItem('user');
-                    showToastfy("Por favor, efetue novamente o login!", "error");
-                    return router.push('/login');
-                }
-            } catch (err) {
-                showToastfy("Por favor, efetue novamente o login!", "error");
-                sessionStorage.removeItem('user');
-                return router.push('/login');
-            }
-
             config.headers['Authorization'] = `Bearer ${token}`;
         } 
 
@@ -60,7 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     axiosInstance.interceptors.response.use(response => {
         loading.value = false;
         if(!response.config.url.includes('/users'))  {
-            sessionStorage.setItem('token', response?.headers?.get('Authorization').split(" ")[1]);
+            sessionStorage.setItem('user', response?.headers?.get('Authorization').split(" ")[1]);
         }
         if (response.config.url.includes('/report/generate')) {
             if(response.data.MsgAlerta !== "" && response.data.response === "" ) return showToastfy(response.data.msgAlerta, "warning");
