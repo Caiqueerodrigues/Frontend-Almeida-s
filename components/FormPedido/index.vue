@@ -65,7 +65,7 @@
             </v-col>
             <v-col cols="12" md="7">
                 <v-row class="justify-center" v-if="!loading && pedido.modelo">
-                    <v-col cols="12" md="6">
+                    <v-col cols="12">
                         <v-text-field
                             rounded="xl"
                             label="Total de pares"
@@ -137,7 +137,9 @@
                             :items="materiais"
                             :selecteds="pedido.tipoRecebido"
                             :disabled="false"
-                            :outsideList="false"
+                            :outsideList="true"
+                            :type="'text'"
+                            :maxLength="100"
                             @salvar="pedido.tipoRecebido = $event"
                         />
                     </v-col>

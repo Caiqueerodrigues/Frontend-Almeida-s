@@ -39,7 +39,10 @@
     const items = ref(props.items);
 
     const setNewValue = (ev) => {
-        if(props.outsideList && selecteds.value.length < props.maxLength) selecteds.value.push(ev.target.value);
+        if(props.outsideList && selecteds.value.length < props.maxLength) {
+            selecteds.value.push(ev.target.value);
+            if(props.maxLength >= 100) emitEvent();
+        }
         setMsg();
     }
     
