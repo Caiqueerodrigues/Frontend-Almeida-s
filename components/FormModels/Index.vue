@@ -372,7 +372,7 @@
         if (priceText.length >= 2) result = priceText.slice(0, -3) + "." + priceText.slice(-3);
         else result = priceText;
         result = Number(result);
-        //if(key.target.value.slice(-1) === '0') result = Number(result).toFixed(2);
+        if(key.target.value.slice(-1) === '0') result = Number(result).toFixed(3);
         
         if(type === 'foto') modelo.value.fotos[i].precoFaca = result;
         else modelo.value.preco = result;
