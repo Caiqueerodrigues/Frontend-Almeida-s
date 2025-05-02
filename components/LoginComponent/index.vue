@@ -20,18 +20,27 @@
                             </v-col>
                             <v-col cols="12" class="mt-0  pt-0">
                                 <v-text-field
-                                v-model="user.password"
-                                rounded="xl"
-                                class="mb-2"
-                                variant="outlined"
-                                label="Insira sua senha"
-                                :rules="[(value) => !!value || 'A senha é obrigatório!']"
-                                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                                :type="visible ? 'text' : 'password'"
-                                @click:append-inner="visible = !visible"
-                                @keydown.enter="submit()"
-                            >
-                        </v-text-field>
+                                    v-model="user.password"
+                                    rounded="xl"
+                                    class="mb-2"
+                                    variant="outlined"
+                                    label="Insira sua senha"
+                                    :rules="[(value) => !!value || 'A senha é obrigatório!']"
+                                    :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                                    :type="visible ? 'text' : 'password'"
+                                    @click:append-inner="visible = !visible"
+                                    @keydown.enter="submit()"
+                                >
+                            </v-text-field>
+                            <v-checkbox
+                                v-model="remember"
+                                color="orange"
+                                label="Lembre-se de mim"
+                                :value="true"
+                                class="text-secondary"
+                                :disabled="!user.user || !user.password"
+                                hide-details
+                            ></v-checkbox>
                         </v-col>
                         <v-col cols="12" class="text-center mt-0 pt-0">
                             <v-btn
@@ -59,6 +68,7 @@
     const visible = ref(false);
     const form = ref(null);
     const user = ref({ user: null, password: null });
+    const remember = ref(false);
 
     const submit = async () => {
         if(!user.value.user || !user.value.password) {
@@ -71,13 +81,29 @@
         user.value.user = user.value.user.toLowerCase().trim() 
         axios.post('/users', user.value).then(response => {
             loading.value = false;
-            sessionStorage.setItem('user', response.response);
+            sessionStorage.setItem('token', response.response);
             router.push('/pedidos');
         }).catch(err => {
             loading.value = false;
             console.error(err);
         })
     }
+
+    watch(() => remember.value, (newValue) => {
+        if(newValue) {
+            localStorage.setItem('user', JSON.stringify(user.value));
+        } else {
+            localStorage.removeItem('user');
+        }
+    });
+
+    onMounted(() => {
+        const userStorage = localStorage.getItem('user');
+        if(userStorage) {
+            user.value = JSON.parse(userStorage);
+            remember.value = true;
+        }
+    });
 </script>
 <style scoped>
     .container {
