@@ -34,6 +34,12 @@
         </v-btn>
       </v-col>
 
+      <v-col cols="12" class="text-center mt-14" v-if="dados.tables.length === 0">
+        <h2 class="text-secondary pt-14">
+          NÃO EXISTEM DADOS PARA MOSTRAR
+        </h2>
+      </v-col>
+      
       <v-col cols="12" md="7" v-for="(table, tableIndex) in dados.tables" :key="table.id" class="text-center">
         <v-text-field
           v-model="table.nome"
