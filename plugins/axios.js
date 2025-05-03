@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     axiosInstance.interceptors.request.use(config => {
         loading.value = true; 
         
-        const token = sessionStorage.getItem('user');
+        const token = sessionStorage.getItem('token');
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
@@ -33,7 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     axiosInstance.interceptors.response.use(response => {
         loading.value = false;
         if(!response.config.url.includes('/users'))  {
-            sessionStorage.setItem('user', response?.headers?.get('Authorization').split(" ")[1]);
+            sessionStorage.setItem('token', response?.headers?.get('Authorization').split(" ")[1]);
         }
         if (response.config.url.includes('/report/generate')) {
             if(response.data.MsgAlerta !== "" && response.data.response === "" ) return showToastfy(response.data.msgAlerta, "warning");
@@ -48,7 +48,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         
         if(error?.response?.status === 403) {
             showToastfy("Por favor, efetue novamente o login!", "error");
-            sessionStorage.removeItem('user');
+            sessionStorage.removeItem('token');
             setTimeout(() => {
                 router.push('/login');
             }, 1000 * 5);

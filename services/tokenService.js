@@ -2,26 +2,26 @@ import { decodeJwt } from "jose";
 
 export const isLoggedIn = () => {
     if (process.client) {
-        const token = sessionStorage.getItem("user");
+        const token = sessionStorage.getItem("token");
         return !!token;
     }
 };
 
 export const tokenValido = () => {
     if (process.client) {
-        const token = sessionStorage.getItem("user");
+        const token = sessionStorage.getItem("token");
         if (!token) return false;
 
         try {
             const decoded = decodeJwt(token);
 
             if (decoded.exp && decoded.exp < Date.now() / 1000) {
-                sessionStorage.removeItem("user");
+                sessionStorage.removeItem("token");
                 return false;
             }
             return true;
         } catch (err) {
-            sessionStorage.removeItem("user");
+            sessionStorage.removeItem("token");
             return false;
         }
     }
