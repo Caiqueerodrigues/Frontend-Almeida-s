@@ -23,7 +23,9 @@
             mdi-table-plus
           </v-icon>
         </v-btn>
-
+        
+      </v-col>
+      <v-col cols="12" class="text-center" v-if="dados.cliente">
         <v-btn variant="flat" class="ml-3" color="success" rounded="xl" @click="getTables()">
           <v-icon class="mr-2">
             mdi-table
@@ -32,7 +34,7 @@
         </v-btn>
       </v-col>
 
-      <v-col cols="7" v-for="(table, tableIndex) in dados.tables" :key="table.id" class="text-center">
+      <v-col cols="12" md="7" v-for="(table, tableIndex) in dados.tables" :key="table.id" class="text-center">
         <v-text-field
           v-model="table.nome"
           rounded="xl"
@@ -56,11 +58,14 @@
           ></v-text-field>
         </div>
 
-        <v-btn variant="flat" color="success" rounded="xl" class="ma-2" @click="addColumn(tableIndex)">ADC Coluna</v-btn>
-        <v-btn variant="flat" color="success" rounded="xl" class="ma-2" @click="addRow(tableIndex)">ADC Linha</v-btn>
+        <v-col cols="12" md="6">
+          <v-btn variant="flat" color="success" rounded="xl" class="ma-2" @click="addColumn(tableIndex)">ADC Coluna</v-btn>
+
+          <v-btn variant="flat" color="success" rounded="xl" class="ma-2" @click="addRow(tableIndex)">ADC Linha</v-btn>
+        </v-col>
         
         <v-row class="ma-0">
-          <v-col cols="6">
+          <v-col cols="12" md="6">
             <VueDatePicker 
               v-model="table.createdAt" 
               range 
@@ -70,7 +75,7 @@
               :disabled="true"
             />
           </v-col>
-          <v-col cols="6" v-if="table.updatedAt">
+          <v-col cols="12" md="6" v-if="table.updatedAt">
             <VueDatePicker 
               v-model="table.updatedAt" 
               range 
