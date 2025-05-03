@@ -86,6 +86,11 @@
             icon: 'mdi-file-pdf-box',
         },
         {
+            title: 'Tabelas',
+            route: '/tabelas',
+            icon: 'mdi-table-multiple',
+        },
+        {
             title: 'Sair',
             route: '/login',
             icon: 'mdi-power',
@@ -99,7 +104,7 @@
         itemSelected.value = route;
         
         if(route === '/login') {
-            sessionStorage.removeItem('user');
+            sessionStorage.removeItem('token');
         }
 
         navigateTo(route);
