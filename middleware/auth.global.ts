@@ -1,7 +1,6 @@
 import { isLoggedIn, tokenValido } from "~/services/tokenService";
 
-export default defineNuxtRouteMiddleware((to, from) => {
-    
+export default defineNuxtRouteMiddleware((to, from) => {    
     const router = useRouter();
     const matchedRoute = router.resolve(to.path);
     
@@ -15,12 +14,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (to.path === '/login') {
         if (loggedIn || tokenOK) {
             return navigateTo("/pedidos");
-        }
+        } else return;
     }
     
-    if (process.client) {
-        if (!loggedIn || !tokenOK) {
-            return navigateTo("/login");
-        }
+    if (process.client && (!loggedIn || !tokenOK)) {
+        return navigateTo("/login");
     }
 });
