@@ -7,7 +7,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     const showToastfy = inject("showToastify");
     const router = useRouter();
     const loading = useState('loading', () => false);
-    const nomeUser = useState('nomeUser', () => "");
 
     const axiosInstance = axios.create({
         baseURL: baseURL,
@@ -60,5 +59,4 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.provide('axios', axiosInstance);
     nuxtApp.provide('axios', axiosInstance);
     nuxtApp.vueApp.provide('loading', loading);
-    nuxtApp.vueApp.provide('nomeUser', nomeUser);
 });

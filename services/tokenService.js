@@ -27,3 +27,19 @@ export const tokenValido = () => {
     }
     return false;
 };
+
+export const tokenUser = () => {
+    if (process.client) {
+        const token = sessionStorage.getItem("token");
+        if (!token) return "";
+
+        try {
+            const decoded = decodeJwt(token);
+            
+            return decoded.name;
+        } catch (err) {
+            sessionStorage.removeItem("token");
+            return false;
+        }
+    }
+}

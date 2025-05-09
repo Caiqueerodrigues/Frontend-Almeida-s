@@ -23,7 +23,7 @@
                 class="bg-black"
                 temporary
             >
-            <p class="font-weight-bold ml-2 text-center text-secondary my-4">Bem vindo {{ nomeUser }}</p>
+                <p class="font-weight-bold ml-2 text-center text-secondary my-4">Bem vindo {{ tokenUser() }}</p>
             <v-list>
                 <v-list-item 
                     v-for="item in items" 
@@ -55,8 +55,9 @@
     </v-card>
 </template>
 <script setup>
+    import { tokenUser } from '../services/tokenService';
+
     const loading = inject("loading");
-    const nomeUser = inject("nomeUser");
     const route = useRoute()
     const drawer = ref(false);
     const items = ref([
