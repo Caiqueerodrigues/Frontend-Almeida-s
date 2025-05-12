@@ -7,18 +7,9 @@
                 @voltar="voltarListagemMateriais($event)"
             />
         </v-col>
-        <v-col cols="12" v-show="!id && !showForm">
-            <DataTable 
-                title="Listagem de clientes cadastrados"
-                :items="clients"
-                :headers="nomesColunas" 
-                :acaoVer="true"
-                @verId="showFormFunc($event)"
-            />
-        </v-col>
-
-        <v-col cols="12" class="text-center pb-12" v-if="!showForm && !loading">
-            <v-btn 
+        <v-col cols="12" class="pb-12 text-center" v-show="!id && !showForm">
+            <v-btn
+                v-if="!showForm && !loading"
                 variant="flat"
                 color="success"
                 rounded="xl"
@@ -26,6 +17,13 @@
             >
                 CADASTRAR CLIENTE
             </v-btn>
+            <DataTable 
+                title="Listagem de clientes cadastrados"
+                :items="clients"
+                :headers="nomesColunas" 
+                :acaoVer="true"
+                @verId="showFormFunc($event)"
+            />
         </v-col>
     </v-row>
 </template>
