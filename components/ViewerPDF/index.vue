@@ -39,43 +39,43 @@
     };
 
     const shareFile = async () => {
-    try {
-        // 1. Baixar o arquivo PDF
-        const response = await fetch(pdfSrc.value);
-        const pdfBlob = await response.blob();
-        
-        // 2. Criar um arquivo para compartilhamento
-        const file = new File([pdfBlob], `${props.nomeFile}.pdf`, { 
-            type: 'application/pdf' 
-        });
-        
-        // 3. Verificar se a API de compartilhamento suporta arquivos
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: `Compartilhar ${props.nomeFile}`,
-                text: 'Aqui está o arquivo PDF que você pediu!'
+        try {
+            // 1. Baixar o arquivo PDF
+            const response = await fetch(pdfSrc.value);
+            const pdfBlob = await response.blob();
+            
+            // 2. Criar um arquivo para compartilhamento
+            const file = new File([pdfBlob], `${props.nomeFile}.pdf`, { 
+                type: 'application/pdf' 
             });
-        } else {
-            // Fallback para dispositivos que não suportam compartilhamento de arquivos
-            if (navigator.share) {
-                // Compartilhar apenas texto/URL
+            
+            // 3. Verificar se a API de compartilhamento suporta arquivos
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
+                    files: [file],
                     title: `Compartilhar ${props.nomeFile}`,
-                    text: 'Veja este arquivo PDF',
-                    url: pdfSrc.value
+                    text: 'Aqui está o arquivo PDF que você pediu!'
                 });
             } else {
-                showToastify('Compartilhamento não suportado neste navegador. Use o botão de download.', 'info');
+                // Fallback para dispositivos que não suportam compartilhamento de arquivos
+                if (navigator.share) {
+                    // Compartilhar apenas texto/URL
+                    await navigator.share({
+                        title: `Compartilhar ${props.nomeFile}`,
+                        text: 'Veja este arquivo PDF',
+                        url: pdfSrc.value
+                    });
+                } else {
+                    showToastify('Compartilhamento não suportado neste navegador. Use o botão de download.', 'info');
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao compartilhar:', error);
+            if (error.name !== 'AbortError') {
+                alert('Não foi possível compartilhar o arquivo. Use o botão de download.');
             }
         }
-    } catch (error) {
-        console.error('Erro ao compartilhar:', error);
-        if (error.name !== 'AbortError') {
-            alert('Não foi possível compartilhar o arquivo. Use o botão de download.');
-        }
-    }
-};
+    };
 
     onMounted(() => {
         isClient.value = true;

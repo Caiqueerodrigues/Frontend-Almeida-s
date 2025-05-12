@@ -1,7 +1,7 @@
 <template>
     <v-row class="justify-center align-center h-100">
-        <v-col cols="12" md="6">
-            <h2 class="text-secondary text-center py-12">
+        <v-col cols="10">
+            <h2 class="text-secondary text-center">
                 {{ props.title }}
             </h2>
             <v-data-table-virtual
@@ -18,6 +18,16 @@
                             {{ item.situacao }}
                         </v-icon>
                     </v-chip>
+                </template>
+
+                <template v-slot:[`item.checkbox`]="{ item, index }">
+                    <v-checkbox
+                        v-model="selecteds[index]"
+                        color="success"
+                        :value="item"
+                        hide-details
+                        @change="checkboxSelected(item, index)"
+                    ></v-checkbox>
                 </template>
 
                 <template v-slot:[`item.nome`]="{ item }">
@@ -51,10 +61,22 @@
 </template>
 <script setup>
     const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect' ]);
-    const emit = defineEmits([ 'verId' ]);
+    const emit = defineEmits([ 'verId', 'selecteds' ]);
     const formattePrice = inject('formattePrice');
     const selectedItem = ref(false);
-    const router = useRouter()
+    const router = useRouter();
+    const selecteds = ref(props.items.map(() => false));
+    const selectedEmitItems = ref([]);
+
+    const checkboxSelected = (item, index) => {
+        if(selecteds.value[index]) {
+            selectedEmitItems.value.push(item.id);
+        } else {
+            selectedEmitItems.value = selectedEmitItems.value.filter(selected => selected !== item.id);
+        }
+
+        emit('selecteds', selectedEmitItems.value);
+    }
 
     const emitId = (item) => {
         selectedItem.value = item;

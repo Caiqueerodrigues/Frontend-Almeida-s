@@ -15,7 +15,6 @@
         :type="props.type"
         :no-data-text="msgNoData"
         @keydown.enter="setNewValue"
-        @keydown.space="setNewValue"
         @change="setNewValue"
     >
         <template v-slot:chip="{ props, item }">
@@ -43,6 +42,10 @@
             selecteds.value.push(ev.target.value);
             if(props.maxLength >= 100) emitEvent();
         }
+        
+        ev.target.value = '';
+        ev.target.dispatchEvent(new Event('input'));
+
         setMsg();
     }
     

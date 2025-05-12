@@ -16,21 +16,10 @@
                 :hide-details="true"
             ></v-text-field>
         </v-col>
-        <v-col cols="12" v-show="!idMaterial && !showMaterialForm">
-            <DataTable 
-                v-show="materiais.length > 0"
-                title="Listagem de materiais cadastrados"
-                :items="filteredMateriais"
-                :headers="nomesColunas" 
-                :acaoVer="true"
-                @verId="showForm($event)"
-            />
-        </v-col>
-
         <v-col cols="12" class="text-center" v-if="!showMaterialForm && !loading && materiais.length === 0">
             <h2 class="text-secondary text-h4">Não existem materiais cadastrados</h2>
         </v-col>
-        <v-col cols="12" class="text-center pb-12" v-if="!showMaterialForm && !loading">
+        <v-col cols="12" class="text-center" v-if="!showMaterialForm && !loading">
             <v-btn 
                 variant="flat"
                 color="success"
@@ -39,6 +28,16 @@
             >
                 CADASTRAR MATERIAL
             </v-btn>
+        </v-col>
+        <v-col cols="7"  class="pb-12" v-show="!idMaterial && !showMaterialForm">
+            <DataTable 
+                v-show="materiais.length > 0"
+                title="Listagem de materiais cadastrados"
+                :items="filteredMateriais"
+                :headers="nomesColunas" 
+                :acaoVer="true"
+                @verId="showForm($event)"
+            />
         </v-col>
     </v-row>
 </template>

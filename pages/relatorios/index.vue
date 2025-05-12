@@ -65,7 +65,10 @@
     const nomesColunas = ref([
         { title: 'Nome', align: 'center', key: 'nome' },
         { title: 'Dia', align: 'center', key: 'dia' },
+        { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
+        { title: 'Total de pares', align: 'center', key: 'totalPares' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
+        { title: 'Observação', align: 'center', key: 'obs' },
     ]);
     const dataChart = ref({ labels: [], data: [] });
     const showModalRelatorios = ref(false);
@@ -92,7 +95,7 @@
                     }
 
                     pedidos.value.push(
-                        { totalDinheiro: item.totalDinheiro, dia: `${dia}-${mes}-${ano}` , nome: item.client.nome, id: item.id  }
+                        { ...item, totalDinheiro: item.totalDinheiro, dia: `${dia}-${mes}-${ano}` , nome: item.client.nome, id: item.id  }
                     );
                 });
                 total.value = Number(pedidos.value.reduce((total, item) => total += item.totalDinheiro, 0)).toFixed(3);

@@ -22,7 +22,25 @@
                 @voltar="voltarListagem($event)"
             />
         </v-col>
-        <v-col cols="12" md="7" v-show="!showForm">
+        <v-col cols="12" class="text-center" v-if="!showForm && clientComplete">
+            <v-btn 
+                variant="outlined"
+                rounded="xl"
+                class="mr-4"
+                @click="voltarListagem(false)"
+            >
+                CANCELAR
+            </v-btn>
+            <v-btn
+                variant="flat"
+                color="success"
+                rounded="xl"
+                @click="showForm = true"
+            >
+                CADASTRAR MODELO
+            </v-btn>
+        </v-col>
+        <v-col cols="12" class="pb-12" v-show="!showForm">
             <h2 class="text-center text-secondary" v-if="clientComplete && modelos.length === 0">
                 Não existem modelos cadastrados para este cliente
             </h2>
@@ -35,25 +53,6 @@
                 @verId="showFormFunc($event)"
             />
         </v-col>
-        <v-col cols="12" class="text-center pb-12" v-if="!showForm && clientComplete">
-            <v-btn 
-                variant="outlined"
-                rounded="xl"
-                class="mr-4 mb-4"
-                @click="voltarListagem(false)"
-            >
-                CANCELAR
-            </v-btn>
-            <v-btn 
-                class="mb-4"
-                variant="flat"
-                color="success"
-                rounded="xl"
-                @click="showForm = true"
-            >
-                CADASTRAR MODELO
-            </v-btn>
-        </v-col>
     </v-row>
 </template>
 <script setup>
@@ -63,6 +62,11 @@
     const nomesColunas = ref([
         { title: 'Tipo', align: 'center', key: 'tipo' },
         { title: 'Preço', align: 'center', key: 'preco' },
+        { title: 'Rendimento M²', align: 'center', key: 'rendimento' },
+        { title: 'Cronometragem', align: 'center', key: 'cronometragem' },
+        { title: 'Quantidade Faca', align: 'center', key: 'qtdFaca' },
+        { title: 'Peças ao par', align: 'center', key: 'qtdPecasPar' },
+        { title: 'Observação', align: 'center', key: 'obs' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
 

@@ -8,6 +8,9 @@
         </v-col>
         <v-col cols="12">
             <v-row class="justify-center w-100">
+                <v-col cols="12" class="text-center" v-if="pedidos.length > 0">
+                    <span class="text-secondary text-h6 font-weight-bold">TOTAL FATURADO R$ {{ formattePrice(totalFaturado) }}</span>
+                </v-col>
                 <v-col cols="12" md="4">
                     <DatePicker 
                         name="dataListagemPedidos"
@@ -18,25 +21,34 @@
                 </v-col>
             </v-row>
         </v-col>
+        <v-col cols="12" v-if="pedidos.length === 0">
+            <h1 class="text-center text-secondary">
+                Não existem pedidos <br> para a data selecionada
+            </h1>
+        </v-col>
         <v-col cols="12" class="text-center z-1">
             <v-btn variant="flat" class="rounded-xl" color="success" @click="showFormFunc()">
                 CADASTRAR PEDIDO
             </v-btn>
+            <v-btn 
+                variant="flat"
+                class="rounded-xl ml-4" 
+                color="success" 
+                @click="impressao()" 
+                :disabled="selectedsPrint.length === 0"
+            >
+                IMPRESSÃO FICHAS
+            </v-btn>
         </v-col>
-        <v-col cols="12" md="7" class="text-center" v-if="pedidos.length > 0">
+        <v-col cols="12" class="text-center " v-if="pedidos.length > 0">
             <DataTable 
                 title="Listagem de Pedidos"
                 :items="pedidos"
                 :headers="nomesColunas" 
                 :acaoVer="true"
                 @verId="showFormFunc($event)"
+                @selecteds="selectedsPrint = $event"
             />
-            <span class="text-secondary text-h6 font-weight-bold">TOTAL FATURADO R$ {{ formattePrice(totalFaturado) }}</span>
-        </v-col>
-        <v-col cols="12" v-if="pedidos.length === 0">
-            <h1 class="text-center text-secondary">
-                Não existem pedidos <br> para a data selecionada
-            </h1>
         </v-col>
     </v-row>
 </template>
@@ -44,12 +56,18 @@
     const axios = inject("axios");
     const formattePrice = inject("formattePrice");
     const formatteDateDB = inject("formatteDateDB");
+    const selectedsPrint = ref([]);
 
     const router = useRouter();
 
     const nomesColunas = ref([
+        { title: ' ', align: 'center', key: 'checkbox', width: '10px' },
         { title: 'Cliente', align: 'center', key: 'nomeCliente' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
+        { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
+        { title: 'Preço par', align: 'center', key: 'modelo.preco' },
+        { title: 'Total pares', align: 'center', key: 'totalPares' },
+        { title: 'Obs.', align: 'center', key: 'obs' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
     const textDate = ref("");
@@ -80,6 +98,38 @@
     const showFormFunc = (ev = 0) => {
         router.push(`/pedido/${ev}${ev === 0 ? '?date=' + selectedDate.value.toISOString() : ''}`);
     };
+
+    const impressao = async () => {
+        const dados = {
+            firstFilter: "CLIENTE",
+            client: 0,
+            period: [],
+            report: "FICHA_DE_CORTE",
+            situation: "TODOS",
+            idPedidos: selectedsPrint.value,
+            quantidadeVias: 2,
+        }
+        await axios.post('report/generate', dados).then(response => {
+            const base64 = response;
+
+            const byteCharacters = atob(base64);
+            const byteArray = new Uint8Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteArray[i] = byteCharacters.charCodeAt(i);
+            }
+
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+            const blobUrl = URL.createObjectURL(blob);
+
+            const printWindow = window.open(blobUrl);
+            if (printWindow) {
+                printWindow.onload = () => {
+                    printWindow.focus();
+                    printWindow.print();
+                };
+            }
+        }).catch(e => console.error(e));
+    }
 
     const setDate = (ev) => {
         const date = new Date(ev);

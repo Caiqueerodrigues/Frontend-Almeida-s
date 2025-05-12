@@ -37,6 +37,9 @@
     const nomesColunas = ref([
         { title: 'Nome', align: 'center', key: 'nome' },  
         { title: 'Telefone', align: 'center', key: 'telefone' }, 
+        { title: 'Razão Social', align: 'center', key: 'razaoSocial' }, 
+        { title: 'Observação', align: 'center', key: 'obs' }, 
+        { title: 'Está ativo?', align: 'center', key: 'ativo' }, 
         { title: 'Ação', align: 'center', key: 'ver' }, 
     ]);
     const clients = ref([]);
@@ -45,6 +48,7 @@
         await axios.get('/clients').then(response => {
             response.forEach(client => {
                 client.icons = true;
+                client.ativo = client.ativo ? 'Sim' : 'Não'
             });
             clients.value = response;
         }).catch(err => console.error(err));

@@ -6,7 +6,7 @@
                     {{ props.id > 0 ? "EDITAR O " : "CADASTRAR UM NOVO " }} PEDIDO
                 </h2>
             </v-col>
-            <v-col cols="12" md="7" class="text-secondary">
+            <v-col cols="12" class="text-secondary">
                 <v-autocomplete
                     v-model="clientSelected"
                     clearable
@@ -30,9 +30,9 @@
                     @verId="pedido.modelo = $event"
                 />
             </v-col>
-            <v-col cols="12" md="7" v-if="!loading && pedido.modelo">
+            <v-col cols="12" v-if="!loading && pedido.modelo">
                 <v-row class="justify-center" v-if="dateSelected">
-                    <v-col col="12" md="6">
+                    <v-col col="12">
                         <DatePicker 
                             :range="false"
                             title="DATA DE INÍCIO"
@@ -41,7 +41,7 @@
                             @dateEmit="pedido.dataPedido = $event"
                         />
                     </v-col>
-                    <v-col cols="12" md="6" v-if="dateSelected">
+                    <v-col cols="12" v-if="dateSelected">
                         <DatePicker 
                             :range="false"
                             title="CONCLUSÃO"
@@ -63,7 +63,7 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="12" md="7">
+            <v-col cols="12">
                 <v-row class="justify-center" v-if="!loading && pedido.modelo">
                     <v-col cols="12">
                         <v-text-field
@@ -89,7 +89,7 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="12" md="7" v-show="pedido.modelo">
+            <v-col cols="12" v-show="pedido.modelo">
                 <v-text-field
                     rounded="xl"
                     label="Referência do calçado"
@@ -103,8 +103,6 @@
                 </h2>
             </v-col>
             <v-col 
-                col="6" 
-                md="4" 
                 v-for="(item, index) in pedido.grade" 
                 :key="index"
                 class="d-flex justify-center"
@@ -118,8 +116,7 @@
                 />
             </v-col>
             <v-col 
-                col="6" 
-                md="4" 
+                col="12" 
                 class="d-flex justify-center"
                 v-if="!loading && pedido.totalPares > 0"
             >
@@ -130,7 +127,7 @@
             </v-col>
             <v-col cols="12" v-if="!loading && pedido.modelo">
                 <v-row class="ma-0 pa-0 justify-center">
-                    <v-col cols="12" md="7" class="ma-0 pa-0">
+                    <v-col cols="12" class="ma-0 pa-0">
                         <AutoCompleteMultiple 
                             v-if="materiais.length > 0"
                             :label="'Materiais recebidos'"
@@ -145,7 +142,7 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0" >
+            <v-col cols="12" v-if="!loading && pedido.tipoRecebido.length > 0" >
                 <AutoCompleteMultiple 
                     v-if="materiais.length > 0"
                     :label="'Cores dos materiais'"
@@ -158,7 +155,7 @@
                     @salvar="pedido.cor = $event"
                 />
             </v-col>
-            <v-col cols="12" md="7" v-if="!loading && pedido.tipoRecebido.length > 0">
+            <v-col cols="12" v-if="!loading && pedido.tipoRecebido.length > 0">
                 <AutoCompleteMultiple 
                     v-if="pedido.tipoRecebido.length > 0"
                     :label="'Rendimento por pares'"
@@ -166,7 +163,7 @@
                     :selecteds="pedido.rendimentoParesMetro"
                 />
             </v-col>
-            <v-col cols="12" md="7" v-show="pedido.modelo">
+            <v-col cols="12" v-show="pedido.modelo">
                 <v-textarea
                     v-model="pedido.obs"
                     rounded="xl"
@@ -179,7 +176,7 @@
                     maxlength="255"
                 ></v-textarea>
             </v-col>
-            <v-col cols="12" md="7" v-show="pedido.modelo">
+            <v-col cols="12" v-show="pedido.modelo">
                 <v-text-field
                     rounded="xl"
                     label="Quem retirou/Assinou"
@@ -187,7 +184,7 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="mt-n6" v-if="pedido.modelo">
+            <v-col cols="12" class="mt-n6" v-if="pedido.modelo">
                 <DatePicker 
                     :range="false"
                     title="DATA DE RETIRADA"
@@ -276,7 +273,9 @@
     const materiais = ref([]);
     const nomesColunas = ref([
         { title: 'Nome', align: 'center', key: 'tipo' },
-        { title: 'preco', align: 'center', key: 'preco' },
+        { title: 'Preço', align: 'center', key: 'preco' },
+        { title: 'Peças par', align: 'center', key: 'qtdPecasPar' },
+        { title: 'Observação', align: 'center', key: 'obs' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
 
@@ -473,7 +472,7 @@
             quemAssinou: null
         }
         
-        router.push('/pedidos')
+        router.back();
     };
 
     watch(() => clientSelected.value, (nv) => {

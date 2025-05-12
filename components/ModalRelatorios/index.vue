@@ -114,16 +114,21 @@
                                     md="6"
                                     class="pa-0 text-center" 
                                 >
-                                <v-text-field
-                                    v-model="filters.quantidadeVias"
-                                    type="number"
-                                    rounded="xl"
-                                    variant="outlined"
-                                    label="Quantidade de vias"
-                                    :disabled="pdf"
-                                    :rules="[(value) => !!value || 'A quantidade é obrigatório!']"
-                                ></v-text-field>
-                            </v-col>
+                                    <v-text-field
+                                        v-model="filters.quantidadeVias"
+                                        type="number"
+                                        rounded="xl"
+                                        variant="outlined"
+                                        label="Quantidade de vias"
+                                        :disabled="pdf"
+                                        :rules="[(value) => !!value || 'A quantidade é obrigatório!']"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" v-if="pdf">
+                                    <v-btn @click="shareFile" color="success" rounded="xl" class="mx-2" variant="flat">
+                                        Compartilhar
+                                    </v-btn>
+                                </v-col>
                             </v-row>
                             <v-row v-if="pdf">
                                 <v-col>
@@ -191,6 +196,7 @@
             period: props.date,
             report: null,
             situation: null,
+            idPedidos: [],
             quantidadeVias: 2
         }
     );
@@ -247,17 +253,59 @@
         });
     } 
 
+    const shareFile = async () => {
+        try {
+            // 1. Baixar o arquivo PDF
+            const response = await fetch(pdf.value);
+            const pdfBlob = await response.blob();
+            
+            const cliente = clientes.value.length > 0 ? clientes.value.find(cliente => cliente.id === filters.value.client) : [];
+            const nomeFile = cliente.length > 0 ? `${cliente.nome} - ${filters.value.report}.pdf` : 'Pedido.pdf';
+            
+            // 2. Criar um arquivo para compartilhamento
+            const file = new File([pdfBlob], nomeFile, { 
+                type: 'application/pdf' 
+            });
+            
+            // 3. Verificar se a API de compartilhamento suporta arquivos
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: `Compartilhar ${nomeFile}`,
+                    text: 'Aqui está o arquivo PDF que você pediu!'
+                });
+            } else {
+                // Fallback para dispositivos que não suportam compartilhamento de arquivos
+                if (navigator.share) {
+                    // Compartilhar apenas texto/URL
+                    await navigator.share({
+                        title: `Compartilhar ${nomeFile}`,
+                        text: 'Veja este arquivo PDF',
+                        url: pdfSrc.value
+                    });
+                } else {
+                    showToastify('Compartilhamento não suportado neste navegador. Use o botão de download.', 'info');
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao compartilhar:', error);
+            if (error.name !== 'AbortError') {
+                alert('Não foi possível compartilhar o arquivo. Use o botão de download.');
+            }
+        }
+    };
+
     const clearFilters= () => {
         pdf.value = false;
         loading.value = false;
-        filters.value = 
-        {
-            firstFilter: null,
+        filters.value = {
+            firstFilter: "CLIENTE",
             client: null,
             period: [],
             report: null,
             situation: null,
-            quantidadeVias: 1,
+            idPedidos: [],
+            quantidadeVias: 2,
         };
     }
 
