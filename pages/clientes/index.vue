@@ -7,7 +7,7 @@
                 @voltar="voltarListagemMateriais($event)"
             />
         </v-col>
-        <v-col cols="12" class="pb-12 text-center" v-show="!id && !showForm">
+        <v-col cols="12" class="pb-12 text-center pt-4" v-show="!id && !showForm">
             <v-btn
                 v-if="!showForm && !loading"
                 variant="flat"
