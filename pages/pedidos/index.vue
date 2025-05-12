@@ -54,6 +54,7 @@
 </template>
 <script setup>
     const axios = inject("axios");
+    const loading = inject("loading");
     const formattePrice = inject("formattePrice");
     const formatteDateDB = inject("formatteDateDB");
     const selectedsPrint = ref([]);
@@ -134,7 +135,6 @@
     const setDate = (ev) => {
         const date = new Date(ev);
         selectedDate.value = date;
-        selectedsPrint.value = [];
     }
     
     const getDateAtualBrasilia = (data = new Date()) => {
@@ -151,6 +151,8 @@
 
     watch(() => selectedDate.value, (nv) => {
         if(nv) {
+            selectedsPrint.value = [];
+            pedidos.value = [];
             textDate.value = getDateAtualBrasilia(nv); 
             getPedidos();
         }
