@@ -18,6 +18,11 @@
                 </v-col>
             </v-row>
         </v-col>
+        <v-col cols="12" class="text-center z-1">
+            <v-btn variant="flat" class="rounded-xl" color="success" @click="showFormFunc()">
+                CADASTRAR PEDIDO
+            </v-btn>
+        </v-col>
         <v-col cols="12" md="7" class="text-center" v-if="pedidos.length > 0">
             <DataTable 
                 title="Listagem de Pedidos"
@@ -32,11 +37,6 @@
             <h1 class="text-center text-secondary">
                 Não existem pedidos <br> para a data selecionada
             </h1>
-        </v-col>
-        <v-col cols="12" class="text-center z-1">
-            <v-btn variant="flat" class="rounded-xl" color="success" @click="showFormFunc()">
-                CADASTRAR PEDIDO
-            </v-btn>
         </v-col>
     </v-row>
 </template>
