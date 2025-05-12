@@ -63,8 +63,9 @@
 
     const nomesColunas = ref([
         { title: ' ', align: 'center', key: 'checkbox', width: '10px' },
-        { title: 'Cliente', align: 'center', key: 'nomeCliente' },
+        { title: 'Cliente', align: 'center', key: 'nomeCliente', width: '30px' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
+        { title: 'Hora pedido', align: 'center', key: 'dataPedido' },
         { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
         { title: 'Preço par', align: 'center', key: 'modelo.preco' },
         { title: 'Total pares', align: 'center', key: 'totalPares' },

@@ -43,6 +43,9 @@
                 <template v-slot:[`item.totalDinheiro`]="{ item }">
                     R$ {{ formattePrice(item.totalDinheiro) }}
                 </template>
+                <template v-slot:[`item.dataPedido`]="{ item }">
+                    {{ getHours(item.dataPedido) }}
+                </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
                     <v-btn variant="text" @click="emitId(item)">
@@ -89,6 +92,10 @@
         }
     };
 
+    const getHours = (date) => {
+        console.log(date)
+        return date.toString().split('T')[1]
+    }
 
     const redirect = (item) => {
         router.push(`/pedido/${item.id}`)
