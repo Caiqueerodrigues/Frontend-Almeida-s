@@ -40,7 +40,7 @@
                 IMPRESSÃO FICHAS
             </v-btn>
         </v-col>
-        <v-col cols="12" class="text-center " v-if="pedidos.length > 0">
+        <v-col cols="12" class="text-center pb-12" v-if="pedidos.length > 0">
             <DataTable 
                 title="Listagem de Pedidos"
                 :items="pedidos"
