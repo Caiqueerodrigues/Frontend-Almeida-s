@@ -134,6 +134,7 @@
     const setDate = (ev) => {
         const date = new Date(ev);
         selectedDate.value = date;
+        selectedsPrint.value = [];
     }
     
     const getDateAtualBrasilia = (data = new Date()) => {
