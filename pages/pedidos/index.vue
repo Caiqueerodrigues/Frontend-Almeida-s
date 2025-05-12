@@ -70,6 +70,7 @@
         { title: 'Preço par', align: 'center', key: 'modelo.preco' },
         { title: 'Total pares', align: 'center', key: 'totalPares' },
         { title: 'Obs.', align: 'center', key: 'obs' },
+        { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
     const textDate = ref("");

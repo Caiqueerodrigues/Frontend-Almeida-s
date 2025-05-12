@@ -93,8 +93,7 @@
     };
 
     const getHours = (date) => {
-        console.log(date)
-        return date.toString().split('T')[1]
+        return date.toString().split('T')[1];
     }
 
     const redirect = (item) => {

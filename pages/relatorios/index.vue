@@ -68,6 +68,7 @@
         { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
         { title: 'Total de pares', align: 'center', key: 'totalPares' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
+        { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
         { title: 'Observação', align: 'center', key: 'obs' },
     ]);
     const dataChart = ref({ labels: [], data: [] });
