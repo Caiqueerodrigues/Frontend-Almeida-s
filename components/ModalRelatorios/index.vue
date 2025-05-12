@@ -191,7 +191,7 @@
             period: props.date,
             report: null,
             situation: null,
-            quantidadeVias: 1
+            quantidadeVias: 2
         }
     );
 
@@ -279,6 +279,7 @@
             checkMobile();
         } else {
             pdf.value = props.pdf;
+            filters.value.report = "CLIENTE";
         }
         window.addEventListener('resize', checkMobile);
     });
