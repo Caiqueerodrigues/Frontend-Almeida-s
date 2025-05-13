@@ -46,6 +46,9 @@
                 <template v-slot:[`item.dataPedido`]="{ item }">
                     {{ getHours(item.dataPedido) }}
                 </template>
+                <template v-slot:[`item.modelo.preco`]="{ item }">
+                    R$ {{ formattePrice(item.modelo.preco) }}
+                </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
                     <v-btn variant="text" @click="emitId(item)">
