@@ -100,6 +100,8 @@
                     );
                 });
                 total.value = Number(pedidos.value.reduce((total, item) => total += item.totalDinheiro, 0)).toFixed(3);
+                total.value = total.value[total.value.length - 1] === '0' ? 
+                    Number(total.value).toFixed(2) : Number(total.value).toFixed(3) ;
             }
         }).catch(e => console.error(e));
     }
