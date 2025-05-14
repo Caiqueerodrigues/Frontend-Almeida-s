@@ -32,7 +32,7 @@
             </v-col>
             <v-col cols="12" v-if="!loading && pedido.modelo">
                 <v-row class="justify-center" v-if="dateSelected">
-                    <v-col col="12">
+                    <v-col col="12" md="4">
                         <DatePicker 
                             :range="false"
                             title="DATA DE INÍCIO"
@@ -41,7 +41,7 @@
                             @dateEmit="pedido.dataPedido = $event"
                         />
                     </v-col>
-                    <v-col cols="12" v-if="dateSelected">
+                    <v-col cols="12" md="4" v-if="dateSelected">
                         <DatePicker 
                             :range="false"
                             title="CONCLUSÃO"
@@ -51,7 +51,7 @@
                             @dateEmit="pedido.dataFinalizado = $event"
                         />
                     </v-col>
-                    <v-col cols="12">
+                    <v-col cols="12" md="4">
                         <DatePicker 
                             :range="false"
                             title="DATA DO PAGAMENTO"
@@ -65,7 +65,7 @@
             </v-col>
             <v-col cols="12">
                 <v-row class="justify-center" v-if="!loading && pedido.modelo">
-                    <v-col cols="12">
+                    <v-col cols="12" md="6">
                         <v-text-field
                             rounded="xl"
                             label="Total de pares"
@@ -76,7 +76,7 @@
                             @input="formateddPrice($event), calculateTotal()"
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="12">
+                    <v-col cols="12" md="6">
                         <v-text-field
                             rounded="xl"
                             label="Total do pedido"
@@ -125,7 +125,7 @@
                     @add="addNewItemGrade($event)"
                 />
             </v-col>
-            <v-col cols="12" v-if="!loading && pedido.modelo">
+            <v-col cols="12" md="6" v-if="!loading && pedido.modelo">
                 <v-row class="ma-0 pa-0 justify-center">
                     <v-col cols="12" class="ma-0 pa-0">
                         <AutoCompleteMultiple 
@@ -142,7 +142,7 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="12" v-if="!loading && pedido.tipoRecebido.length > 0" >
+            <v-col cols="12" md="6" v-if="!loading && pedido.tipoRecebido.length > 0" >
                 <AutoCompleteMultiple 
                     v-if="materiais.length > 0"
                     :label="'Cores dos materiais'"
@@ -176,7 +176,7 @@
                     maxlength="255"
                 ></v-textarea>
             </v-col>
-            <v-col cols="12" v-show="pedido.modelo">
+            <v-col cols="12" md="4" v-show="pedido.modelo">
                 <v-text-field
                     rounded="xl"
                     label="Quem cortou"
@@ -184,7 +184,7 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" v-show="pedido.modelo">
+            <v-col cols="12" md="4" v-show="pedido.modelo">
                 <v-text-field
                     rounded="xl"
                     label="Quem retirou/Assinou"
@@ -192,7 +192,7 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" class="mt-n6" v-if="pedido.modelo">
+            <v-col cols="12" md="4" class="mt-n4" v-if="pedido.modelo">
                 <DatePicker 
                     :range="false"
                     title="DATA DE RETIRADA"
@@ -284,6 +284,7 @@
         { title: 'Nome', align: 'center', key: 'tipo' },
         { title: 'Preço', align: 'center', key: 'preco' },
         { title: 'Peças par', align: 'center', key: 'qtdPecasPar' },
+        { title: 'Facas par', align: 'center', key: 'qtdFaca' },
         { title: 'Observação', align: 'center', key: 'obs' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);

@@ -1,12 +1,12 @@
 <template>
     <v-form ref="form" class="h-100">
-        <v-row class="align-center justify-center h-100 w-100 font-weight-bold">
+        <v-row class="w-75 mx-auto align-center justify-center h-100 w-75font-weight-bold">
             <v-col cols="12" class="text-center">
                 <span class="text-h4 text-secondary font-weight-bold">
                     {{ modelo.id ? 'Editar o' : 'Cadastrar um novo' }} modelo
                 </span>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12"  class="pl-7">
                 <v-text-field
                     rounded="xl"
                     label="Tipo do calçado"
@@ -16,7 +16,7 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
                     label="Preço do calçado"
@@ -28,7 +28,7 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
                     label="Referência/Ordem do calçado"
@@ -37,7 +37,7 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
                     label="Qtd de facas"
@@ -48,7 +48,7 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
                     label="Quantidade de peças ao par"
@@ -59,7 +59,7 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
                     label="Rendimento por M²"
@@ -68,7 +68,7 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
                     label="Cronometragem por Hr"
@@ -77,7 +77,7 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="7" class="pl-7">
+            <v-col cols="12" class="pl-7">
                 <v-textarea
                     v-model="modelo.obs"
                     rounded="xl"
