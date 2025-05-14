@@ -43,6 +43,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         return response.data.response;
     }, error => {
         loading.value = false;
+
+        if (error.code === 'ECONNABORTED') showToastfy("A requisição demorou demais. Tente novamente.", "error");
+
         if(error?.response?.data?.msgErro) showToastfy(error?.response?.data?.msgErro, "error");
         
         if(error?.response?.status === 403) {
