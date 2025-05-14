@@ -179,6 +179,14 @@
             <v-col cols="12" v-show="pedido.modelo">
                 <v-text-field
                     rounded="xl"
+                    label="Quem cortou"
+                    v-model="pedido.quemCortou"
+                    variant="outlined"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" v-show="pedido.modelo">
+                <v-text-field
+                    rounded="xl"
                     label="Quem retirou/Assinou"
                     v-model="pedido.quemAssinou"
                     variant="outlined"
@@ -265,6 +273,7 @@
         cor: [],
         quemAssinou: null,
         dataRetirada: null,
+        quemCortou: null
     });
     const clients = ref([]);
     const clientSelected = ref(null);
@@ -314,6 +323,7 @@
             
             if(response.dataRetirada) pedido.value.dataRetirada = new Date(response.dataRetirada);
             pedido.value.quemAssinou = response.quemAssinou;
+            pedido.value.quemCortou = response.quemCortou;
         }).catch(e => console.error(e));
     }
 
@@ -469,7 +479,8 @@
             rendimentoParesMetro: [],
             cor: [],
             tipoRecebido: [],
-            quemAssinou: null
+            quemAssinou: null,
+            quemCortou: null
         }
         
         router.back();

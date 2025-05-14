@@ -67,9 +67,11 @@
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
         { title: 'Hora pedido', align: 'center', key: 'dataPedido' },
         { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
+        { title: 'Cor(es)', align: 'center', key: 'cor' },
         { title: 'Preço par', align: 'center', key: 'modelo.preco' },
         { title: 'Total pares', align: 'center', key: 'totalPares' },
         { title: 'Obs.', align: 'center', key: 'obs' },
+        { title: 'Quem cortou', align: 'center', key: 'quemCortou' },
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
@@ -107,10 +109,10 @@
             firstFilter: "CLIENTE",
             client: 0,
             period: [],
-            report: "FICHA_DE_CORTE",
+            report: "FICHAS_GERAIS",
             situation: "TODOS",
             idPedidos: selectedsPrint.value,
-            quantidadeVias: 2,
+            quantidadeVias: 1,
         }
         await axios.post('report/generate', dados).then(response => {
             const base64 = response;

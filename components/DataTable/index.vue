@@ -49,6 +49,9 @@
                 <template v-slot:[`item.modelo.preco`]="{ item }">
                     R$ {{ formattePrice(item.modelo.preco) }}
                 </template>
+                <template v-slot:[`item.cor`]="{ item }">
+                    {{ getDadosJoin(item.cor) }}
+                </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
                     <v-btn variant="text" @click="emitId(item)">
@@ -66,6 +69,8 @@
     </v-row>
 </template>
 <script setup>
+    import { getDadosJoin } from '~/services/helpers';
+
     const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect' ]);
     const emit = defineEmits([ 'verId', 'selecteds' ]);
     const formattePrice = inject('formattePrice');

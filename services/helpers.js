@@ -28,3 +28,9 @@ export function formatteDateBrasilia (date, onlyDate) {
         `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year}` :
         `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year} ${hour}`;
 }
+
+export function getDadosJoin (item) {
+    if(item.length > 1) return item.join(", ");
+    
+    return item[0];
+}
