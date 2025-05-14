@@ -73,6 +73,7 @@
         { title: 'Obs.', align: 'center', key: 'obs' },
         { title: 'Quem cortou', align: 'center', key: 'quemCortou' },
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
+        { title: 'Pago?', align: 'center', key: 'jaFoiPago' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
     const textDate = ref("");
