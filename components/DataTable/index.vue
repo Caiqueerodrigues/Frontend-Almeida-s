@@ -52,6 +52,14 @@
                 <template v-slot:[`item.cor`]="{ item }">
                     {{ getDadosJoin(item.cor) }}
                 </template>
+                <template v-slot:[`item.jaFoiPago`]="{ item }">
+                    <v-icon v-if="item.jaFoiPago === 'Sim'" size="40" class="text-success">
+                        mdi-check
+                    </v-icon>
+                    <v-icon v-if="item.jaFoiPago === 'Não'" size="40" class="text-error">
+                        mdi-close
+                    </v-icon>
+                </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
                     <v-btn variant="text" @click="emitId(item)">

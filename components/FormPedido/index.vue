@@ -102,28 +102,31 @@
                     GRADE DO PEDIDO
                 </h2>
             </v-col>
-            <v-col 
-                v-for="(item, index) in pedido.grade" 
-                :key="index"
-                class="d-flex justify-center"
-            >
-                <CardGradePedido 
-                    :item="item"
-                    :index="index"
-                    @salvar="setNewValor($event)"
-                    @add="addNewItemGrade($event)"
-                    @remove="removeItemGrade($event)"
-                />
-            </v-col>
-            <v-col 
-                col="12" 
-                class="d-flex justify-center"
-                v-if="!loading && pedido.totalPares > 0"
-            >
-                <CardGradePedido 
-                    :plus="true"
-                    @add="addNewItemGrade($event)"
-                />
+            <v-col cols="12">
+                <v-row>
+                    <v-col 
+                        v-for="(item, index) in pedido.grade" 
+                        :key="index"
+                        class="d-flex justify-center"
+                    >
+                        <CardGradePedido 
+                            :item="item"
+                            :index="index"
+                            @salvar="setNewValor($event)"
+                            @add="addNewItemGrade($event)"
+                            @remove="removeItemGrade($event)"
+                        />
+                    </v-col>
+                    <v-col 
+                        class="d-flex justify-center"
+                        v-if="!loading && pedido.totalPares > 0"
+                    >
+                        <CardGradePedido 
+                            :plus="true"
+                            @add="addNewItemGrade($event)"
+                        />
+                    </v-col>
+                </v-row>
             </v-col>
             <v-col cols="12" md="6" v-if="!loading && pedido.modelo">
                 <v-row class="ma-0 pa-0 justify-center">
@@ -212,8 +215,8 @@
                     VOLTAR
                 </v-btn>
                 <v-btn
-                    variant="outlined"
-                    color="success"
+                    variant="flat"
+                    color="surface"
                     rounded="xl"
                     class="mr-4"
                     @click="showModalReport = true"
