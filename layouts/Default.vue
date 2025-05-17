@@ -23,7 +23,7 @@
                 class="bg-black"
                 temporary
             >
-                <p class="font-weight-bold ml-2 text-center text-secondary my-4">Bem vindo {{ tokenUser() }}</p>
+                <p class="font-weight-bold ml-2 text-center text-secondary my-4">Bem vindo(a) {{ tokenUser() }}</p>
             <v-list>
                 <v-list-item 
                     v-for="item in items" 

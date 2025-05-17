@@ -128,7 +128,7 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="12" md="6" v-if="!loading && pedido.modelo">
+            <v-col cols="12" v-if="!loading && pedido.modelo">
                 <v-row class="ma-0 pa-0 justify-center">
                     <v-col cols="12" class="ma-0 pa-0">
                         <AutoCompleteMultiple 
@@ -145,7 +145,7 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="12" md="6" v-if="!loading && pedido.tipoRecebido.length > 0" >
+            <v-col cols="12" v-if="!loading && pedido.tipoRecebido.length > 0" >
                 <AutoCompleteMultiple 
                     v-if="materiais.length > 0"
                     :label="'Cores dos materiais'"

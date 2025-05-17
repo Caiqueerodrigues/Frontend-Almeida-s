@@ -1,6 +1,7 @@
 <template>
     <v-autocomplete
         v-model="selecteds"
+        v-model:search="search"
         :disabled="props.disabled"
         :items="items"
         color="blue-grey-lighten-2"
@@ -16,6 +17,7 @@
         :no-data-text="msgNoData"
         @keydown.enter="setNewValue"
         @change="setNewValue"
+        @update:modelValue="onUpdateModel"
     >
         <template v-slot:chip="{ props, item }">
             <v-chip
@@ -36,6 +38,7 @@
         props.items.length && Array.isArray(props.selecteds) ? props.selecteds.map(id => props.items.find(item => item.id === id)) : props.selecteds
     );
     const items = ref(props.items);
+    const search = ref('');
 
     const setNewValue = (ev) => {
         if(props.outsideList && selecteds.value.length < props.maxLength) {
@@ -43,12 +46,22 @@
             if(props.maxLength >= 100) emitEvent();
         }
         
-        ev.target.value = '';
-        ev.target.dispatchEvent(new Event('input'));
+        setValue(ev);
 
         setMsg();
     }
+
+    const setValue = (ev) => {
+        ev.target.value = '';
+        ev.target.dispatchEvent(new Event('input'));
+    }
     
+    const onUpdateModel = () => {
+        search.value = '';
+        setMsg();
+        emitEvent();
+    };
+
     const emitEvent = () => {
         emit('salvar', selecteds.value)
     }

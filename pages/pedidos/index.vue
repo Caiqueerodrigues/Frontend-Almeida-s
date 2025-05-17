@@ -3,10 +3,10 @@
         <v-col cols="12" class="text-center">
             <h2 class="text-center text-secondary">
                 LISTAGEM DE PEDIDOS <br>
-                {{ textDate }}
+                {{ devidos ? ' DEVIDOS' : textDate }}
             </h2>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" v-if="!devidos">
             <v-row class="justify-center w-100">
                 <v-col cols="12" class="text-center" v-if="pedidos.length > 0">
                     <span class="text-secondary text-h6 font-weight-bold">TOTAL FATURADO R$ {{ formattePrice(totalFaturado) }}</span>
@@ -23,11 +23,17 @@
         </v-col>
         <v-col cols="12" v-if="pedidos.length === 0">
             <h1 class="text-center text-secondary">
-                Não existem pedidos <br> para a data selecionada
+                Não existem pedidos <br> {{ devidos ? '' : 'para a data selecionada'  }}
             </h1>
         </v-col>
         <v-col cols="12" class="text-center z-1">
-            <v-btn variant="flat" class="rounded-xl" color="success" @click="showFormFunc()">
+            <v-btn 
+                variant="flat" 
+                class="rounded-xl" 
+                color="success" 
+                @click="showFormFunc()"
+                v-if="!devidos"
+            >
                 CADASTRAR PEDIDO
             </v-btn>
             <v-btn 
@@ -36,11 +42,30 @@
                 color="success" 
                 @click="impressao()" 
                 :disabled="selectedsPrint.length === 0"
+                v-if="!devidos"
             >
                 IMPRESSÃO FICHAS
             </v-btn>
+            <v-btn 
+                variant="flat"
+                class="rounded-xl ml-4" 
+                :color="devidos ? 'success' : 'warning'" 
+                @click="devidos ? getPedidos() : getPendentes()"
+            >
+                {{ devidos ? 'BUSCAR PEDIDOS' : 'BUSCAR PENDENTE(S)' }}
+            </v-btn>
+            <v-btn 
+                variant="flat"
+                class="rounded-xl ml-4" 
+                color="warning" 
+                :disabled="selectedsPrint.length === 0"
+                @click="marcarPagos()"
+                v-if="devidos"
+            >
+                MARCAR COMO PAGO(S)
+            </v-btn>
         </v-col>
-        <v-col cols="12" class="text-center pb-12" v-if="pedidos.length > 0">
+        <v-col cols="12" class="text-center pb-12" v-if="pedidos.length > 0 && showTable">
             <DataTable 
                 title="Listagem de Pedidos"
                 :items="pedidos"
@@ -80,8 +105,12 @@
     const pedidos = ref([]);
     const totalFaturado = ref(0);
     const selectedDate = ref(new Date());
+    const devidos = ref(false);
+    const showTable = ref(true);
 
     const getPedidos = async () => {
+        devidos.value = false;
+        selectedsPrint.value = [];
         let date = new Date(selectedDate.value);
         const dateFormatted = formatteDateDB(date);
         const dados = { date: dateFormatted };
@@ -98,7 +127,40 @@
                 totalFaturado.value = 0;
                 pedidos.value = [];
             }
+            resetCheckeds();
         }).catch(err => console.error(err));
+    }
+
+    const marcarPagos = async () => {
+        devidos.value = false;
+        
+        const dados = { 
+            ids: selectedsPrint.value,
+            date: formatteDateDB(new Date())
+        }
+
+        await axios.put('/orders/updatePayment', dados).then(response => {
+            getPedidos();
+            resetCheckeds();
+        }).catch(err => console.error(err));
+    }
+
+    const getPendentes = async () => {
+        devidos.value = true;
+        
+        await axios.get('/orders/due').then(response => {
+            selectedsPrint.value = [];
+            if(response.length > 0) pedidos.value = response;
+            else pedidos.value = [];
+            resetCheckeds();
+        }).catch(err => console.error(err));
+    }
+
+    const resetCheckeds = () => {
+        showTable.value = false;
+        setTimeout(() => {
+            showTable.value = true
+        }, 500);
     }
 
     const showFormFunc = (ev = 0) => {
@@ -134,6 +196,7 @@
                     printWindow.print();
                 };
             }
+            resetCheckeds();
         }).catch(e => console.error(e));
     }
 
