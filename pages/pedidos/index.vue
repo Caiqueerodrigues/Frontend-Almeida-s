@@ -150,8 +150,12 @@
         
         await axios.get('/orders/due').then(response => {
             selectedsPrint.value = [];
-            if(response.length > 0) pedidos.value = response;
-            else pedidos.value = [];
+            if(response.length > 0) {
+                response.forEach(item => {
+                    item.nomeCliente = item.client.nome;
+                });
+                pedidos.value = response;
+            } else pedidos.value = [];
             resetCheckeds();
         }).catch(err => console.error(err));
     }
