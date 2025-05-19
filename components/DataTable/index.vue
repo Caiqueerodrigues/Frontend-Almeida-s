@@ -49,6 +49,9 @@
                 <template v-slot:[`item.modelo.preco`]="{ item }">
                     R$ {{ formattePrice(item.modelo.preco) }}
                 </template>
+                <template v-slot:[`item.precoPar`]="{ item }">
+                    R$ {{ formattePrice(item.precoPar) }}
+                </template>
                 <template v-slot:[`item.cor`]="{ item }">
                     {{ getDadosJoin(item.cor) }}
                 </template>

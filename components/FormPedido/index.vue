@@ -164,6 +164,10 @@
                     :label="'Rendimento por pares'"
                     :items="[]"
                     :selecteds="pedido.rendimentoParesMetro"
+                    :outsideList="true"
+                    :type="'text'"
+                    :maxLength="pedido.tipoRecebido.length"
+                    @salvar="pedido.rendimentoParesMetro = $event"
                 />
             </v-col>
             <v-col cols="12" v-show="pedido.modelo">

@@ -6,12 +6,20 @@
                 {{ devidos ? ' DEVIDOS' : textDate }}
             </h2>
         </v-col>
-        <v-col cols="12" v-if="!devidos">
+        <v-col cols="12">
             <v-row class="justify-center w-100">
                 <v-col cols="12" class="text-center" v-if="pedidos.length > 0">
-                    <span class="text-secondary text-h6 font-weight-bold">TOTAL FATURADO R$ {{ formattePrice(totalFaturado) }}</span>
+                    <span v-if="!devidos" class="text-secondary text-h6 font-weight-bold">
+                        TOTAL FATURADO R$ {{ formattePrice(totalFaturado) }}
+                    </span>
+                    <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
+                        TOTAL SELECIONADO PARA BAIXA R$ {{ formattePrice(totalDevido) }}
+                    </span><br>
+                    <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
+                        {{ pedidos.length }} PEDIDOS DEVIDOS 
+                    </span>
                 </v-col>
-                <v-col cols="12" md="4">
+                <v-col cols="12" md="8" v-if="!devidos">
                     <DatePicker 
                         name="dataListagemPedidos"
                         :date="selectedDate"
@@ -72,7 +80,7 @@
                 :headers="nomesColunas" 
                 :acaoVer="true"
                 @verId="showFormFunc($event)"
-                @selecteds="selectedsPrint = $event"
+                @selecteds="setSelecteds($event)"
             />
         </v-col>
     </v-row>
@@ -104,6 +112,7 @@
     const textDate = ref("");
     const pedidos = ref([]);
     const totalFaturado = ref(0);
+    const totalDevido = ref(0);
     const selectedDate = ref(new Date());
     const devidos = ref(false);
     const showTable = ref(true);
@@ -164,7 +173,7 @@
         showTable.value = false;
         setTimeout(() => {
             showTable.value = true
-        }, 500);
+        }, 100);
     }
 
     const showFormFunc = (ev = 0) => {
@@ -220,6 +229,15 @@
 
         return date.replace(/^\w/, (c) => c.toUpperCase()).replace(/\s\w/g, (c) => c.toUpperCase());
     };
+
+    const setSelecteds = (ev) => {
+        selectedsPrint.value = ev;
+        if(devidos.value) {
+            totalDevido.value = 0;
+            const pedidosDevidosSelecionados = pedidos.value.filter(item => selectedsPrint.value.includes(item.id));
+            totalDevido.value += pedidosDevidosSelecionados.reduce((acc, item) => acc + item.totalDinheiro, 0);
+        }
+    }
 
     watch(() => selectedDate.value, (nv) => {
         if(nv) {

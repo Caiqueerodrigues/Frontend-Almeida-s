@@ -67,14 +67,14 @@
             icon: 'mdi-account-tie',
         },
         {
-            title: 'Modelos',
-            route: '/modelos',
-            icon: 'mdi-shoe-heel',
-        },
-        {
             title: 'Materiais',
             route: '/materiais',
             icon: 'mdi-script',
+        },
+        {
+            title: 'Modelos',
+            route: '/modelos',
+            icon: 'mdi-shoe-heel',
         },
         {
             title: 'Pedidos',
@@ -90,6 +90,11 @@
             title: 'Tabelas',
             route: '/tabelas',
             icon: 'mdi-table-multiple',
+        },
+        {
+            title: 'Histórico',
+            route: '/historico',
+            icon: 'mdi-history',
         },
         {
             title: 'Sair',
