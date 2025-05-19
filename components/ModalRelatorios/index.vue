@@ -322,6 +322,11 @@
         if(nv === "MENSAL") filters.value.period = [];
     });
 
+    watch(() => filters.value.report, (nv) => {
+        if(nv === 'FECHAMENTO CLIENTE') filters.value.quantidadeVias = 1;
+        else filters.value.quantidadeVias = 2;
+    })
+
     onMounted(() => {
         if(!props.withOutFilter) {
             checkMobile();
