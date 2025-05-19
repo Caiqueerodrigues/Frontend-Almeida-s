@@ -7,8 +7,13 @@
 
                 <v-toolbar-title class="text-secondary ml-n2">
                     <v-row class="align-center justify-space-between">
-                        <v-col cols="1" @click.stop="!loading ? drawer = !drawer : ''">
-                            <img src="../assets/images/logo.png" alt="Logo da empresa" class="leao">
+                        <v-col cols="1">
+                            <img 
+                                src="../assets/images/logo.png" 
+                                alt="Logo da empresa" 
+                                class="leao cursor-pointer" 
+                                @click="navigateTo('/pedidos')"
+                            >
                         </v-col>
                         <v-col cols="9" class="d-flex justify-center pl-12">
                             <img src="../assets/images/logo_escrito.png" alt="Texto da logo da empresa" class="logoEscrito">
