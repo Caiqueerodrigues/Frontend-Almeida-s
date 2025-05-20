@@ -260,8 +260,8 @@
             const pdfBlob = await response.blob();
             
             const cliente = clientes.value.length > 0 ? clientes.value.find(cliente => cliente.id === filters.value.client) : [];
-            const nomeFile = cliente.length > 0 ? `${cliente.nome} - ${filters.value.report}.pdf` : 'Pedido.pdf';
-            
+            const nomeFile = cliente.nome ? `${cliente.nome} - ${filters.value.report}.pdf` : 'Pedido.pdf';
+
             // 2. Criar um arquivo para compartilhamento
             const file = new File([pdfBlob], nomeFile, { 
                 type: 'application/pdf' 
@@ -290,7 +290,7 @@
         } catch (error) {
             console.error('Erro ao compartilhar:', error);
             if (error.name !== 'AbortError') {
-                alert('Não foi possível compartilhar o arquivo. Use o botão de download.');
+                showToastify('Não foi possível compartilhar o arquivo. Use o botão de download.', 'warning');
             }
         }
     };
