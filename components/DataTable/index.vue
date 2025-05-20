@@ -112,7 +112,7 @@
     };
 
     const getHours = (date) => {
-        return date.toString().split('T')[1];
+        return `${date.toString().split('T')[0].split('-')[2]}-${date.toString().split('T')[0].split('-')[1]}-${date.toString().split('T')[0].split('-')[0]} às ${date.toString().split('T')[1]}`;
     }
 
     const redirect = (item) => {
