@@ -17,6 +17,9 @@
                     </span><br>
                     <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
                         {{ pedidos.length }} PEDIDOS DEVIDOS 
+                    </span><br>
+                    <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
+                        R$ {{ formattePrice(totalReceber) }} A RECEBER
                     </span>
                 </v-col>
                 <v-col cols="12" md="8" v-if="!devidos">
@@ -116,6 +119,7 @@
     const selectedDate = ref(new Date());
     const devidos = ref(false);
     const showTable = ref(true);
+    const totalReceber = ref(0);
 
     const getPedidos = async () => {
         devidos.value = false;
@@ -156,6 +160,7 @@
 
     const getPendentes = async () => {
         devidos.value = true;
+        totalReceber.value = 0;
         
         await axios.get('/orders/due').then(response => {
             selectedsPrint.value = [];
@@ -164,6 +169,7 @@
                     item.nomeCliente = item.client.nome;
                 });
                 pedidos.value = response;
+                totalReceber.value = response.reduce((acc , item) => acc + item.totalDinheiro, 0);
             } else pedidos.value = [];
             resetCheckeds();
         }).catch(err => console.error(err));
