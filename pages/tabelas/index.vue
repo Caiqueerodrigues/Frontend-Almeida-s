@@ -181,7 +181,7 @@
       id: generateIdRandom(6, true),
       nome: '',
       isNew: true,
-      createdAt: formatteDateBrasilia(new Date(), false),
+      createdAt: new Date(), //formatteDateBrasilia(new Date(), false),
       columns: [ 
         { title: 'Nova coluna', align: 'center', key: '1' },
         { title: 'Ações', align: 'center', key: 'actions', sortable: false, width: '50px' }
