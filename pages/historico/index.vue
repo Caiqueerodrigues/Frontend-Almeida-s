@@ -32,6 +32,7 @@
 </template>
 <script setup>
     const axios = inject('axios');
+    const formatteDateDB = inject("formatteDateDB");
     const router = useRouter();
 
     const nomesColunas = ref([
@@ -56,7 +57,11 @@
     }
 
     const getPedidos = async () => {
-        axios.post('/history-orders', { date: selectedDate.value }).then(response => {
+        let date = new Date(selectedDate.value);
+        const dateFormatted = formatteDateDB(date);
+        const dados = { date: dateFormatted };
+
+        axios.post('/history-orders', dados).then(response => {
             pedidos.value = response;
         })
     }
