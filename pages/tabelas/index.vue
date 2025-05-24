@@ -42,6 +42,7 @@
       
       <v-col cols="12" md="7" v-for="(table, tableIndex) in dados.tables" :key="table.id" class="text-center">
         <v-text-field
+          v-capitalize-first
           v-model="table.nome"
           rounded="xl"
           variant="outlined"
@@ -52,6 +53,7 @@
         
         <div class="ma-0" v-for="(column, index) in table.columns" :key="index">
           <v-text-field
+            v-capitalize-first
             v-if="column.key !== 'actions'"
             v-model="column.title"
             rounded="xl"
@@ -105,6 +107,7 @@
           >
             <template v-for="col in table.columns" #[`item.${col.key}`]="{ item, index }" :key="col.key">
               <v-text-field
+                v-capitalize-first
                 v-if="col.key !== 'actions'"
                 v-model="table.rows[index][col.key]"
                 variant="outlined"

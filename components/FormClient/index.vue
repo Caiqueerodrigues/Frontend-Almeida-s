@@ -8,6 +8,7 @@
             </v-col>
             <v-col cols="12" md="7" class="pl-7">
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     label="Nome do cliente"
                     v-model="cliente.nome"
@@ -18,6 +19,7 @@
             </v-col>
             <v-col cols="12" md="7" class="pl-7">
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     label="Razão social"
                     v-model="cliente.razaoSocial"
@@ -91,6 +93,7 @@
                     counter
                     cleareble
                     maxlength="255"
+                    v-capitalize-first
                 ></v-textarea>
             </v-col>
             <v-col cols="12" md="7" class="pl-7 text-center">

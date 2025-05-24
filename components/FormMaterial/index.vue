@@ -8,6 +8,7 @@
             </v-col>
             <v-col cols="12" md="7" class="pl-7">
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     label="Nome do material"
                     v-model="material.nome"

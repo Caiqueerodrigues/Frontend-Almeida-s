@@ -8,6 +8,7 @@
         </v-col>
         <v-col cols="12" md="6" v-if="!idMaterial && !showMaterialForm">
             <v-text-field
+                v-capitalize-first
                 v-model="search"
                 rounded="xl"
                 class="mt-12"

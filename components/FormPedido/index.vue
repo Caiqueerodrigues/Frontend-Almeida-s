@@ -8,6 +8,7 @@
             </v-col>
             <v-col cols="12" class="text-secondary">
                 <v-autocomplete
+                    v-capitalize-first
                     v-model="clientSelected"
                     clearable
                     label="Selecione o cliente"
@@ -91,6 +92,7 @@
             </v-col>
             <v-col cols="12" v-show="pedido.modelo">
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     label="Referência do calçado"
                     v-model="pedido.relatorioCliente"
@@ -132,6 +134,7 @@
                 <v-row class="ma-0 pa-0 justify-center">
                     <v-col cols="12" class="ma-0 pa-0">
                         <AutoCompleteMultiple 
+                            v-capitalize-first
                             v-if="materiais.length > 0"
                             :label="'Materiais recebidos'"
                             :items="materiais"
@@ -147,6 +150,7 @@
             </v-col>
             <v-col cols="12" v-if="!loading && pedido.tipoRecebido.length > 0" >
                 <AutoCompleteMultiple 
+                    v-capitalize-first
                     v-if="materiais.length > 0"
                     :label="'Cores dos materiais'"
                     :items="[]"
@@ -160,6 +164,7 @@
             </v-col>
             <v-col cols="12" v-if="!loading && pedido.tipoRecebido.length > 0">
                 <AutoCompleteMultiple 
+                    v-capitalize-first
                     v-if="pedido.tipoRecebido.length > 0"
                     :label="'Rendimento por pares'"
                     :items="[]"
@@ -172,6 +177,7 @@
             </v-col>
             <v-col cols="12" v-show="pedido.modelo">
                 <v-textarea
+                    v-capitalize-first
                     v-model="pedido.obs"
                     rounded="xl"
                     rows="4"
@@ -184,13 +190,8 @@
                 ></v-textarea>
             </v-col>
             <v-col cols="12" md="4" v-if="!loading && pedido.modelo">
-                <!--<v-text-field
-                    rounded="xl"
-                    label="Quem cortou"
-                    v-model="pedido.quemCortou"
-                    variant="outlined"
-                ></v-text-field>-->
                 <AutoCompleteMultiple 
+                    v-capitalize-first
                     :label="'Quem cortou'"
                     :items="cortadores"
                     :selecteds="pedido.quemCortou"
@@ -202,6 +203,7 @@
             </v-col>
             <v-col cols="12" md="4" v-show="pedido.modelo">
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     label="Quem retirou/Assinou"
                     v-model="pedido.quemAssinou"

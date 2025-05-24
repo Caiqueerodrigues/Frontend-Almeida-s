@@ -67,6 +67,7 @@ export default defineNuxtConfig({
     '~/plugins/formattePreco.js',
     '~/plugins/validateForm.js',
     '~/plugins/formatteDateDB.js',
+    '~/plugins/capitalizeFirstLetter.js',
   ],
 
   vue: {  

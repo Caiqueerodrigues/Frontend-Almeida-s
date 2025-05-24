@@ -8,6 +8,7 @@
             </v-col>
             <v-col cols="12"  class="pl-7">
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     label="Tipo do calçado"
                     v-model="modelo.tipo"
@@ -30,6 +31,7 @@
             </v-col>
             <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     label="Referência/Ordem do calçado"
                     v-model="modelo.refOrdem"
@@ -79,6 +81,7 @@
             </v-col>
             <v-col cols="12" class="pl-7">
                 <v-textarea
+                    v-capitalize-first
                     v-model="modelo.obs"
                     rounded="xl"
                     rows="4"
@@ -114,11 +117,12 @@
                     </v-icon>
                 </v-img>
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     v-if="foto.routeFile"
                     label="Nome da peça"
                     v-model="foto.nomePeca"
-                    class="ma-2"
+                    class="ma-4"
                     :rules="[ (value) => !!value || 'O nome da peça é obrigatório!', nomeUnico(foto, index) ]"
                     variant="outlined"
                     @input="alterouFotos = true"
@@ -129,17 +133,18 @@
                     label="Qtd ao par"
                     v-model="foto.qtdPar"
                     type="number"
-                    class="ma-2"
+                    class="ma-4"
                     :rules="[(value) => !!value || 'A QTD ao par é obrigatório!']"
                     variant="outlined"
                     @input="alterouFotos = true"
                 ></v-text-field>
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     v-if="foto.routeFile"
                     label="Propriedade da faca"
                     v-model="foto.propriedadeFaca"
-                    class="ma-2"
+                    class="ma-4"
                     :rules="[(value) => !!value || 'A propriedade é obrigatório!']"
                     variant="outlined"
                     @input="alterouFotos = true"
@@ -150,17 +155,18 @@
                     label="Preço por faca"
                     v-model="foto.precoFaca"
                     type="tel"
-                    class="ma-2"
+                    class="ma-4"
                     :rules="[(value) => !!value || 'O preço por faca é obrigatório!']"
                     @input="formateddPrice($event, 'foto', index), alterouFotos = true"
                     variant="outlined"
                 ></v-text-field>
                 <v-text-field
+                    v-capitalize-first
                     rounded="xl"
                     v-if="foto.routeFile"
                     label="Observação"
                     v-model="foto.obs"
-                    class="ma-2"
+                    class="ma-4"
                     variant="outlined"
                     @input="alterouFotos = true"
                 ></v-text-field>
