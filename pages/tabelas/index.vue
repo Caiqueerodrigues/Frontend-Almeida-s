@@ -1,7 +1,10 @@
 <template>
   <v-form ref="form">
     <v-row class="justify-center">
-      <v-col cols="12" md="7" class="mt-4">
+      <v-col cols="12">
+        <h1 class="text-center text-secondary pt-3">TABELAS</h1>
+      </v-col>
+      <v-col cols="12" md="11" class="mt-4">
         <v-select
             chips
             label="Selecione o cliente"
@@ -40,7 +43,7 @@
         </h2>
       </v-col>
       
-      <v-col cols="12" md="7" v-for="(table, tableIndex) in dados.tables" :key="table.id" class="text-center">
+      <v-col cols="12" md="11" v-for="(table, tableIndex) in dados.tables" :key="table.id" class="text-center">
         <v-text-field
           v-capitalize-first
           v-model="table.nome"
