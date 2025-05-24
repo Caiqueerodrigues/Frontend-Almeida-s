@@ -184,12 +184,21 @@
                 ></v-textarea>
             </v-col>
             <v-col cols="12" md="4" v-show="pedido.modelo">
-                <v-text-field
+                <!--<v-text-field
                     rounded="xl"
                     label="Quem cortou"
                     v-model="pedido.quemCortou"
                     variant="outlined"
-                ></v-text-field>
+                ></v-text-field>-->
+                <v-autocomplete
+                    v-model="pedido.quemCortou"
+                    clearable
+                    label="Quem cortou"
+                    :items="['Paulo Sérgio', 'Márcio']"
+                    name="funcionario"
+                    variant="outlined"
+                    rounded="xl"
+                ></v-autocomplete>
             </v-col>
             <v-col cols="12" md="4" v-show="pedido.modelo">
                 <v-text-field
