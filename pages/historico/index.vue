@@ -19,7 +19,7 @@
                 NÃO EXISTEM ALTERAÇÕES PARA A DATA SELECIONADA
             </h2>
         </v-col>
-        <v-col cols="12" v-if="pedidos.length > 0">
+        <v-col cols="12" class="mb-6" v-if="pedidos.length > 0">
             <DataTable 
                 title="Listagem de Alterações"
                 :items="pedidos"

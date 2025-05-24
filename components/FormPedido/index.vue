@@ -183,24 +183,22 @@
                     maxlength="255"
                 ></v-textarea>
             </v-col>
-            <v-col cols="12" md="4" v-show="pedido.modelo">
+            <v-col cols="12" md="4" v-if="!loading && pedido.modelo">
                 <!--<v-text-field
                     rounded="xl"
                     label="Quem cortou"
                     v-model="pedido.quemCortou"
                     variant="outlined"
                 ></v-text-field>-->
-                <v-autocomplete
-                    v-model="pedido.quemCortou"
-                    allow-new
-                    hide-no-data
-                    clearable
-                    label="Quem cortou"
-                    :items="['Paulo Sérgio', 'Márcio']"
-                    name="funcionario"
-                    variant="outlined"
-                    rounded="xl"
-                ></v-autocomplete>
+                <AutoCompleteMultiple 
+                    :label="'Quem cortou'"
+                    :items="cortadores"
+                    :selecteds="pedido.quemCortou"
+                    :outsideList="true"
+                    :type="'text'"
+                    :maxLength="1"
+                    @salvar="pedido.quemCortou = $event[0]"
+                />
             </v-col>
             <v-col cols="12" md="4" v-show="pedido.modelo">
                 <v-text-field
@@ -293,6 +291,7 @@
         dataRetirada: null,
         quemCortou: null
     });
+    const cortadores = ref(['Paulo Sérgio', 'Márcio']);
     const clients = ref([]);
     const clientSelected = ref(null);
     const clientsNames = ref([]);
@@ -452,6 +451,7 @@
         dados.cor = pedido.value.cor ? pedido.value.cor.join(",") : null;
         dados.totalDinheiro = Number(pedido.value.totalDinheiro);
         dados.totalPares = Number(pedido.value.totalPares);
+        dados.quemCortou = pedido.value.quemCortou;
         
         let gradeString = "";
         pedido.value.grade.map((item , i) => {
@@ -463,9 +463,7 @@
             dados.id = props.id;
 
             await axios.put("/orders", dados).then(response => {
-                setTimeout(() => {
-                    voltar(); 
-                }, 1000);
+                voltar(); 
             }).catch(e => console.error(e));
         } else {
             const model = modelos.value.filter(item => item.id === dados.modelo);

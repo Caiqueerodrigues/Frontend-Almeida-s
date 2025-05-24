@@ -35,7 +35,7 @@
 
     const msgNoData = ref('Sem dados');
     const selecteds = ref(
-        props.items.length && Array.isArray(props.selecteds) ? props.selecteds.map(id => props.items.find(item => item.id === id)) : props.selecteds
+        props.items.length && Array.isArray(props.selecteds) ? props.selecteds.map(id => props.items.find(item => item.id === id)) : props.selecteds ? props.selecteds : []
     );
     const items = ref(props.items);
     const search = ref('');
@@ -43,7 +43,8 @@
     const setNewValue = (ev) => {
         if(props.outsideList && selecteds.value.length < props.maxLength) {
             selecteds.value.push(ev.target.value);
-            if(props.maxLength >= 100) emitEvent();
+            // if(props.maxLength >= 100) emitEvent();
+            emitEvent();
         }
         
         setValue(ev);
@@ -57,6 +58,10 @@
     }
     
     const onUpdateModel = () => {
+        if(selecteds.value.length > props.maxLength) {
+            selecteds.value.pop();
+            return;
+        }
         search.value = '';
         setMsg();
         emitEvent();
@@ -68,7 +73,7 @@
 
     const setMsg = () => {
         if((selecteds.value && props.outsideList) && selecteds.value.length < props.maxLength) msgNoData.value = "Inserir novo valor";
-        else if( selecteds.value &&  selecteds.value.length === props.maxLength) msgNoData.value = "Quantidade de materiais atingida";
+        else if( selecteds.value && (selecteds.value.length === props.maxLength || typeof selecteds.value === 'string' && props.maxLength === 1)) msgNoData.value = "Quantidade máxima atingida";
         else msgNoData.value = 'Sem dados';
     };
 

@@ -1,6 +1,6 @@
 <template>
-    <v-row class="justify-center align-center h-100">
-        <v-col cols="10">
+    <v-row class="justify-center align-center h-100 px-3">
+        <v-col cols="12">
             <h2 class="text-secondary text-center">
                 {{ props.title }}
             </h2>
