@@ -192,6 +192,8 @@
                 ></v-text-field>-->
                 <v-autocomplete
                     v-model="pedido.quemCortou"
+                    allow-new
+                    hide-no-data
                     clearable
                     label="Quem cortou"
                     :items="['Paulo Sérgio', 'Márcio']"
