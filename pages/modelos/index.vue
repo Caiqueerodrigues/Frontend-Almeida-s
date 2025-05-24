@@ -1,7 +1,7 @@
 <template>
     <v-row class="h-100 justify-center align-center">
         <v-col cols="12" md="7" class="pt-12">
-            <h2 class="text-secondary font-weight-bold text-center pb-4">Listagem de modelos</h2>
+            <h2 class="text-secondary font-weight-bold text-center pb-4">LISTAGEM DE MODELOS</h2>
             <h3 class="text-secondary font-weight-bold text-center pb-4">Selecione o cliente</h3>
             <v-autocomplete
                 v-model="clientSelected"

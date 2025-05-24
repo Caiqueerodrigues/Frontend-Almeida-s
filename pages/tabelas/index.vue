@@ -2,7 +2,7 @@
   <v-form ref="form">
     <v-row class="justify-center">
       <v-col cols="12">
-        <h1 class="text-center text-secondary pt-3">TABELAS</h1>
+        <h2 class="text-center text-secondary pt-3">TABELAS</h2>
       </v-col>
       <v-col cols="12" md="11" class="mt-4">
         <v-select

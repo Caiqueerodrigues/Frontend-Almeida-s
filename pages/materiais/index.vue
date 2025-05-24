@@ -7,11 +7,14 @@
             />
         </v-col>
         <v-col cols="12" md="6" v-if="!idMaterial && !showMaterialForm">
+            <h2 class="text-center text-secondary pt-4">
+                MATERIAIS
+            </h2>
             <v-text-field
                 v-capitalize-first
                 v-model="search"
                 rounded="xl"
-                class="mt-12"
+                class="mt-2"
                 variant="outlined"
                 label="PESQUISAR"
                 :hide-details="true"

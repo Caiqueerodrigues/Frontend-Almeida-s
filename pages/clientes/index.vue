@@ -8,6 +8,9 @@
             />
         </v-col>
         <v-col cols="12" class="pb-12 text-center pt-4 mt-4" v-show="!id && !showForm">
+            <h2 class="text-center text-secondary py-4">
+                CLIENTES
+            </h2>
             <v-btn
                 v-if="!showForm && !loading"
                 variant="flat"

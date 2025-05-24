@@ -1,7 +1,7 @@
 <template>
     <v-row class="h-100 justify-center align-center">
         <v-col cols="12" class="text-center">
-            <h2 class="text-center text-secondary">
+            <h2 class="text-center text-secondary mt-4">
                 LISTAGEM DE ALTERAÇÕES DE PEDIDOS
             </h2>
             <h2 class="text-center text-secondary">
@@ -19,7 +19,7 @@
                 NÃO EXISTEM ALTERAÇÕES PARA A DATA SELECIONADA
             </h2>
         </v-col>
-        <v-col cols="12" class="mb-6" v-if="pedidos.length > 0">
+        <v-col cols="12" class="mb-10" v-if="pedidos.length > 0">
             <DataTable 
                 title="Listagem de Alterações"
                 :items="pedidos"

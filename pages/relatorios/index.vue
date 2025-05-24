@@ -1,6 +1,11 @@
 <template>
     <v-row class="h-100 justify-center align-center mb-4">
         <v-col cols="12" class="mt-4 text-center">
+            <h2 class="text-center text-secondary">
+                RELATÓRIOS
+            </h2>
+        </v-col>
+        <v-col cols="12" class="mt-4 text-center">
             <span CLASS="text-center text-h5 font-weight-bold text-secondary">
                 SELECIONE O DIA OU PERÍODO
             </span>
