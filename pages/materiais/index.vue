@@ -33,7 +33,7 @@
                 CADASTRAR MATERIAL
             </v-btn>
         </v-col>
-        <v-col cols="7"  class="pb-12" v-show="!idMaterial && !showMaterialForm">
+        <v-col cols="11"  class="pb-12" v-show="!idMaterial && !showMaterialForm">
             <DataTable 
                 v-show="materiais.length > 0"
                 title="Listagem de materiais cadastrados"
