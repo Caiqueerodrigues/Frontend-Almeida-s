@@ -40,7 +40,7 @@
         <v-col cols="12" class="text-center z-1">
             <v-btn 
                 variant="flat" 
-                class="rounded-xl" 
+                class="rounded-xl mt-2" 
                 color="success" 
                 @click="showFormFunc()"
                 v-if="!devidos"
@@ -49,7 +49,7 @@
             </v-btn>
             <v-btn 
                 variant="flat"
-                class="rounded-xl ml-4" 
+                class="rounded-xl ml-4 mt-2" 
                 color="success" 
                 @click="impressao()" 
                 :disabled="selectedsPrint.length === 0"
@@ -59,7 +59,7 @@
             </v-btn>
             <v-btn 
                 variant="flat"
-                class="rounded-xl ml-4" 
+                class="rounded-xl ml-4 mt-2" 
                 :color="devidos ? 'success' : 'warning'" 
                 @click="devidos ? getPedidos() : getPendentes()"
             >
@@ -67,7 +67,7 @@
             </v-btn>
             <v-btn 
                 variant="flat"
-                class="rounded-xl ml-4" 
+                class="rounded-xl ml-4 mr-2" 
                 color="warning" 
                 :disabled="selectedsPrint.length === 0"
                 @click="marcarPagos()"
