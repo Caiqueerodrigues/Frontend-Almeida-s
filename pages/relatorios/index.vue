@@ -68,6 +68,7 @@
     const pedidos = ref([]);
     const total = ref(0);
     const nomesColunas = ref([
+        { title: 'ID pedido', align: 'center', key: 'id' },
         { title: 'Nome', align: 'center', key: 'nome' },
         { title: 'Dia', align: 'center', key: 'dia' },
         { title: 'Modelo', align: 'center', key: 'modelo.tipo' },

@@ -99,6 +99,7 @@
 
     const nomesColunas = ref([
         { title: ' ', align: 'center', key: 'checkbox', width: '10px' },
+        { title: 'ID pedido', align: 'center', key: 'id', width: '30px' },
         { title: 'Cliente', align: 'center', key: 'nomeCliente', width: '30px' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
         { title: 'Hora pedido', align: 'center', key: 'dataPedido' },
