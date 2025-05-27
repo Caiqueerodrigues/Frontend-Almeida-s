@@ -52,10 +52,11 @@
 <style scoped>
     :deep(.dp__input) {
         background-color: #A60014;
-        border-radius: 20px;
+        border-radius: 30px;
         border-color: #eeff00;
         color: #eeff00;
         font-weight: bold;
+        padding-block: 15px;
     }
 
     :deep(.dp__menu) {
@@ -64,4 +65,6 @@
         font-weight: bold;
         padding-bottom: 20px;
     }
+
+
 </style>

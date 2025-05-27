@@ -22,13 +22,25 @@
                         R$ {{ formattePrice(totalReceber) }} A RECEBER
                     </span>
                 </v-col>
-                <v-col cols="12" md="8" v-if="!devidos">
+                <v-col cols="12" md="4" v-if="!devidos">
                     <DatePicker 
                         name="dataListagemPedidos"
                         :date="selectedDate"
                         :onlyDate="true"
                         @dateEmit="setDate($event)"
                     />
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-select
+                        chips
+                        class="w-75 mx-auto"
+                        label="Cliente"
+                        v-model="filterClient"
+                        :items="clientes"
+                        variant="outlined"
+                        rounded="xl"
+                        :disabled="pdf"
+                    ></v-select>
                 </v-col>
             </v-row>
         </v-col>
@@ -75,16 +87,97 @@
             >
                 MARCAR COMO PAGO(S)
             </v-btn>
+            <v-btn 
+                variant="flat"
+                class="rounded-xl ml-4" 
+                color="success" 
+                :disabled="selectedsPrint.length === 0"
+                @click="showModal = true"
+            >
+                MARCAR COMO RETIRADO(S)
+            </v-btn>
         </v-col>
         <v-col cols="12" class="text-center pb-12" v-if="pedidos.length > 0 && showTable">
             <DataTable 
                 title="Listagem de Pedidos"
-                :items="pedidos"
+                :items="pedidosFiltrados"
                 :headers="nomesColunas" 
                 :acaoVer="true"
                 @verId="showFormFunc($event)"
                 @selecteds="setSelecteds($event)"
             />
+        </v-col>
+    </v-row>
+
+    <v-row v-if="showModal">
+        <v-col cols="12">
+            <v-dialog 
+                max-width="50%" 
+                max-height="95%" 
+                v-model="showModal"
+                persistent
+            >
+                <v-card
+                    class="text-surface bg-primary text-center "
+                    prepend-icon="mdi-border-color"
+                    :title="`Marcar pedido(s) como pago(s)`"
+                >
+                    <template #append>
+                        <v-icon
+                            @click="closeModal()"
+                            size="30"
+                        >
+                            mdi-close
+                        </v-icon>
+                    </template>
+                    <v-card-text class="px-0 pb-0">
+                        <v-divider :thickness="4" color="white" />
+                        <v-form ref="formPagos">
+                            <v-row class="justify-center">
+                                <v-col cols="10" class="mt-4">
+                                    <v-text-field
+                                        rounded="xl"
+                                        label="Quem retirou"
+                                        v-model="baixaVarios.quemRetirou"
+                                        type="text"
+                                        variant="outlined"
+                                        :rules="[ (value) => !!value || 'O campo é obrigatório!']"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="6" class="px-0 pt-2">
+                                    <DatePicker 
+                                        name="dataRetirada"
+                                        :date="selectedDate"
+                                        :onlyDate="true"
+                                        @dateEmit="baixaVarios.date = $event"
+                                    />
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </v-card-text>
+                    <template v-slot:actions>
+                        <v-col cols="12">
+                            <v-btn
+                                class="bg-primary text-white font-weight-bold rounded-xl mr-4"
+                                size="large"
+                                variant="outlined"
+                                @click="closeModal()"
+                            >
+                                CANCELAR
+                            </v-btn>
+                            <v-btn
+                                class="bg-success text-primary font-weight-bold rounded-xl"
+                                size="large"
+                                variant="outlined"
+                                @click="marcarRetirados()"
+                                :disabled="!baixaVarios.quemRetirou"
+                            >
+                                SALVAR
+                            </v-btn>
+                        </v-col>
+                    </template>
+                </v-card>
+            </v-dialog>
         </v-col>
     </v-row>
 </template>
@@ -97,6 +190,7 @@
 
     const router = useRouter();
 
+    const formPagos = ref(null);
     const nomesColunas = ref([
         { title: ' ', align: 'center', key: 'checkbox', width: '10px' },
         { title: 'ID pedido', align: 'center', key: 'id', width: '30px' },
@@ -121,9 +215,13 @@
     const devidos = ref(false);
     const showTable = ref(true);
     const totalReceber = ref(0);
+    const showModal = ref(false);
+    const baixaVarios = ref({ quemRetirou: '', date: selectedDate.value, ids: [] });
+    const filterClient = ref('Todos');
 
     const getPedidos = async () => {
         devidos.value = false;
+        filterClient.value = 'Todos';
         selectedsPrint.value = [];
         let date = new Date(selectedDate.value);
         const dateFormatted = formatteDateDB(date);
@@ -159,8 +257,27 @@
         }).catch(err => console.error(err));
     }
 
+    const marcarRetirados = async () => {
+        baixaVarios.value.date = formatteDateDB(new Date(baixaVarios.value.date));
+        baixaVarios.value.ids = selectedsPrint.value;
+
+        axios.put('/orders/withdrawn', baixaVarios.value).then(response => {
+            closeModal();
+            if(devidos.value) getPendentes();
+            else getPedidos();
+            resetCheckeds();
+        }).catch(err => console.error(err));
+    } 
+
+    const closeModal = () => {
+        resetCheckeds();
+        showModal.value = false;
+        baixaVarios.value = { ids: [], date: selectedDate.value, quemRetirou: '' };
+    }
+
     const getPendentes = async () => {
         devidos.value = true;
+        filterClient.value = 'Todos';
         totalReceber.value = 0;
         
         await axios.get('/orders/due').then(response => {
@@ -176,7 +293,23 @@
         }).catch(err => console.error(err));
     }
 
+    const clientes = computed(() => {
+        const nomes = ['Todos'];
+        pedidos.value.map(item => {
+            if(!nomes.includes(item.client.nome)) nomes.push(item.client.nome)
+        })
+        return nomes;
+    });
+
+    const pedidosFiltrados = computed(() => {
+        resetCheckeds();
+        if (!filterClient.value || filterClient.value === "Todos") return pedidos.value;
+
+        return pedidos.value.filter(pedido => pedido.client?.nome === filterClient.value);
+    });
+
     const resetCheckeds = () => {
+        selectedsPrint.value = [];
         showTable.value = false;
         setTimeout(() => {
             showTable.value = true

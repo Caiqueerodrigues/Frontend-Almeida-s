@@ -293,7 +293,7 @@
         dataRetirada: null,
         quemCortou: null
     });
-    const cortadores = ref(['Paulo Sérgio', 'Márcio']);
+    const cortadores = ref(['Paulo Sérgio', 'Márcio', "Paulo/Mácio"]);
     const clients = ref([]);
     const clientSelected = ref(null);
     const clientsNames = ref([]);
