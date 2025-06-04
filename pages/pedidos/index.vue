@@ -136,6 +136,7 @@
                             <v-row class="justify-center">
                                 <v-col cols="10" class="mt-4">
                                     <v-text-field
+                                        v-capitalize-first
                                         rounded="xl"
                                         label="Quem retirou"
                                         v-model="baixaVarios.quemRetirou"
