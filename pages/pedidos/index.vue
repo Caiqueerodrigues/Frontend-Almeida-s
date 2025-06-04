@@ -149,7 +149,7 @@
                                         name="dataRetirada"
                                         :date="selectedDate"
                                         :onlyDate="true"
-                                        @dateEmit="baixaVarios.date = $event"
+                                        @dateEmit="baixaVarios.dataRetirada = $event"
                                     />
                                 </v-col>
                             </v-row>
@@ -216,7 +216,7 @@
     const showTable = ref(true);
     const totalReceber = ref(0);
     const showModal = ref(false);
-    const baixaVarios = ref({ quemRetirou: '', date: selectedDate.value, ids: [] });
+    const baixaVarios = ref({ quemRetirou: '', dataRetirada: selectedDate.value, ids: [] });
     const filterClient = ref('Todos');
 
     const getPedidos = async () => {
@@ -258,7 +258,7 @@
     }
 
     const marcarRetirados = async () => {
-        baixaVarios.value.date = formatteDateDB(new Date(baixaVarios.value.date));
+        baixaVarios.value.dataRetirada = formatteDateDB(new Date(baixaVarios.value.dataRetirada));
         baixaVarios.value.ids = selectedsPrint.value;
 
         axios.put('/orders/withdrawn', baixaVarios.value).then(response => {
