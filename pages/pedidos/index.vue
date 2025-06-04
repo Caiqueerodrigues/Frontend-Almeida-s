@@ -113,7 +113,7 @@
         <v-col cols="12">
             <v-dialog 
                 max-width="50%" 
-                max-height="95%" 
+                height="95%" 
                 v-model="showModal"
                 persistent
             >
