@@ -86,7 +86,7 @@
                                             [ 'CLIENTE', 'FICHA DE CORTE' ]"
                                         variant="outlined"
                                         rounded="xl"
-                                        :disabled="pdf"
+                                        :disabled="pdf || filters.firstFilter === 'PERÍODO'"
                                     ></v-select>
                                 </v-col>
                                 <v-col 
@@ -318,6 +318,8 @@
         if(ov !== 'CLIENTE' && ov !== 'CLIENTE E PERÍODO' && (nv === 'CLIENTE' || nv === 'CLIENTE E PERÍODO') && clientes.value.length === 0) {
             getClientes();
         }
+
+        if(nv === "PERÍODO") filters.value.report = 'COMPLETO';
         filters.value.client = null;
         if(nv === "MENSAL") filters.value.period = [];
     });

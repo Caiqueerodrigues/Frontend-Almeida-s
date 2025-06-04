@@ -92,10 +92,15 @@
             icon: 'mdi-file-pdf-box',
         },
         {
-            title: 'Tabelas',
-            route: '/tabelas',
-            icon: 'mdi-table-multiple',
+            title: 'Funcionários',
+            route: '/funcionarios',
+            icon: 'mdi-account-group',
         },
+        // {
+        //     title: 'Tabelas',
+        //     route: '/tabelas',
+        //     icon: 'mdi-table-multiple',
+        // },
         {
             title: 'Histórico',
             route: '/historico',
