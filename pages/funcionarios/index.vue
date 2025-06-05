@@ -74,7 +74,7 @@
             </v-btn>
         </v-col>
 
-        <v-col cols="11" v-for="(item, index) in filtrados" :key="index" class="py-0">
+        <v-col cols="12" v-for="(item, index) in filtrados" :key="index" class="py-0">
             <v-row class="ma-0 pa-0 align-center">
                 <v-col cols="2" class="py-0 d-flex">
                     <v-checkbox
@@ -190,7 +190,7 @@
     }
 
     const addHorario = (horarios) => {
-        if(horarios.length < 6) horarios.unshift('00:00', '00:00');
+        if(horarios.length < 6) horarios.push('00:00', '00:00');
     };
 
     const formatTime = (event, index, item) => {
