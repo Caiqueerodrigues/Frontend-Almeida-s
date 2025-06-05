@@ -1,5 +1,6 @@
 <template>
     <v-autocomplete
+        v-capitalize-first
         v-model="selecteds"
         v-model:search="search"
         :disabled="props.disabled"

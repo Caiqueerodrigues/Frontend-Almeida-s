@@ -36,13 +36,14 @@
     const router = useRouter();
 
     const nomesColunas = ref([
-        { title: 'ID pedido', align: 'center', key: 'id' },
-        { title: 'Cliente', align: 'center', key: 'nomeCliente', width: '30px' },
+        { title: 'ID pedido', align: 'center', key: 'idPedido', width: '10px' },
+        { title: 'Cliente', align: 'center', key: 'nomeCliente' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
-        { title: 'Operacao realizada', align: 'center', key: 'operacaoRealizada' },
-        { title: 'Hora pedido', align: 'center', key: 'horaModificacao' },
         { title: 'Modelo', align: 'center', key: 'modelo' },
         { title: 'Cor(es)', align: 'center', key: 'cor' },
+        { title: 'ID alteração', align: 'center', key: 'id', width: '10px' },
+        { title: 'Operacao realizada', align: 'center', key: 'operacaoRealizada' },
+        { title: 'Hora alteração', align: 'center', key: 'horaModificacao' },
         { title: 'Usuário', align: 'center', key: 'nomeUsuario' },
         { title: 'Ações', align: 'center', key: 'ver' },
     ]);

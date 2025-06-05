@@ -65,6 +65,7 @@
         }
 
         item.value.grade = result;
+        emitEvent();
     };
 
     const formatQuantity = () => {
@@ -75,6 +76,7 @@
         }
 
         item.value.qtd = Number(formattedValue);
+        emitEvent();
     };
 
     const emitEvent = () => {

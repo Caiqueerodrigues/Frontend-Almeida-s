@@ -39,7 +39,6 @@
                         :items="clientes"
                         variant="outlined"
                         rounded="xl"
-                        :disabled="pdf"
                     ></v-select>
                 </v-col>
             </v-row>
@@ -89,7 +88,7 @@
             </v-btn>
             <v-btn 
                 variant="flat"
-                class="rounded-xl ml-4" 
+                class="rounded-xl ml-4 mt-2" 
                 color="success" 
                 :disabled="selectedsPrint.length === 0"
                 @click="showModal = true"

@@ -35,17 +35,15 @@
                         :key="item.title"
                         class="pointer"
                     >
-                        <v-list-item-content>
-                            <v-list-item-title 
-                                @click="!loading && goTo(item.route)" 
-                                class="text-surface font-weight-bold text-center py-4"             
-                                :class="itemSelected === item.route || (item.route.includes('pedido') && itemSelected?.includes('pedido')) ? 'selected' : ''"
-                            >
-                                <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
-                                {{ item.title }}
-                                <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
-                            </v-list-item-title>
-                        </v-list-item-content>
+                        <v-list-item-title 
+                            @click="!loading && goTo(item.route)" 
+                            class="text-surface font-weight-bold text-center py-4"             
+                            :class="itemSelected === item.route || (item.route.includes('pedido') && itemSelected?.includes('pedido')) ? 'selected' : ''"
+                        >
+                            <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
+                            {{ item.title }}
+                            <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
+                        </v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-navigation-drawer>

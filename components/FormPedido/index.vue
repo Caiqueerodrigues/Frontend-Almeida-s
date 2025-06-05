@@ -108,7 +108,7 @@
                 <v-row>
                     <v-col 
                         v-for="(item, index) in pedido.grade" 
-                        :key="index"
+                        :key="item.id"
                         class="d-flex justify-center"
                     >
                         <CardGradePedido 
@@ -116,7 +116,7 @@
                             :index="index"
                             @salvar="setNewValor($event)"
                             @add="addNewItemGrade($event)"
-                            @remove="removeItemGrade($event)"
+                            @remove="removeItemGrade($event, index)"
                         />
                     </v-col>
                     <v-col 
@@ -338,7 +338,7 @@
             
             const arrayGrade = response.grade.split(',');
             arrayGrade.map(item => {
-                pedido.value.grade.push({ grade: item.split(":")[0] , qtd: Number(item.split(":")[1]) });
+                pedido.value.grade.push({  id: Date.now() + Math.random(), grade: item.split(":")[0] , qtd: Number(item.split(":")[1]) });
             });
             
             if(response.dataRetirada) pedido.value.dataRetirada = new Date(response.dataRetirada);
@@ -364,37 +364,38 @@
     }
 
     const validateForm = async () => {
-        const error = await validForm(form);
-
-        if(error.valid) {
-            const fieldsRequired = [
-                { name: 'Client', value: pedido.value.client },
-                { name: 'dataPedido', value: pedido.value.dataPedido },
-                { name: 'gradeForm', value: pedido.value.grade },
-                { name: 'tipoRecebido', value: pedido.value.tipoRecebido },
-            ];
+        pedido.value.grade = pedido.value.grade.filter(item => item.grade !== '' && item.qtd !== null);
+        setTimeout(async () => {
+            const error = await validForm(form);
+            if(error.valid) {
+                const fieldsRequired = [
+                    { name: 'Client', value: pedido.value.client },
+                    { name: 'dataPedido', value: pedido.value.dataPedido },
+                    { name: 'gradeForm', value: pedido.value.grade },
+                    { name: 'tipoRecebido', value: pedido.value.tipoRecebido },
+                ];
+        
+                const errors = fieldsRequired.filter(field => !field.value);
     
-            const errors = fieldsRequired.filter(field => !field.value);
-
-            if(pedido.value.cor.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.cor.length) {
-                showToastify("Quantidade divergentes de materiais e cores!", "info");
-                return false;
-            }
-
-            const totalGrade = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
-            if(Number(pedido.value.totalPares) !== totalGrade) {
-                showToastify("Quantidade divergentes de pares e grades!", "info");
-                return false;
-            }
+                if(pedido.value.cor.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.cor.length) {
+                    showToastify("Quantidade divergentes de materiais e cores!", "info");
+                    return false;
+                }
     
-            if (errors.length > 0) {
-                showToastify("Campos obrigatórios sem preenchimento!", "error");
-                return false;
+                const totalGrade = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
+                if(Number(pedido.value.totalPares) !== totalGrade) {
+                    showToastify("Quantidade divergentes de pares e grades!", "info");
+                    return false;
+                }
+                if (errors.length > 0) {
+                    showToastify("Campos obrigatórios sem preenchimento!", "error");
+                    return false;
+                }
+                
+                submitPedido();
+                return true;
             }
-            
-            submitPedido();
-            return true;
-        }
+        }, 100);
     };
 
     const formateddPrice = (key) => {
@@ -425,14 +426,10 @@
     }
     const addNewItemGrade = () => {
         if(!qtdParesMenorQueGrade()) return;
-        else if (pedido.value.grade.length > 0 && pedido.value.grade[pedido.value.grade.length - 1].qtd === null) {
-            showToastify('Preencha a o item anterior', 'info');
-            return;
-        };
-        pedido.value.grade.push({ grade: '', qtd: null });
+        pedido.value.grade.push({  id: Date.now() + Math.random(), grade: '', qtd: null });
     }
-    const removeItemGrade = (ev) =>{
-        pedido.value.grade.splice(ev.index, 1);
+    const removeItemGrade = (ev, index) =>{
+        pedido.value.grade.splice(index, 1);
     }
     const qtdParesMenorQueGrade = () => {
         const total = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
@@ -442,7 +439,7 @@
     }
 
     const submitPedido = async () => {
-        let dados = pedido.value;
+        let dados = { ...pedido.value };
 
         dados.dataPedido = formatteDateDB(pedido.value.dataPedido);
         dados.dataFinalizado = pedido.value.dataFinalizado ? formatteDateDB(pedido.value.dataFinalizado) : null;
@@ -465,7 +462,9 @@
             dados.id = props.id;
 
             await axios.put("/orders", dados).then(response => {
-                voltar(); 
+                setTimeout(() => {
+                    voltar(); 
+                }, 1000);
             }).catch(e => console.error(e));
         } else {
             const model = modelos.value.filter(item => item.id === dados.modelo);
