@@ -24,7 +24,7 @@
             <v-select
                 chips
                 class="w-75 mx-auto"
-                label="Cliente"
+                label="Funcionário"
                 v-model="filter"
                 :items="nomes"
                 variant="outlined"
@@ -168,7 +168,7 @@
     const dados = ref([]);
     const selecteds = ref([]);
     const checked = ref([]);
-    const valorHora = ref(null);
+    const valorHora = ref(15.55);
     const filter= ref('Todos');
 
     const getDados = async () => {
