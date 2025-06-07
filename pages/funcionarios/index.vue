@@ -4,6 +4,12 @@
             <h2 class="text-center text-secondary mt-4">
                 LISTAGEM DE REGISTRO DE FUNCIONÁRIOS
             </h2>
+            <div class="container-anotacoes d-flex">
+                <p>220 horas mensais</p>
+                <p>110 horas quinzenais</p>
+                <p>Pagamentos quinzenais, dia 20 até dia 5, recebe dia 05</p>
+                <p>Pagamentos quinzenais, dia 6 até dia 19, recebe dia 20</p>
+            </div>
         </v-col>
 
         <v-col cols="4">
@@ -177,7 +183,7 @@
         dados.value = [];
         checked.value = [];
         selecteds.value = [];
-        valorHora.value = null;
+        valorHora.value = 15.55;
         filter.value = 'Todos';
 
         axios.get(`/employee/${dateInitial}/${dateFinal}`)
@@ -300,7 +306,7 @@
             getDados();
             selecteds.value = [];
             checked.value = [];
-            valorHora.value = null;
+            valorHora.value = 15.55;
         }).catch(err => console.error(err));
     }
 
@@ -343,4 +349,35 @@
         background-color: #139026;
         padding-inline: 4px;
     }
+
+    .container-anotacoes {
+    width: 100%;
+    margin: 20px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.container-anotacoes p {
+    padding: 20px;
+    width: 200px;
+    background: #fdfd96;
+    border-radius: 10px;
+    color: #A60014;
+    font-weight: bold;
+    font-weight: bold;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+    .container-anotacoes p:hover {
+        transform: rotate(-2deg) scale(1.05);
+    }
+
 </style>

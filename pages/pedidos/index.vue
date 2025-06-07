@@ -10,13 +10,13 @@
             <v-row class="justify-center w-100">
                 <v-col cols="12" class="text-center" v-if="pedidos.length > 0">
                     <span v-if="!devidos" class="text-secondary text-h6 font-weight-bold">
-                        TOTAL FATURADO R$ {{ formattePrice(totalFaturado) }}
+                        TOTAL FATURADO R$ {{ formattePrice(totalReceber) }}
                     </span>
                     <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
                         TOTAL SELECIONADO PARA BAIXA R$ {{ formattePrice(totalDevido) }}
                     </span><br>
                     <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
-                        {{ pedidos.length }} PEDIDOS DEVIDOS 
+                        {{ pedidosFiltrados.length }} PEDIDOS DEVIDOS 
                     </span><br>
                     <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
                         R$ {{ formattePrice(totalReceber) }} A RECEBER
@@ -66,7 +66,7 @@
                 :disabled="selectedsPrint.length === 0"
                 v-if="!devidos"
             >
-                IMPRESSÃO FICHAS
+                IMPRESSÃO FICHAS {{ selectedsPrint.length > 0 ? '- (' + selectedsPrint.length  + ')' : '' }}
             </v-btn>
             <v-btn 
                 variant="flat"
@@ -84,7 +84,7 @@
                 @click="marcarPagos()"
                 v-if="devidos"
             >
-                MARCAR COMO PAGO(S)
+                MARCAR COMO PAGO(S) {{ selectedsPrint.length > 0 ? '- (' + selectedsPrint.length  + ')' : '' }}
             </v-btn>
             <v-btn 
                 variant="flat"
@@ -93,12 +93,12 @@
                 :disabled="selectedsPrint.length === 0"
                 @click="showModal = true"
             >
-                MARCAR COMO RETIRADO(S)
+                MARCAR COMO RETIRADO(S) {{ selectedsPrint.length > 0 ? '- (' + selectedsPrint.length  + ')' : '' }}
             </v-btn>
         </v-col>
         <v-col cols="12" class="text-center pb-12" v-if="pedidos.length > 0 && showTable">
             <DataTable 
-                title="Listagem de Pedidos"
+                :title="'Listagem de Pedidos ' + pedidosFiltrados.length"
                 :items="pedidosFiltrados"
                 :headers="nomesColunas" 
                 :acaoVer="true"
@@ -209,12 +209,10 @@
     ]);
     const textDate = ref("");
     const pedidos = ref([]);
-    const totalFaturado = ref(0);
     const totalDevido = ref(0);
     const selectedDate = ref(new Date());
     const devidos = ref(false);
     const showTable = ref(true);
-    const totalReceber = ref(0);
     const showModal = ref(false);
     const baixaVarios = ref({ quemRetirou: '', dataRetirada: selectedDate.value, ids: [] });
     const filterClient = ref('Todos');
@@ -228,15 +226,12 @@
         const dados = { date: dateFormatted };
         
         await axios.post('/orders/date', dados).then(response => {
-            totalFaturado.value = 0;
             if(response.length > 0) {
                 response.forEach(item => {
                     item.nomeCliente = item.client.nome;
-                    totalFaturado.value += item.totalDinheiro;
                 });
                 pedidos.value = response;
             } else {
-                totalFaturado.value = 0;
                 pedidos.value = [];
             }
             resetCheckeds();
@@ -278,7 +273,6 @@
     const getPendentes = async () => {
         devidos.value = true;
         filterClient.value = 'Todos';
-        totalReceber.value = 0;
         
         await axios.get('/orders/due').then(response => {
             selectedsPrint.value = [];
@@ -287,7 +281,6 @@
                     item.nomeCliente = item.client.nome;
                 });
                 pedidos.value = response;
-                totalReceber.value = response.reduce((acc , item) => acc + item.totalDinheiro, 0);
             } else pedidos.value = [];
             resetCheckeds();
         }).catch(err => console.error(err));
@@ -306,6 +299,10 @@
         if (!filterClient.value || filterClient.value === "Todos") return pedidos.value;
 
         return pedidos.value.filter(pedido => pedido.client?.nome === filterClient.value);
+    });
+
+    const totalReceber = computed(() => {
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalDinheiro, 0);
     });
 
     const resetCheckeds = () => {

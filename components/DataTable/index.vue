@@ -102,7 +102,7 @@
 
     const emitId = (item) => {
         selectedItem.value = item;
-        emit('verId', item.id);
+        emit('verId', item.idPedido ?? item.id);
     };
 
     const handleRowClick = (event, { item }) => {
@@ -116,7 +116,7 @@
     }
 
     const redirect = (item) => {
-        router.push(`/pedido/${item.id}`)
+        router.push(`/pedido/${item.idPedido}`)
     };
 
     onMounted(() => {
