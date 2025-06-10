@@ -156,6 +156,7 @@
                                     size="large"
                                     variant="flat"
                                     @click="clearFilters()"
+                                    v-if="!props.withOutFilter"
                                 >
                                     Limpar
                                 </v-btn>
@@ -310,7 +311,7 @@
     }
 
     const setInactiveModal = () => {
-        clearFilters();
+        if(!props.withOutFilter) clearFilters();
         emit('setInactiveModal', false);
     }
 
