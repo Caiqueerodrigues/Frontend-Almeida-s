@@ -263,6 +263,8 @@
     />
 </template>
 <script setup>
+import { ModalRelatorios } from '#components';
+
     const axios = inject("axios");
     const loading = inject("loading");
     const showToastify = inject("showToastify");
@@ -368,8 +370,11 @@
     }
 
     const setModelo = (modelo) => {
+        pedido.value.rendimentoParesMetro = [];
+
         pedido.value.relatorioCliente = modelo.refOrdem;
         pedido.value.modelo = modelo.id;
+        pedido.value.rendimentoParesMetro.push(modelo.rendimento);
     }
 
     const validateForm = async () => {

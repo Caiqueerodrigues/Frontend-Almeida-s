@@ -66,6 +66,8 @@
         { title: 'Cronometragem', align: 'center', key: 'cronometragem' },
         { title: 'Quantidade Faca', align: 'center', key: 'qtdFaca' },
         { title: 'Peças ao par', align: 'center', key: 'qtdPecasPar' },
+        { title: 'Rendimento por M²', align: 'center', key: 'rendimento' },
+        { title: 'Referência', align: 'center', key: 'refOrdem' },
         { title: 'Observação', align: 'center', key: 'obs' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
