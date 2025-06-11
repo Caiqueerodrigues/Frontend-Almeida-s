@@ -28,6 +28,7 @@
                     :items="modelos"
                     :headers="nomesColunas"
                     :acaoVer="false"
+                    :itemComplete="true"
                     @verId="setModelo($event)"
                 />
             </v-col>

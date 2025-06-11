@@ -82,7 +82,7 @@
 <script setup>
     import { getDadosJoin } from '~/services/helpers';
 
-    const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect' ]);
+    const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect', 'itemComplete' ]);
     const emit = defineEmits([ 'verId', 'selecteds' ]);
     const formattePrice = inject('formattePrice');
     const selectedItem = ref(false);
@@ -102,7 +102,7 @@
 
     const emitId = (item) => {
         selectedItem.value = item;
-        if(props.title === 'Listagem de modelos') emit('verId', item);
+        if(props.itemComplete) emit('verId', item);
         else emit('verId', item.idPedido ?? item.id);
     };
 
