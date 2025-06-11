@@ -23,12 +23,12 @@
             <v-col cols="12" class="text-secondary" v-show="!loading && pedido.client">
                 <h2 class="text-center text-secondary" v-if="modelos.length === 0">Não existem produtos para este cliente</h2>
                 <DataTable
-                    v-show="pedido.client && modelos.length > 0"
+                    v-if="pedido.client && modelos.length > 0"
                     title="Listagem de modelos"
                     :items="modelos"
                     :headers="nomesColunas"
                     :acaoVer="false"
-                    @verId="pedido.modelo = $event"
+                    @verId="setModelo($event)"
                 />
             </v-col>
             <v-col cols="12" v-if="!loading && pedido.modelo">
@@ -166,7 +166,7 @@
                 <AutoCompleteMultiple 
                     v-capitalize-first
                     v-if="pedido.tipoRecebido.length > 0"
-                    :label="'Rendimento por pares'"
+                    :label="'Rendimento por M²'"
                     :items="[]"
                     :selecteds="pedido.rendimentoParesMetro"
                     :outsideList="true"
@@ -305,6 +305,7 @@
         { title: 'Peças par', align: 'center', key: 'qtdPecasPar' },
         { title: 'Facas par', align: 'center', key: 'qtdFaca' },
         { title: 'Observação', align: 'center', key: 'obs' },
+        { title: 'Refêrencia', align: 'center', key: 'refOrdem' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
 
@@ -348,6 +349,8 @@
     }
 
     const getModelos = async (idClient) => {
+        modelos.value = [];
+        
         await axios.get(`/models/client/${idClient}`).then(response => {
             if(response.length > 0) {
                 modelos.value = response;
@@ -361,6 +364,11 @@
                 materiais.value = response;
             };
         }).catch(err => console.error(err));
+    }
+
+    const setModelo = (modelo) => {
+        pedido.value.relatorioCliente = modelo.refOrdem;
+        pedido.value.modelo = modelo.id;
     }
 
     const validateForm = async () => {

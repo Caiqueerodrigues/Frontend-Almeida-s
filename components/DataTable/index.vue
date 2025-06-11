@@ -102,7 +102,8 @@
 
     const emitId = (item) => {
         selectedItem.value = item;
-        emit('verId', item.idPedido ?? item.id);
+        if(props.title === 'Listagem de modelos') emit('verId', item);
+        else emit('verId', item.idPedido ?? item.id);
     };
 
     const handleRowClick = (event, { item }) => {
@@ -116,7 +117,7 @@
     }
 
     const redirect = (item) => {
-        router.push(`/pedido/${item.idPedido}`)
+        router.push(`/pedido/${item.id}`)
     };
 
     onMounted(() => {
