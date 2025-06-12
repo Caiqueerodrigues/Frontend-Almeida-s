@@ -167,7 +167,7 @@
                 <AutoCompleteMultiple 
                     v-capitalize-first
                     v-if="pedido.tipoRecebido.length > 0"
-                    :label="'Rendimento por M²'"
+                    :label="'Rendimento por Metro'"
                     :items="[]"
                     :selecteds="pedido.rendimentoParesMetro"
                     :outsideList="true"

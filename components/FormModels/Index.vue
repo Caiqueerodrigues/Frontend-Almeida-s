@@ -64,7 +64,7 @@
             <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
-                    label="Rendimento por M²"
+                    label="Rendimento por Metro"
                     v-model="modelo.rendimento"
                     type="number"
                     variant="outlined"
