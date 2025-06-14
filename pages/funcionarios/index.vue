@@ -5,10 +5,13 @@
                 LISTAGEM DE REGISTRO DE FUNCIONÁRIOS
             </h2>
             <div class="container-anotacoes d-flex">
-                <p>220 horas mensais</p>
-                <p>110 horas quinzenais</p>
-                <p>Pagamentos quinzenais, dia 20 até dia 5, recebe dia 05</p>
-                <p>Pagamentos quinzenais, dia 6 até dia 19, recebe dia 20</p>
+                <p 
+                    v-for="item in mensagens" 
+                    :key="item.id"
+
+                >
+                    {{ item.texto }}
+                </p>
             </div>
         </v-col>
 
@@ -49,6 +52,10 @@
                 class="mt-6 w-25 mx-auto"
             ></v-text-field>
             <h2 class="text-center text-secondary mt-4" v-html="calculateTotalHours(selecteds, true)"></h2>
+            <div class="container-anotacoes d-flex">
+                <p v-html="calculateTotalHours(selecteds, false, true, 44)"></p>
+                <p v-html="calculateTotalHours(selecteds, false, true, 88)"></p>
+            </div>
         </v-col>
 
         <v-col cols="12" class="text-center mt-4">
@@ -171,6 +178,12 @@
     const formatteDateDB = inject("formatteDateDB");
 
     const date = ref([new Date(), new Date()]);
+    const mensagens = ref([
+        { id: 1, texto: '44 horas semanais (5 dias trabalhados)' },
+        { id: 2, texto: '88 horas quinzenais (10 dias trabalhos, duas semanas)' },
+        { id: 2, texto: 'Pagamentos quinzenais, dia 20 até dia 5, recebe dia 05' },
+        { id: 3, texto: 'Pagamentos quinzenais, dia 6 até dia 19, recebe dia 20' },
+    ]);
     const dados = ref([]);
     const selecteds = ref([]);
     const checked = ref([]);
@@ -237,7 +250,7 @@
         return `${hours} horas e <br> ${minutes} minutos`;
     };
 
-    const calculateTotalHours = (selecionado, total) => {
+    const calculateTotalHours = (selecionado, total, diferenca, totalHoras) => {
         const horariosPorFuncionario = dados.value.filter(dado => selecionado.includes(dado.id)).map(dado => dado.horarios);
         let totalMinutes = 0;
 
@@ -251,9 +264,18 @@
             }
         });
 
-
         const hours = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
+
+        if (diferenca) {
+            const totalHorasEmMinutos = totalHoras * 60;
+            const diferencaMinutes = Math.abs(totalHorasEmMinutos - totalMinutes);
+
+            const diferencaHours = Math.floor(diferencaMinutes / 60);
+            const diferencaRemainingMinutes = diferencaMinutes % 60;
+
+            return `HORAS ${totalHoras === 44 ? 'SEMANAIS' : 'QUINZENAIS'} ${totalHoras + ' horas'} <br> ${diferencaHours > 0 ? '+' : '-'} ${diferencaHours} horas e ${diferencaRemainingMinutes} minutos`;
+        }
 
         return  !total ? `TOTAL DE ${hours} horas e <br> ${minutes} minutos` : `TOTAL DE R$ ${((hours + (totalMinutes / 60)) * valorHora.value).toFixed(2)}`;
     }
@@ -277,7 +299,10 @@
             return;
         }
 
-        let dadosEnviar = item;
+        let adjustedDate = new Date(item.date);
+            adjustedDate.setHours(adjustedDate.getHours() - 3);
+
+        let dadosEnviar = { ...item, date: adjustedDate };
         dadosEnviar.horarios = item.horarios.filter(item => item !== "00:00").join(", ");
 
         if(item.id) {
