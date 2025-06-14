@@ -181,8 +181,8 @@
     const mensagens = ref([
         { id: 1, texto: '44 horas semanais (5 dias trabalhados)' },
         { id: 2, texto: '88 horas quinzenais (10 dias trabalhos, duas semanas)' },
-        { id: 2, texto: 'Pagamentos quinzenais, dia 20 até dia 5, recebe dia 05' },
-        { id: 3, texto: 'Pagamentos quinzenais, dia 6 até dia 19, recebe dia 20' },
+        { id: 2, texto: 'Pagamentos quinzenais, dia 20 até dia 4, recebe dia 05' },
+        { id: 3, texto: 'Pagamentos quinzenais, dia 5 até dia 19, recebe dia 20' },
     ]);
     const dados = ref([]);
     const selecteds = ref([]);
