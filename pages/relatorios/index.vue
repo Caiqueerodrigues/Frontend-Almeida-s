@@ -10,7 +10,7 @@
                 SELECIONE O DIA OU PERÍODO
             </span>
         </v-col>
-        <v-col cols="12" md="7" v-if="!loading">
+        <v-col cols="4" md="4" v-if="!loading">
             <VueDatePicker 
                 v-model="date" 
                 range 
@@ -23,17 +23,39 @@
                 :max-date="new Date()"
             />
         </v-col>
+        <v-col cols="4" md="4">
+            <v-select
+                chips
+                label="Cliente"
+                v-model="filter.client"
+                :items="clientes"
+                :disabled="clientes.length === 1"
+                variant="outlined"
+                rounded="xl"
+            ></v-select>
+        </v-col>
+        <v-col cols="2">
+            <v-select
+                chips
+                label="Situação"
+                v-model="filter.situation"
+                :items="[ 'Todos', 'Pagos', 'Devidos' ]"
+                :disabled="clientes.length === 1"
+                variant="outlined"
+                rounded="xl"
+            ></v-select>
+        </v-col>
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  > 0">
             <DataTable
-                title="Listagem de pedidos"
-                :items="pedidos"
+                :title="'Listagem de pedidos ' + pedidosFiltrados.length"
+                :items="pedidosFiltrados"
                 :headers="nomesColunas"
                 :acaoVer="true"
                 :redirect="true"
                 class="mb-2"
             />
             <span class="text-h5 text-secondary font-weight-bold">
-                Total Faturado no período é R$ {{ total }}
+                Total Faturado no período é R$ {{ totalReceber }}
             </span>
             <Charts 
                 :labels="dataChart.labels"
@@ -45,7 +67,7 @@
                 NÂO EXISTEM PEDIDOS PARA ESTE PERÍODO
             </span>
         </v-col>
-        <v-col col="12" class="text-center">
+        <v-col cols="12" class="text-center">
             <v-btn variant="flat" color="success" rounded="xl" @click="showModalRelatorios = true">
                 GERAR RELATÓRIOS
             </v-btn>
@@ -66,7 +88,6 @@
     const formatteDateDB = inject("formatteDateDB");
     const date = ref([new Date(), new Date()]);
     const pedidos = ref([]);
-    const total = ref(0);
     const nomesColunas = ref([
         { title: 'ID pedido', align: 'center', key: 'id' },
         { title: 'Nome', align: 'center', key: 'nome' },
@@ -80,40 +101,79 @@
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
         { title: 'Observação', align: 'center', key: 'obs' },
     ]);
-    const dataChart = ref({ labels: [], data: [] });
     const showModalRelatorios = ref(false);
+    const filter = ref({ client: 'Todos', situation: 'Todos' });
 
     const getPedidos = async () => {
         const initialDate = formatteDateDB(date.value[0]).split("T")[0];
         const finalDate = formatteDateDB(date.value[1]).split("T")[0];
+        filter.value.client = "Todos";
+        filter.value.situation = "Todos";
 
         await axios.get(`/orders/period/${initialDate}/${finalDate}`).then(response => {
             pedidos.value = [];
-            total.value = 0;
 
             if(response.length > 0) {
                 response.map(item => {
                     const date = item.dataPedido.split('T')[0];
                     const [ ano, mes , dia ] = date.split("-");
 
-                    const indexExists = dataChart.value.labels.findIndex(label => label === item.client.nome.split(" ")[0]) 
-                    if(indexExists === -1) {
-                        dataChart.value.labels.push(`${item.client.nome.split(" ")[0]}`);
-                        dataChart.value.data.push(item.totalDinheiro);
-                    } else {
-                        dataChart.value.data[indexExists] += item.totalDinheiro;
-                    }
-
                     pedidos.value.push(
                         { ...item, totalDinheiro: item.totalDinheiro, dia: `${dia}-${mes}-${ano}` , nome: item.client.nome, id: item.id  }
                     );
                 });
-                total.value = Number(pedidos.value.reduce((total, item) => total += item.totalDinheiro, 0)).toFixed(3);
-                total.value = total.value[total.value.length - 1] === '0' ? 
-                    Number(total.value).toFixed(2) : Number(total.value).toFixed(3) ;
             }
         }).catch(e => console.error(e));
     }
+
+    const dataChart = computed(() => {
+        const labels = [];
+        const data = [];
+        const nomesIndex = {};
+        
+        pedidosFiltrados.value.forEach(item => {
+            const nomeCliente = item.client?.nome || "Desconhecido";
+            
+            if (nomesIndex[nomeCliente] !== undefined) {
+                data[nomesIndex[nomeCliente]] += item.totalDinheiro;
+            } else {
+                nomesIndex[nomeCliente] = labels.length;
+                labels.push(nomeCliente);
+                data.push(item.totalDinheiro);
+            }
+        });
+
+        return {
+            labels,
+            data
+        };
+    })
+
+    const clientes = computed(() => {
+        const nomes = ['Todos'];
+        pedidos.value.map(item => {
+            if(!nomes.includes(item.client.nome)) nomes.push(item.client.nome)
+        })
+        return nomes;
+    });
+
+    const pedidosFiltrados = computed(() => {
+        let filtrados = pedidos.value;
+
+        if (filter.value.client !== "Todos")  {
+            filtrados = filtrados.filter(pedido => pedido.client?.nome === filter.value.client);
+        }
+
+        if(filter.value.situation !== "Todos") {
+            const situation = filter.value.situation === 'Devidos' ? "Não" : "Sim";
+            filtrados = filtrados.filter(pedido => pedido?.jaFoiPago === situation);
+        }
+        return filtrados
+    });
+
+    const totalReceber = computed(() => {
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalDinheiro, 0);
+    });
 
     watch(() => date.value, (nv) => {
         if(nv) getPedidos();
@@ -128,6 +188,8 @@
         border-color: #eeff00;
         color: #eeff00;
         font-weight: bold;
+        padding-block: 15px;
+        margin-top: -20px;
     }
 
     :deep(.dp__menu) {
@@ -135,5 +197,9 @@
         border-color: #eeff00;
         font-weight: bold;
         padding-bottom: 20px;
+    }
+
+    :deep(.dp__input_icon) {
+        top: 32%;
     }
 </style>

@@ -25,7 +25,7 @@
                 format="dd/MM/yyyy"
                 :clearable="false"
                 :min-date="new Date('2000-01-01')"
-                :max-date="new Date()"
+                :max-date="adjustedDate(new Date())"
                 @update:modelValue="getDados()"
             />
         </v-col>
@@ -74,7 +74,7 @@
                 v-if="selecteds.length > 0"
                 @click="pagosEmLote()"
             >
-                MARCAR COMO PAGOS
+                MARCAR COMO PAGOS ({{ selecteds.length }})
             </v-btn>
             <v-btn
                 class="bg-success text-primary font-weight-bold rounded-xl ml-4"
@@ -187,8 +187,14 @@
     const dados = ref([]);
     const selecteds = ref([]);
     const checked = ref([]);
-    const valorHora = ref(15.55);
+    const valorHora = ref(16.48);
     const filter= ref('Todos');
+
+    const adjustedDate = (date) => {
+        const newDate = new Date(date);
+        newDate.setHours(newDate.getHours() + 3);
+        return newDate;
+    };
 
     const getDados = async () => {
         const dateInitial = formatteDateDB(date.value[0]).split("T")[0];
@@ -196,7 +202,7 @@
         dados.value = [];
         checked.value = [];
         selecteds.value = [];
-        valorHora.value = 15.55;
+        valorHora.value = 16.48;
         filter.value = 'Todos';
 
         axios.get(`/employee/${dateInitial}/${dateFinal}`)
@@ -269,15 +275,18 @@
 
         if (diferenca) {
             const totalHorasEmMinutos = totalHoras * 60;
-            const diferencaMinutes = Math.abs(totalHorasEmMinutos - totalMinutes);
+            const diferencaBruta = totalMinutes - totalHorasEmMinutos;
+            const diferencaMinutes = Math.abs(diferencaBruta);
 
             const diferencaHours = Math.floor(diferencaMinutes / 60);
             const diferencaRemainingMinutes = diferencaMinutes % 60;
 
-            return `HORAS ${totalHoras === 44 ? 'SEMANAIS' : 'QUINZENAIS'} ${totalHoras + ' horas'} <br> ${diferencaHours > 0 ? '+' : '-'} ${diferencaHours} horas e ${diferencaRemainingMinutes} minutos`;
+            const sinal = diferencaBruta >= 0 ? '+' : '-';
+
+            return `HORAS ${totalHoras === 44 ? 'SEMANAIS' : 'QUINZENAIS'} ${totalHoras + ' horas'} <br> ${sinal} ${diferencaHours} horas e ${diferencaRemainingMinutes} minutos`;
         }
 
-        return  !total ? `TOTAL DE ${hours} horas e <br> ${minutes} minutos` : `TOTAL DE R$ ${((hours + (totalMinutes / 60)) * valorHora.value).toFixed(2)}`;
+        return  !total ? `TOTAL DE ${hours} horas e <br> ${minutes} minutos` : `TOTAL DE R$ ${((hours) * valorHora.value).toFixed(2)}`;
     }
 
     const formatDate = (d) => {
@@ -331,7 +340,7 @@
             getDados();
             selecteds.value = [];
             checked.value = [];
-            valorHora.value = 15.55;
+            valorHora.value = 16.48;
         }).catch(err => console.error(err));
     }
 

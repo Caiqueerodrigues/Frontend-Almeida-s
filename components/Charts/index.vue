@@ -18,38 +18,54 @@
     const DoughnutChart = ref(null);
     const props = defineProps(['labels', 'data', 'headers', 'acaoVer']);
 
-    const dataChart = ref({
-        labels: props.labels,
-        datasets: [
-            {
-                data: props.data,
-                backgroundColor: []
-            }
-        ],
-        options: {
-            plugins: {
-                legend: {
-                    labels: {
-                        font: {
-                            wight: "bolder",
-                            size: 126
+    const dataChart = computed(() => {
+        const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F"];
+        const backgroundColor = [];
+
+        for (let i = 0; i < props.labels.length; i++) {
+            let color = "#";
+            do {
+                for (let j = 0; j < 6; j++) {
+                    color += options[Math.floor(Math.random() * options.length)];
+                }
+            } while (backgroundColor.includes(color));
+
+            backgroundColor.push(color);
+        }
+
+        return {
+            labels: props.labels,
+            datasets: [
+                {
+                    data: props.data,
+                    backgroundColor: backgroundColor
+                }
+            ],
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                weight: "bolder",
+                                size: 126
+                            }
                         }
-                    }
+                    },
                 },
-            },
-            responsive: true,
-            plugins: {
-                tooltip: {
-                    titleColor: '#000',
-                    bodyColor: '#000',
-                    callbacks: {
-                        label: function(context) {
-                            return context.label + ': ' + context.raw;
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        titleColor: '#000',
+                        bodyColor: '#000',
+                        callbacks: {
+                            label: function (context) {
+                                return context.label + ': ' + context.raw;
+                            }
                         }
                     }
                 }
             }
-        }
+        };
     });
 
     const isClient = ref(false);
@@ -71,15 +87,23 @@
         }
     }
 
+    watch(() => props.labels, (nv) => {
+        mountGraph();
+    })
+
+    const mountGraph = async () => {
+        const { DoughnutChart: LoadedDoughnutChart } = await import('vue-chart-3');
+        const { Chart, registerables } = await import('chart.js');
+        Chart.register(...registerables);
+
+        DoughnutChart.value = LoadedDoughnutChart;
+    }
+
     onMounted(async () => {
         if (typeof window !== 'undefined') {
             isClient.value = true;
 
-            const { DoughnutChart: LoadedDoughnutChart } = await import('vue-chart-3');
-            const { Chart, registerables } = await import('chart.js');
-            Chart.register(...registerables);
-
-            DoughnutChart.value = LoadedDoughnutChart;
+            mountGraph();
         }
         randomColors();
     });
