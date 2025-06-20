@@ -81,7 +81,7 @@
                 class="rounded-xl ml-4 mr-2" 
                 color="warning" 
                 :disabled="selectedsPrint.length === 0"
-                @click="marcarPagos()"
+                @click="showModalDate = true"
                 v-if="devidos"
             >
                 MARCAR COMO PAGO(S) {{ selectedsPrint.length > 0 ? '- (' + selectedsPrint.length  + ')' : '' }}
@@ -180,6 +180,11 @@
             </v-dialog>
         </v-col>
     </v-row>
+    <ModalDate 
+        :isActiveModal="showModalDate"
+        @setInactiveModal="showModalDate = $event"
+        @confirma="marcarPagos($event)"
+    />
 </template>
 <script setup>
     const axios = inject("axios");
@@ -187,6 +192,7 @@
     const formattePrice = inject("formattePrice");
     const formatteDateDB = inject("formatteDateDB");
     const selectedsPrint = ref([]);
+    const showModalDate = ref(false);
 
     const router = useRouter();
 
@@ -238,15 +244,16 @@
         }).catch(err => console.error(err));
     }
 
-    const marcarPagos = async () => {
-        devidos.value = false;
+    const marcarPagos = async (date) => {
+        showModalDate.value = false;
         
         const dados = { 
             ids: selectedsPrint.value,
-            date: formatteDateDB(new Date())
+            date: formatteDateDB(date)
         }
-
+        
         await axios.put('/orders/updatePayment', dados).then(response => {
+            devidos.value = false;
             getPedidos();
             resetCheckeds();
         }).catch(err => console.error(err));

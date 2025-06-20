@@ -76,13 +76,13 @@
         <v-col cols="12" class="text-center mt-4">
             <v-row>
                 <v-col cols="1" v-if="filtrados.length > 0">
-                    <!-- <v-checkbox
+                    <v-checkbox-btn
                         v-model="checkedAll"
                         color="success"
                         class="ml-3"
                         hide-details
                         @change="checkAll()"
-                    ></v-checkbox> -->
+                    ></v-checkbox-btn>
                 </v-col>
                 <v-col :cols="filtrados.length > 0 ? '11' : '12'">
                     <v-btn
@@ -119,14 +119,13 @@
         <v-col cols="12" v-for="(item, index) in filtrados" :key="index" class="py-0">
             <v-row class="ma-0 pa-0 align-center">
                 <v-col cols="2" class="py-0 d-flex">
-                    <v-checkbox
+                    <v-checkbox-btn
                         v-if="formatDate(date[0]) !== formatDate(date[1]) && !item.status"
-                        v-model="checked[index]"
-                        :value="item.id"
+                        v-model="item.checked"
                         color="success"
                         @change="checkboxSelected(item, index)"
                         hide-details
-                    ></v-checkbox>
+                    ></v-checkbox-btn>
                     <v-text-field
                         v-capitalize-first
                         rounded="xl"
@@ -215,7 +214,6 @@
     ]);
     const dados = ref([]);
     const selecteds = ref([]);
-    const checked = ref([]);
     const valorHora = ref(16.48);
     const filter= ref('Todos');
     const checkedAll = ref(false);
@@ -230,7 +228,6 @@
         const dateInitial = formatteDateDB(date.value[0]).split("T")[0];
         const dateFinal = formatteDateDB(date.value[1]).split("T")[0];
         dados.value = [];
-        checked.value = [];
         selecteds.value = [];
         valorHora.value = 16.48;
         filter.value = 'Todos';
@@ -240,6 +237,7 @@
                 if(response && response.length > 0) {
                     response.forEach(item => {
                         item.date = item.date + 'T00:00:00';
+                        item.checked = false;
                     })
                     dados.value = response;
                 }
@@ -342,10 +340,12 @@
     };
 
     const checkboxSelected = (item, index) => {
+        checkedAll.value = false;
+        
         if(!selecteds.value.includes(item.id)) {
             selecteds.value.push(item.id);
         } else {
-            checked.value[index] = false;
+            item.checked = false;
             selecteds.value = selecteds.value.filter(selected => selected !== item.id);
         }
     }
@@ -387,7 +387,6 @@
         axios.put('/employee/update-status-payment', selecteds.value).then(response => {
             getDados();
             selecteds.value = [];
-            checked.value = [];
             valorHora.value = 16.48;
         }).catch(err => console.error(err));
     }
@@ -407,12 +406,11 @@
     });
 
     const checkAll =() => {
-        
         if (checkedAll.value) {
-            checked.value = filtrados.value.map(() => true);
+            dados.value = filtrados.value.map((item) => ({...item, checked: true}) );
             selecteds.value = filtrados.value.map(item => item.id);
         } else {
-            checked.value = filtrados.value.map(() => false);
+            dados.value = filtrados.value.map((item) => ({...item, checked: false}) );
             selecteds.value = [];
         }
     };
