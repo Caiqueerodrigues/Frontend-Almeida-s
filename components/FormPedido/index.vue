@@ -303,10 +303,11 @@ import { ModalRelatorios } from '#components';
     const modelos = ref([]);
     const materiais = ref([]);
     const nomesColunas = ref([
-        { title: 'Nome', align: 'center', key: 'tipo' },
+        { title: 'Nome', align: 'center', key: 'tipo', width: '200px' },
         { title: 'Preço', align: 'center', key: 'preco' },
         { title: 'Peças par', align: 'center', key: 'qtdPecasPar' },
         { title: 'Facas par', align: 'center', key: 'qtdFaca' },
+        { title: 'Rendimento', align: 'center', key: 'rendimento ' },
         { title: 'Observação', align: 'center', key: 'obs' },
         { title: 'Refêrencia', align: 'center', key: 'refOrdem' },
         { title: 'Ação', align: 'center', key: 'ver' },
