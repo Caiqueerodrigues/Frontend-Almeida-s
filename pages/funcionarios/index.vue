@@ -15,13 +15,14 @@
             </div>
         </v-col>
 
-        <v-col cols="4">
+        <v-col cols="6" class="d-flex justify-end">
             <VueDatePicker 
                 v-model="date" 
                 range 
                 autoApply
                 locale="pt-BR"
                 dark
+                class="w-50"
                 format="dd/MM/yyyy"
                 :clearable="false"
                 :min-date="new Date('2000-01-01')"
@@ -29,10 +30,10 @@
                 @update:modelValue="getDados()"
             />
         </v-col>
-        <v-col cols="4">
+        <v-col cols="6" >
             <v-select
                 chips
-                class="w-75 mx-auto"
+                class="w-50"
                 label="Funcionário"
                 v-model="filter"
                 :items="nomes"
@@ -41,7 +42,7 @@
             ></v-select>
         </v-col>
 
-        <v-col cols="8" v-if="selecteds.length > 0">
+        <v-col cols="12" v-if="selecteds.length > 0">
             <h2 class="text-center text-secondary mt-4" v-html="calculateTotalHours(selecteds)"></h2>
             <v-text-field
                 rounded="xl"
@@ -53,38 +54,66 @@
             ></v-text-field>
             <h2 class="text-center text-secondary mt-4" v-html="calculateTotalHours(selecteds, true)"></h2>
             <div class="container-anotacoes d-flex">
-                <p v-html="calculateTotalHours(selecteds, false, true, 44)"></p>
-                <p v-html="calculateTotalHours(selecteds, false, true, 88)"></p>
+                <p 
+                    :class="calculateTotalHours(selecteds, false, true, 44).includes('+') && 'bg-green'" 
+                    v-html="calculateTotalHours(selecteds, false, true, 44)"
+                ></p>
+                <p 
+                    :class="calculateTotalHours(selecteds, false, true, 88).includes('+') && 'bg-green'" 
+                    v-html="calculateTotalHours(selecteds, false, true, 88)"
+                ></p>
+                <p 
+                    :class="calculateTotalHours(selecteds, false, true, 132).includes('+') && 'bg-green'" 
+                    v-html="calculateTotalHours(selecteds, false, true, 132)"
+                ></p>
+                <p 
+                    v-html="calculateTotalHours(selecteds, false, true, 176)"
+                    :class="calculateTotalHours(selecteds, false, true, 176).includes('+') && 'bg-green'" 
+                ></p>
             </div>
         </v-col>
 
         <v-col cols="12" class="text-center mt-4">
-            <v-btn
-                class="bg-success text-primary font-weight-bold rounded-xl"
-                size="large"
-                variant="outlined"
-                @click="getDados()"
-            >
-                BUSCAR
-            </v-btn>
-            <v-btn
-                class="bg-warning text-primary font-weight-bold rounded-xl ml-4"
-                size="large"
-                variant="outlined"
-                v-if="selecteds.length > 0"
-                @click="pagosEmLote()"
-            >
-                MARCAR COMO PAGOS ({{ selecteds.length }})
-            </v-btn>
-            <v-btn
-                class="bg-success text-primary font-weight-bold rounded-xl ml-4"
-                size="large"
-                variant="outlined"
-                v-if="formatDate(date[0]) === formatDate(date[1])"
-                @click="addRegistro()"
-            >
-                ADICIONAR REGISTRO
-            </v-btn>
+            <v-row>
+                <v-col cols="1" v-if="filtrados.length > 0">
+                    <!-- <v-checkbox
+                        v-model="checkedAll"
+                        color="success"
+                        class="ml-3"
+                        hide-details
+                        @change="checkAll()"
+                    ></v-checkbox> -->
+                </v-col>
+                <v-col :cols="filtrados.length > 0 ? '11' : '12'">
+                    <v-btn
+                        :class="filtrados.length > 0 ? 'ml-n16 mr-16' : ''"
+                        class="bg-success text-primary font-weight-bold rounded-xl"
+                        size="large"
+                        variant="outlined"
+                        @click="getDados()"
+                    >
+                        BUSCAR
+                    </v-btn>
+                    <v-btn
+                        class="bg-warning text-primary font-weight-bold rounded-xl ml-4"
+                        size="large"
+                        variant="outlined"
+                        v-if="selecteds.length > 0"
+                        @click="pagosEmLote()"
+                    >
+                        MARCAR COMO PAGOS ({{ selecteds.length }})
+                    </v-btn>
+                    <v-btn
+                        class="bg-success text-primary font-weight-bold rounded-xl ml-4"
+                        size="large"
+                        variant="outlined"
+                        v-if="formatDate(date[0]) === formatDate(date[1])"
+                        @click="addRegistro()"
+                    >
+                        ADICIONAR REGISTRO
+                    </v-btn>
+                </v-col>
+            </v-row>
         </v-col>
 
         <v-col cols="12" v-for="(item, index) in filtrados" :key="index" class="py-0">
@@ -189,7 +218,8 @@
     const checked = ref([]);
     const valorHora = ref(16.48);
     const filter= ref('Todos');
-
+    const checkedAll = ref(false);
+    
     const adjustedDate = (date) => {
         const newDate = new Date(date);
         newDate.setHours(newDate.getHours() + 3);
@@ -207,10 +237,12 @@
 
         axios.get(`/employee/${dateInitial}/${dateFinal}`)
             .then(response => {
-                response.forEach(item => {
-                    item.date = item.date + 'T00:00:00';
-                })
-                dados.value = response;
+                if(response && response.length > 0) {
+                    response.forEach(item => {
+                        item.date = item.date + 'T00:00:00';
+                    })
+                    dados.value = response;
+                }
             }).catch(error => console.error("Erro ao buscar dados:", error));
     }
 
@@ -283,7 +315,23 @@
 
             const sinal = diferencaBruta >= 0 ? '+' : '-';
 
-            return `HORAS ${totalHoras === 44 ? 'SEMANAIS' : 'QUINZENAIS'} ${totalHoras + ' horas'} <br> ${sinal} ${diferencaHours} horas e ${diferencaRemainingMinutes} minutos`;
+            let periodo = '';
+
+            switch(totalHoras) {
+                case 44:
+                    periodo = 'SEMANAIS';
+                    break
+                case 88:
+                    periodo = 'QUINZENAIS';
+                    break;
+                case 132: 
+                    periodo = '3 SEMANAS';
+                    break;
+                default:
+                    periodo = 'MENSAL';
+            }
+
+            return `HORAS ${periodo} ${totalHoras + ' horas'} <br> ${sinal} ${diferencaHours} horas e ${diferencaRemainingMinutes} minutos`;
         }
 
         return  !total ? `TOTAL DE ${hours} horas e <br> ${minutes} minutos` : `TOTAL DE R$ ${((hours) * valorHora.value).toFixed(2)}`;
@@ -357,6 +405,17 @@
         })
         return nomes;
     });
+
+    const checkAll =() => {
+        
+        if (checkedAll.value) {
+            checked.value = filtrados.value.map(() => true);
+            selecteds.value = filtrados.value.map(item => item.id);
+        } else {
+            checked.value = filtrados.value.map(() => false);
+            selecteds.value = [];
+        }
+    };
 
     onMounted(() => {
         getDados();
