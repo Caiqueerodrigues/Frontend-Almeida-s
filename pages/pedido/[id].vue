@@ -1,6 +1,6 @@
 <template>
     <v-row class="h-100 justify-center align-center">
-        <v-col cols="12" md="7">
+        <v-col cols="11">
             <FormPedido 
                 :id="idPedido"
             />
