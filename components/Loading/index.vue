@@ -1,7 +1,9 @@
 <template>
     <v-row class="container ma-0 pa-0 justify-center align-center">
         <v-col cols="1" class="ma-0 pa-0">
-            <span class="loader"></span>
+            <span class="loader">
+            </span>
+            <img src="/images/leao-sem-fundo.png" alt="logo Almeida's Corte" class="logo">
         </v-col>
     </v-row>
 </template>
@@ -17,9 +19,16 @@
     overflow: hidden !important;
 }
 
+.logo {
+    width: 180px;
+    position: relative;
+    top: -180px;
+    left: -5px;
+}
+
 .loader {
-    width: 48px;
-    height: 48px;
+    width: 168px;
+    height: 168px;
     border-radius: 50%;
     display: inline-block;
     border-top: 4px solid #E90049;
@@ -34,8 +43,8 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 48px;
-    height: 48px;
+    width: 168px;
+    height: 168px;
     border-radius: 50%;
     border-left: 4px solid #C0812D;
     border-bottom: 4px solid transparent;
