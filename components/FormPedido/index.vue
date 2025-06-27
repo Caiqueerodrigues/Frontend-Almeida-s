@@ -307,7 +307,7 @@ import { ModalRelatorios } from '#components';
         { title: 'Preço', align: 'center', key: 'preco' },
         { title: 'Peças par', align: 'center', key: 'qtdPecasPar' },
         { title: 'Facas par', align: 'center', key: 'qtdFaca' },
-        { title: 'Rendimento', align: 'center', key: 'rendimento ' },
+        { title: 'Rendimento', align: 'center', key: 'rendimento' },
         { title: 'Observação', align: 'center', key: 'obs' },
         { title: 'Refêrencia', align: 'center', key: 'refOrdem' },
         { title: 'Ação', align: 'center', key: 'ver' },
