@@ -59,14 +59,17 @@
                     v-html="calculateTotalHours(selecteds, false, true, 44)"
                 ></p>
                 <p 
+                    v-if="selecteds.length > 5"
                     :class="calculateTotalHours(selecteds, false, true, 88).includes('+') && 'bg-green'" 
                     v-html="calculateTotalHours(selecteds, false, true, 88)"
                 ></p>
                 <p 
+                    v-if="selecteds.length > 10"
                     :class="calculateTotalHours(selecteds, false, true, 132).includes('+') && 'bg-green'" 
                     v-html="calculateTotalHours(selecteds, false, true, 132)"
                 ></p>
                 <p 
+                    v-if="selecteds.length > 15"
                     v-html="calculateTotalHours(selecteds, false, true, 176)"
                     :class="calculateTotalHours(selecteds, false, true, 176).includes('+') && 'bg-green'" 
                 ></p>
@@ -75,7 +78,7 @@
 
         <v-col cols="12" class="text-center mt-4">
             <v-row>
-                <v-col cols="1" v-if="filtrados.length > 0">
+                <v-col cols="1" v-if="filtrados.length > 1">
                     <v-checkbox-btn
                         v-model="checkedAll"
                         color="success"
@@ -107,7 +110,7 @@
                         class="bg-success text-primary font-weight-bold rounded-xl ml-4"
                         size="large"
                         variant="outlined"
-                        v-if="formatDate(date[0]) === formatDate(date[1])"
+                        v-if="formatDate(date[0]) === formatDate(date[1]) && consultIteNaoSalvo()"
                         @click="addRegistro()"
                     >
                         ADICIONAR REGISTRO
@@ -165,23 +168,15 @@
                     <p class="text-secondary font-weight-bold mt-6" v-html="calculateHours(item.horarios)"></p>
                 </v-col>
                 <v-col cols="2" class="px-0 text-end">
-                    <v-btn-toggle color="success" v-model="item.status" bg class="rounded-xl" divided>
-                        <v-btn 
-                            :value="true" 
-                            :disabled="item.status" 
-                            class="font-weight-bold"
-                            @click="checkboxSelected(item, index)"
-                        >
-                            PAGO
-                        </v-btn>
-                        <v-btn 
-                            :value="false" 
-                            :disabled="!item.status"
-                            class="font-weight-bold"
-                        >
-                            DEVIDO
-                        </v-btn>
-                    </v-btn-toggle>
+                    <v-btn 
+                        icon="$vuetify" 
+                        variant="tonal"
+                        @click="marcarPago(item, index)"
+                    >
+                        <v-icon size="35" :class="item.status ? 'text-green font-weight-bold' : 'text-nao-pago font-weight-bold'">
+                            {{ item.status ? 'mdi-check' : 'mdi-close' }}
+                        </v-icon>
+                    </v-btn>
                 </v-col>
                 <v-col cols="1" class="py-0">
                     <v-btn
@@ -209,8 +204,8 @@
     const mensagens = ref([
         { id: 1, texto: '44 horas semanais (5 dias trabalhados)' },
         { id: 2, texto: '88 horas quinzenais (10 dias trabalhos, duas semanas)' },
-        { id: 2, texto: 'Pagamentos quinzenais, dia 20 até dia 4, recebe dia 05' },
-        { id: 3, texto: 'Pagamentos quinzenais, dia 5 até dia 19, recebe dia 20' },
+        { id: 2, texto: 'Pagamentos quinzenais, dia 1 até dia 15, recebe dia 16' },
+        { id: 3, texto: 'Pagamentos quinzenais, dia 16 até dia 30, recebe dia 1' },
     ]);
     const dados = ref([]);
     const selecteds = ref([]);
@@ -224,12 +219,17 @@
         return newDate;
     };
 
+    const marcarPago = (item, index) => {
+        item.status = !item.status;
+    }
+
     const getDados = async () => {
         const dateInitial = formatteDateDB(date.value[0]).split("T")[0];
         const dateFinal = formatteDateDB(date.value[1]).split("T")[0];
         dados.value = [];
         selecteds.value = [];
         valorHora.value = 16.48;
+        checkedAll.value = false;
         filter.value = 'Todos';
 
         axios.get(`/employee/${dateInitial}/${dateFinal}`)
@@ -383,6 +383,10 @@
         dados.value.unshift(novoRegistro);
     };
 
+    const consultIteNaoSalvo = () => {
+        return dados.value.every(item => item.id);
+    }
+
     const pagosEmLote = async () => {
         axios.put('/employee/update-status-payment', selecteds.value).then(response => {
             getDados();
@@ -467,8 +471,11 @@
     transition: transform 0.2s;
 }
 
-    .container-anotacoes p:hover {
-        transform: rotate(-2deg) scale(1.05);
-    }
+.container-anotacoes p:hover {
+    transform: rotate(-2deg) scale(1.05);
+}
 
+.text-nao-pago {
+    color: #E90049;
+}
 </style>
