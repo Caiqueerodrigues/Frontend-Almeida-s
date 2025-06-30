@@ -18,7 +18,61 @@
                         <v-col cols="9" class="d-flex justify-center pl-12">
                             <img src="../assets/images/logo_escrito.png" alt="Texto da logo da empresa" class="logoEscrito">
                         </v-col>
-                        <v-col cols="1" md="0"></v-col>
+                        <v-col cols="1" md="0">
+                            <div class="text-center">
+                                <v-menu
+                                    v-model="menu"
+                                    :close-on-content-click="false"
+                                    :disabled="loading"
+                                    location="bottom"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                        >
+                                            <img :src="backgroundImage" alt="Avatar do usuário" style="width: 40px">
+                                        </v-btn>
+                                    </template>
+
+                                    <v-card min-width="300">
+                                        <v-list>
+                                        <v-list-item
+                                            :prepend-avatar="dadosUser.photo"
+                                            :title="(dadosUser.sexo === 'M' ? 'Bem vindo ' : 'Bem vinda ') + (tokenUser() ?? '')"
+                                            :subtitle="dadosUser.funcao + ` Almeida's Cortes`"
+                                        ></v-list-item>
+                                        </v-list>
+
+                                        <v-divider></v-divider>
+                                        <v-list>
+                                            <v-list-item>
+                                                <v-btn
+                                                    variant="text"
+                                                    @click="showToast('Em desenvolvimento')"
+                                                >
+                                                    <v-icon>mdi-account</v-icon>
+                                                    PERFIL
+                                                </v-btn>
+                                            </v-list-item>
+                                        </v-list>
+
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+
+                                            <v-btn
+                                                color="primary"
+                                                variant="text"
+                                                @click="menu = false, goTo('/login')"
+                                            >
+                                                <v-icon>mdi-power</v-icon>
+                                                Sair
+                                                <v-icon>mdi-power</v-icon>
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-menu>
+                            </div>
+                        </v-col>
                     </v-row>
                 </v-toolbar-title>
             </v-app-bar>
@@ -28,7 +82,10 @@
                 class="bg-black"
                 temporary
             >
-                <p class="font-weight-bold ml-2 text-center text-secondary my-4">Bem vindo(a) {{ tokenUser() }}</p>
+                <p class="font-weight-bold ml-2 text-center text-secondary my-4 d-flex align-center">
+                    <img :src="backgroundImage" alt="Avatar do usuário" class="mr-2" style="width: 40px">
+                    Bem vind{{ dadosUser.sexo === "M" ? 'o' : 'a' }} {{ tokenUser() ?? '' }}
+                </p>
                 <v-expansion-panels variant="accordion">
                     <v-expansion-panel
                         v-for="item in items" 
@@ -63,7 +120,9 @@
     </v-card>
 </template>
 <script setup>
-    import { tokenUser } from '../services/tokenService';
+    import { tokenUser, tokenUserData } from '../services/tokenService';
+
+    const showToastify = inject('showToastify');
 
     const loading = inject("loading");
     const route = useRoute()
@@ -124,17 +183,15 @@
                 }
             ]
         },
-        // {
-        //     title: 'Sair',
-        //     route: '/login',
-        //     icon: 'mdi-power',
-        // },
     ]);
     const itemSelected = ref(null);
     const mounted = ref(false);
+    const menu = ref(false);
+    const dadosUser = ref(false);
+    const backgroundImage = ref('/images/account.png');
 
     const goTo = (route) => {
-        drawer.value = !drawer.value;
+        drawer.value = false;
         itemSelected.value = route;
         
         if(route === '/login') {
@@ -144,13 +201,30 @@
         navigateTo(route);
     };
 
+    const showToast = (message) => {
+        showToastify(message, 'info');
+    };
+
+    const setDadosUser = () => {
+        const dados = tokenUserData();
+        
+        if(dados) {
+            dadosUser.value = dados;
+            backgroundImage.value = dadosUser.value.photo;
+        } else {
+            dadosUser.value = false;
+        } 
+    }
+
     watch(() => route.fullPath, (nv) => {
         itemSelected.value = route.fullPath;
+        setDadosUser();
     });
 
     onMounted(() => {
         itemSelected.value = route.fullPath;
         mounted.value = true;
+        setDadosUser();
     });
 </script>
 <style scoped>

@@ -30,8 +30,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     });
 
     axiosInstance.interceptors.response.use(response => {
-        loading.value = false;
         if(!response.config.url.includes('/users'))  {
+            loading.value = false;
+            
             sessionStorage.setItem('token', response?.headers?.get('Authorization').split(" ")[1]);
         }
         if (response.config.url.includes('/report/generate') || response.config.url.includes('report/generate')) {

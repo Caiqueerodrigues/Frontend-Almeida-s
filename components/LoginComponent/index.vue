@@ -62,9 +62,9 @@
 <script setup>
     const axios = inject('axios');
     const showToastify = inject('showToastify');
+    const loading = useState('loading');
     const router = useRouter();
     
-    const loading = ref(false);
     const visible = ref(false);
     const form = ref(null);
     const user = ref({ user: null, password: null });
@@ -77,10 +77,9 @@
         }
 
         loading.value = true;
-
+        
         user.value.user = user.value.user.toLowerCase().trim() 
         axios.post('/users', user.value).then(response => {
-            loading.value = false;
             sessionStorage.setItem('token', response.response);
             router.push('/pedidos');
         }).catch(err => {
