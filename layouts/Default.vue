@@ -29,23 +29,28 @@
                 temporary
             >
                 <p class="font-weight-bold ml-2 text-center text-secondary my-4">Bem vindo(a) {{ tokenUser() }}</p>
-                <v-list>
-                    <v-list-item 
+                <v-expansion-panels variant="accordion">
+                    <v-expansion-panel
                         v-for="item in items" 
                         :key="item.title"
-                        class="pointer"
+                        class="bg-transparent font-weight-bold text-default px-2 pb-3"
+                        :title="item.title"
                     >
-                        <v-list-item-title 
-                            @click="!loading && goTo(item.route)" 
-                            class="text-surface font-weight-bold text-center py-4"             
-                            :class="itemSelected === item.route || (item.route.includes('pedido') && itemSelected?.includes('pedido')) ? 'selected' : ''"
-                        >
-                            <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
-                            {{ item.title }}
-                            <v-icon class="pb-2" color="primary">{{item.icon}}</v-icon>
-                        </v-list-item-title>
-                    </v-list-item>
-                </v-list>
+                        <template v-slot:text>
+                            <v-btn
+                                v-for="subItem in item.items" 
+                                :key="subItem.title"
+                                @click="!loading && goTo(subItem.route)" 
+                                class="text-surface font-weight-bold text-center py-4 bg-transparent pointer"
+                                :class="itemSelected === subItem.route || (subItem?.route.includes('pedido') && itemSelected?.includes('pedido')) ? 'selected' : ''"
+                            >
+                                <v-icon class="pb-2 mx-1" color="primary">{{ subItem.icon }}</v-icon>
+                                    {{ subItem.title }}
+                                <v-icon class="pb-2 mx-1" color="primary">{{ subItem.icon }}</v-icon>
+                            </v-btn>
+                        </template>
+                    </v-expansion-panel>
+                </v-expansion-panels>
             </v-navigation-drawer>
 
             <v-main class="h-100 px-5 bg-primary text-white">
@@ -65,50 +70,65 @@
     const drawer = ref(false);
     const items = ref([
         {
-            title: 'Clientes',
-            route: '/clientes',
-            icon: 'mdi-account-tie',
+            title: 'Início',
+            items: [
+                {
+                    title: 'Dashboard',
+                    route: '/dashboard',
+                    icon: 'mdi-finance',
+                },
+                {
+                    title: 'Pedidos',
+                    route: '/pedidos',
+                    icon: 'mdi-currency-usd',
+                },
+                {
+                    title: 'Relatórios',
+                    route: '/relatorios',
+                    icon: 'mdi-file-pdf-box',
+                },
+                {
+                    title: 'Histórico',
+                    route: '/historico',
+                    icon: 'mdi-history',
+                },
+            ]
         },
         {
-            title: 'Materiais',
-            route: '/materiais',
-            icon: 'mdi-script',
+            title: "Produtos",
+            items: [
+                {
+                    title: 'Materiais',
+                    route: '/materiais',
+                    icon: 'mdi-script',
+                },
+                {
+                    title: 'Modelos',
+                    route: '/modelos',
+                    icon: 'mdi-shoe-heel',
+                }
+            ]
         },
         {
-            title: 'Modelos',
-            route: '/modelos',
-            icon: 'mdi-shoe-heel',
-        },
-        {
-            title: 'Pedidos',
-            route: '/pedidos',
-            icon: 'mdi-currency-usd',
-        },
-        {
-            title: 'Relatórios',
-            route: '/relatorios',
-            icon: 'mdi-file-pdf-box',
-        },
-        {
-            title: 'Funcionários',
-            route: '/funcionarios',
-            icon: 'mdi-account-group',
+            title: "Gestão",
+            items: [
+                {
+                    title: 'Clientes',
+                    route: '/clientes',
+                    icon: 'mdi-account-tie',
+                },
+                {
+                    title: 'Funcionários',
+                    route: '/funcionarios',
+                    icon: 'mdi-account-group',
+                }
+            ]
         },
         // {
-        //     title: 'Tabelas',
-        //     route: '/tabelas',
-        //     icon: 'mdi-table-multiple',
+        //     title: 'Sair',
+        //     route: '/login',
+        //     icon: 'mdi-power',
         // },
-        {
-            title: 'Histórico',
-            route: '/historico',
-            icon: 'mdi-history',
-        },
-        {
-            title: 'Sair',
-            route: '/login',
-            icon: 'mdi-power',
-        },
     ]);
     const itemSelected = ref(null);
     const mounted = ref(false);
@@ -148,5 +168,9 @@
 
     .selected {
         color: #fff !important;
+    }
+
+    .text-default {
+        color: #C0812D !important;
     }
 </style>

@@ -391,8 +391,8 @@ import { ModalRelatorios } from '#components';
                 ];
         
                 const errors = fieldsRequired.filter(field => !field.value);
-    
-                if(pedido.value.cor.length > 0 && pedido.value.tipoRecebido.length !== pedido.value.cor.length) {
+
+                if((pedido.value.cor.length === 0 || pedido.value.cor.length > 0) && pedido.value.tipoRecebido.length !== pedido.value.cor.length) {
                     showToastify("Quantidade divergentes de materiais e cores!", "info");
                     return false;
                 }
