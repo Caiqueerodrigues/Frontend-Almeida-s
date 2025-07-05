@@ -310,6 +310,7 @@ import { ModalRelatorios } from '#components';
         { title: 'Rendimento', align: 'center', key: 'rendimento' },
         { title: 'Observação', align: 'center', key: 'obs' },
         { title: 'Refêrencia', align: 'center', key: 'refOrdem' },
+        { title: 'Unidade medida', align: 'center', key: 'unidadeMedida' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
 
@@ -462,7 +463,7 @@ import { ModalRelatorios } from '#components';
         dados.dataRetirada = pedido.value.dataRetirada ? formatteDateDB(pedido.value.dataRetirada) : null;
         dados.tipoRecebido = pedido.value.tipoRecebido.join(",");
         dados.rendimentoParesMetro = pedido.value.rendimentoParesMetro ? pedido.value.rendimentoParesMetro.join(",") : null;
-        dados.cor = pedido.value.cor ? pedido.value.cor.join(",") : null;
+        dados.cor = pedido.value.cor ? pedido.value.cor.join(", ") : null;
         dados.totalDinheiro = Number(pedido.value.totalDinheiro);
         dados.totalPares = Number(pedido.value.totalPares);
         dados.quemCortou = pedido.value.quemCortou;

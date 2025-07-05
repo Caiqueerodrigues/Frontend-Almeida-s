@@ -17,6 +17,18 @@
                     @keydown.enter="handleEnterKey($event)"
                 ></v-text-field>
             </v-col>
+            <v-col cols="12"  class="pl-7">
+                <v-text-field
+                    v-capitalize-first
+                    rounded="xl"
+                    label="Unidade de medida"
+                    v-model="modelo.unidadeMedida"
+                    variant="outlined"
+                    :rules="[(value) => !!value || 'A unidade é obrigatório!']"
+                    maxLength="100"
+                    @keydown.enter="handleEnterKey($event)"
+                ></v-text-field>
+            </v-col>
             <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
@@ -64,7 +76,7 @@
             <v-col cols="12" md="4" class="pl-7">
                 <v-text-field
                     rounded="xl"
-                    label="Rendimento por Metro"
+                    :label="'Rendimento ' + modelo.unidadeMedida"
                     v-model="modelo.rendimento"
                     type="number"
                     variant="outlined"
@@ -237,7 +249,8 @@
         rendimento: 0,
         cronometragem: 0,
         obs: "",
-        fotos: []
+        fotos: [],
+        tipoMaterial: 'Metro'
     });
     const photoInput = ref(null);
     const idsFotos = ref([]);
@@ -406,7 +419,8 @@
             rendimento: 0,
             cronometragem: 0,
             obs: "",
-            fotos: []
+            fotos: [],
+            unidadeMedida: 'Metro'
         };
         emit('voltar', false);
     };
