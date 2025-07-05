@@ -99,7 +99,7 @@
         { title: 'Pago?', align: 'center', key: 'jaFoiPago' },
         { title: 'Quem cortou', align: 'center', key: 'quemCortou' },
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
-        { title: 'Observação', align: 'center', key: 'obs' },
+        { title: 'Observação', align: 'center', key: 'obs', maxWidth: '250px' },
     ]);
     const showModalRelatorios = ref(false);
     const filter = ref({ client: 'Todos', situation: 'Todos' });
