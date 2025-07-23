@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <Loading v-if="loading || !mounted"/>
-        <v-layout v-if="route.path !== '/login'">
+        <v-layout v-if="route.path !== '/login' && usernameToken()">
             <v-app-bar color="#000" class="pr-4">
                 <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" :disabled="loading"></v-app-bar-nav-icon>
 
@@ -38,7 +38,7 @@
                                         <v-list>
                                         <v-list-item
                                             :prepend-avatar="dadosUser.photo"
-                                            :title="(dadosUser.sexo === 'M' ? 'Bem vindo ' : 'Bem vinda ') + (tokenUser() ?? '')"
+                                            :title="(dadosUser.sexo === 'M' ? 'Bem vindo ' : 'Bem vinda ') + (usernameToken() ?? '')"
                                             :subtitle="dadosUser.funcao + ` Almeida's Cortes`"
                                         ></v-list-item>
                                         </v-list>
@@ -84,7 +84,7 @@
             >
                 <p class="font-weight-bold ml-2 text-center text-secondary my-4 d-flex align-center">
                     <img :src="backgroundImage" alt="Avatar do usuário" class="mr-2" style="width: 40px">
-                    Bem vind{{ dadosUser.sexo === "M" ? 'o' : 'a' }} {{ tokenUser() ?? '' }}
+                    Bem vind{{ dadosUser.sexo === "M" ? 'o' : 'a' }} {{ usernameToken() ?? '' }}
                 </p>
                 <v-expansion-panels variant="accordion">
                     <v-expansion-panel
@@ -120,7 +120,7 @@
     </v-card>
 </template>
 <script setup>
-    import { tokenUser, tokenUserData } from '../services/tokenService';
+    import { usernameToken, tokenUserData } from '../services/tokenService';
 
     const showToastify = inject('showToastify');
 

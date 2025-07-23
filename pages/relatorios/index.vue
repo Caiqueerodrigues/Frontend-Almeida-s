@@ -93,6 +93,7 @@
         { title: 'Nome', align: 'center', key: 'nome' },
         { title: 'Dia', align: 'center', key: 'dia' },
         { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
+        { title: 'Rendimento', align: 'center', key: 'modelo.rendimento' },
         { title: 'Cor(es)', align: 'center', key: 'cor' },
         { title: 'Total de pares', align: 'center', key: 'totalPares' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },

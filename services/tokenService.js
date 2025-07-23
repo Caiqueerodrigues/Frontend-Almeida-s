@@ -44,7 +44,7 @@ const tokenDecoded = () => {
     }
 }
 
-export const tokenUser = () => {
+export const usernameToken = () => {
     const user = tokenDecoded();
     if (user) {
         return user.name;

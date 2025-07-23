@@ -13,11 +13,13 @@
                 @click:row="handleRowClick"
             >
                 <template v-slot:[`item.situacao`]="{ item }">
-                    <v-chip :color="item.ativo ? 'success' : 'primary'" text-color="white">
-                        <v-icon v-if="item.icons">
-                            {{ item.situacao }}
-                        </v-icon>
-                    </v-chip>
+                    <div class="centered-cell">
+                        <v-chip :color="item.ativo ? 'success' : 'primary'" text-color="white">
+                            <v-icon v-if="item.icons">
+                                {{ item.situacao }}
+                            </v-icon>
+                        </v-chip>
+                    </div>
                 </template>
 
                 <template v-slot:[`item.checkbox`]="{ item, index }">
@@ -31,48 +33,68 @@
                 </template>
 
                 <template v-slot:[`item.nome`]="{ item }">
-                    {{ item.nome }}
+                    <div class="centered-cell">
+                        {{ item.nome }}
+                    </div>
                 </template>
                 <template v-slot:[`item.dia`]="{ item }">
-                    {{ item.dia }}
+                    <div class="centered-cell">
+                        {{ item.dia }}
+                    </div>
                 </template>
 
                 <template v-slot:[`item.preco`]="{ item }">
-                    R$ {{ formattePrice(item.preco) }}
+                    <div class="centered-cell">
+                        R$ {{ formattePrice(item.preco) }}
+                    </div>
                 </template>
                 <template v-slot:[`item.totalDinheiro`]="{ item }">
-                    R$ {{ formattePrice(item.totalDinheiro) }}
+                    <div class="centered-cell">
+                        R$ {{ formattePrice(item.totalDinheiro) }}
+                    </div>
                 </template>
                 <template v-slot:[`item.dataPedido`]="{ item }">
-                    {{ getHours(item.dataPedido) }}
+                    <div class="centered-cell">
+                        {{ getHours(item.dataPedido) }}
+                    </div>
                 </template>
                 <template v-slot:[`item.modelo.preco`]="{ item }">
-                    R$ {{ formattePrice(item.modelo.preco) }}
+                    <div class="centered-cell">
+                        R$ {{ formattePrice(item.modelo.preco) }}
+                    </div>
                 </template>
                 <template v-slot:[`item.precoPar`]="{ item }">
-                    R$ {{ formattePrice(item.precoPar) }}
+                    <div class="centered-cell">
+                        R$ {{ formattePrice(item.precoPar) }}
+                    </div>
                 </template>
                 <template v-slot:[`item.cor`]="{ item }">
-                    {{ getDadosJoin(item.cor) }}
+                    <div class="centered-cell">
+                        {{ getDadosJoin(item.cor) }}
+                    </div>
                 </template>
                 <template v-slot:[`item.jaFoiPago`]="{ item }">
-                    <v-icon v-if="item.jaFoiPago === 'Sim'" size="40" class="text-success">
-                        mdi-check
-                    </v-icon>
-                    <v-icon v-if="item.jaFoiPago === 'Não'" size="40" class="text-error">
-                        mdi-close
-                    </v-icon>
+                    <div class="centered-cell">
+                        <v-icon v-if="item.jaFoiPago === 'Sim'" size="40" class="text-success">
+                            mdi-check
+                        </v-icon>
+                        <v-icon v-if="item.jaFoiPago === 'Não'" size="40" class="text-error">
+                            mdi-close
+                        </v-icon>
+                    </div>
                 </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
-                    <v-btn variant="text" @click="emitId(item)">
-                        <v-icon v-if="props.acaoVer">
-                            mdi-pencil
-                        </v-icon>
-                        <v-icon v-if="!props.acaoVer" size="30" :class="item === selectedItem ? 'text-success' : '' ">
-                            mdi-check-bold
-                        </v-icon>
-                    </v-btn>
+                    <div class="centered-cell">
+                        <v-btn variant="text" @click="emitId(item)">
+                            <v-icon v-if="props.acaoVer">
+                                mdi-pencil
+                            </v-icon>
+                            <v-icon v-if="!props.acaoVer" size="30" :class="item === selectedItem ? 'text-success' : '' ">
+                                mdi-check-bold
+                            </v-icon>
+                        </v-btn>
+                    </div>
                 </template>
 
             </v-data-table-virtual>
@@ -107,6 +129,12 @@
     };
 
     const handleRowClick = (event, { item }) => {
+        const el = event.target;
+
+        const isCheckbox = el.closest('.v-checkbox');
+
+        if (isCheckbox) return;
+
         if (props.redirect) {
             redirect(item);
         }
@@ -126,3 +154,12 @@
         }, 100);
     });
 </script>
+<style scoped>
+    .centered-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        word-break: break-word;
+        white-space: normal
+    }
+</style>

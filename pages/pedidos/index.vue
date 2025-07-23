@@ -102,6 +102,7 @@
                 :items="pedidosFiltrados"
                 :headers="nomesColunas" 
                 :acaoVer="true"
+                :redirect="true"
                 @verId="showFormFunc($event)"
                 @selecteds="setSelecteds($event)"
             />
@@ -198,20 +199,20 @@
 
     const formPagos = ref(null);
     const nomesColunas = ref([
-        { title: ' ', align: 'center', key: 'checkbox', width: '10px' },
-        { title: 'ID pedido', align: 'center', key: 'id', width: '30px' },
-        { title: 'Cliente', align: 'center', key: 'nomeCliente', width: '30px' },
+        { title: ' ', align: 'center', key: 'checkbox', maxWidth: '50px' },
+        { title: 'ID pedido', align: 'center', key: 'id', maxWidth: '60px' },
+        { title: 'Cliente', align: 'center', key: 'nomeCliente' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
-        { title: 'Hora pedido', align: 'center', key: 'dataPedido', width: '150px' },
-        { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
-        { title: 'Cor(es)', align: 'center', key: 'cor' },
+        { title: 'Hora pedido', align: 'center', key: 'dataPedido', maxWidth: '120px' },
+        { title: 'Modelo', align: 'center', key: 'modelo.tipo', maxWidth: '280px' },
+        { title: 'Rend.', align: 'center', key: 'modelo.rendimento', maxWidth: '80px' },
+        { title: 'Cor(es)', align: 'center', key: 'cor', maxWidth: '180px' },
         { title: 'Preço par', align: 'center', key: 'modelo.preco' },
-        { title: 'Total pares', align: 'center', key: 'totalPares' },
+        { title: 'Total pares', align: 'center', key: 'totalPares', maxWidth: '80px' },
         { title: 'Obs.', align: 'center', key: 'obs', maxWidth: '250px' },
-        { title: 'Quem cortou', align: 'center', key: 'quemCortou' },
+        { title: 'Quem cortou', align: 'center', key: 'quemCortou', maxWidth: '80px' },
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
-        { title: 'Pago?', align: 'center', key: 'jaFoiPago' },
-        { title: 'Ação', align: 'center', key: 'ver' },
+        { title: 'Pago?', align: 'center', key: 'jaFoiPago', maxWidth: '80px' },
     ]);
     const textDate = ref("");
     const pedidos = ref([]);
