@@ -209,7 +209,7 @@
     ]);
     const dados = ref([]);
     const selecteds = ref([]);
-    const valorHora = ref(16.48);
+    const valorHora = ref(17.099);
     const filter= ref('Todos');
     const checkedAll = ref(false);
     
@@ -228,7 +228,7 @@
         const dateFinal = formatteDateDB(date.value[1]).split("T")[0];
         dados.value = [];
         selecteds.value = [];
-        valorHora.value = 16.48;
+        valorHora.value = 17.099;
         checkedAll.value = false;
         filter.value = 'Todos';
 
@@ -391,7 +391,7 @@
         axios.put('/employee/update-status-payment', selecteds.value).then(response => {
             getDados();
             selecteds.value = [];
-            valorHora.value = 16.48;
+            valorHora.value = 17.099;
         }).catch(err => console.error(err));
     }
 
