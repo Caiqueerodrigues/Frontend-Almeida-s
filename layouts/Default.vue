@@ -37,9 +37,9 @@
                                     <v-card min-width="300">
                                         <v-list>
                                         <v-list-item
-                                            :prepend-avatar="dadosUser.photo"
-                                            :title="(dadosUser.sexo === 'M' ? 'Bem vindo ' : 'Bem vinda ') + (usernameToken() ?? '')"
-                                            :subtitle="dadosUser.funcao + ` Almeida's Cortes`"
+                                            :prepend-avatar="dadosUser?.photo"
+                                            :title="(dadosUser?.sexo === 'M' ? 'Bem vindo ' : 'Bem vinda ') + (usernameToken() ?? '')"
+                                            :subtitle="dadosUser?.funcao + ` Almeida's Cortes`"
                                         ></v-list-item>
                                         </v-list>
 
@@ -48,7 +48,7 @@
                                             <v-list-item>
                                                 <v-btn
                                                     variant="text"
-                                                    @click="showToast('Em desenvolvimento')"
+                                                    @click="goTo('/perfil')"
                                                 >
                                                     <v-icon>mdi-account</v-icon>
                                                     PERFIL
@@ -82,9 +82,9 @@
                 class="bg-black"
                 temporary
             >
-                <p class="font-weight-bold ml-2 text-center text-secondary my-4 d-flex align-center">
+                <p class="font-weight-bold ml-2 text-center text-secondary my-4 d-flex align-center pointer" @click="goTo('/perfil')">
                     <img :src="backgroundImage" alt="Avatar do usuário" class="mr-2" style="width: 40px">
-                    Bem vind{{ dadosUser.sexo === "M" ? 'o' : 'a' }} {{ usernameToken() ?? '' }}
+                    Bem vind{{ dadosUser?.sexo === "M" ? 'o' : 'a' }} {{ usernameToken() ?? '' }}
                 </p>
                 <v-expansion-panels variant="accordion">
                     <v-expansion-panel
@@ -199,10 +199,6 @@
         }
 
         navigateTo(route);
-    };
-
-    const showToast = (message) => {
-        showToastify(message, 'info');
     };
 
     const setDadosUser = () => {

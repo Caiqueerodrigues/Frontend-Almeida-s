@@ -51,6 +51,13 @@ export const usernameToken = () => {
     }
 }
 
+export const idUserToken = () => {
+    const user = tokenDecoded();
+    if (user) {
+        return user.id;
+    }
+}
+
 export const tokenUserData = () => {
     const user = tokenDecoded();
     if(user) {

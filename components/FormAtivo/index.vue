@@ -1,10 +1,10 @@
 <template>
     <span class="text-secondary">Está ativo?</span>
         <v-radio-group 
-        v-model="props.valueInicial"
-        inline
-        class="d-flex justify-center color-default"
-    >
+            v-model="props.valueInicial"
+            inline
+            class="d-flex justify-center color-default"
+        >
         <v-radio
             label="Sim"
             :value="true"
