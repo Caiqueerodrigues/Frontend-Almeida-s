@@ -240,7 +240,6 @@
     const getDados = () => {
         axios.get(`/users/${id.value}`).then(response => {
             user.value = response;
-            form.value.disabled()
         }).catch(e => console.error(e));
     }
 
