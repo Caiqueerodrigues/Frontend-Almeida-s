@@ -1,6 +1,7 @@
 import { defineNuxtPlugin } from '#app';
 import { decodeJwt } from 'jose';
 import axios from 'axios';
+import { setToken } from '~/services/tokenService';
 
 export default defineNuxtPlugin((nuxtApp) => {
     const baseURL = useRuntimeConfig().public.API_BACKEND;
@@ -32,7 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     axiosInstance.interceptors.response.use(response => {
         loading.value = false;
         if(!response.config.url.includes('/users'))  {
-            sessionStorage.setItem('token', response?.headers?.get('Authorization').split(" ")[1]);
+            setToken(response?.headers?.get('Authorization').split(" ")[1]);
         }
         if (response.config.url.includes('/report/generate') || response.config.url.includes('report/generate')) {
             if(response.data.MsgAlerta !== "" && response.data.response === "" ) return showToastfy(response.data.msgAlerta, "warning");

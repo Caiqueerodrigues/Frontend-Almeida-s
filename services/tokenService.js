@@ -76,6 +76,8 @@ export const removeToken = () => {
 
 export const setToken = (data) => {
     sessionStorage.setItem('token', data);
+    const decoded = decodeJwt(data);
+    setNewPhotoToken(decoded?.photo);
 }
 
 export const setNewPhotoToken = (nome) => {

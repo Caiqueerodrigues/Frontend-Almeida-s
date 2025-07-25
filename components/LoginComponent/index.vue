@@ -60,6 +60,8 @@
         </v-row>
 </template>
 <script setup>
+import { setToken } from '~/services/tokenService';
+
     const axios = inject('axios');
     const showToastify = inject('showToastify');
     const loading = useState('loading');
@@ -80,7 +82,7 @@
         
         user.value.user = user.value.user.toLowerCase().trim() 
         axios.post('/users', user.value).then(response => {
-            sessionStorage.setItem('token', response.response);
+            setToken(response.response);
             router.push('/pedidos');
         }).catch(err => {
             loading.value = false;
