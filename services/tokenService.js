@@ -68,3 +68,17 @@ export const tokenUserData = () => {
         }
     }
 }
+
+export const setToken = (data) => {
+    sessionStorage.setItem('token', data);
+}
+
+export const setNewPhotoToken = (nome) => {
+    photoPathPrivate.value = nome;
+}
+
+let photoPathPrivate = ref(tokenDecoded()?.photo ?? 'global.png');
+
+export const photoPath = () => {
+    return photoPathPrivate.value;
+}

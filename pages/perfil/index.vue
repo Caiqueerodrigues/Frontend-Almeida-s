@@ -154,7 +154,7 @@
                 ></v-text-field>
             </v-col>
 
-            <v-col cols="8" class="d-flex justify-center mb-8">
+            <v-col cols="12" class="d-flex justify-center mb-8">
                 <v-btn variant="outlined" class="rounded-xl mr-6 font-weight-bold" @click="onCancelar()">
                     CANCELAR
                 </v-btn>
@@ -168,15 +168,15 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
-    import { idUserToken, usernameToken } from '~/services/tokenService';
+    import { idUserToken, setNewPhotoToken, usernameToken } from '~/services/tokenService';
 
     const axios = inject("axios");
     const router = useRouter();
-    const showToastify = inject("showToastify");
     const validForm = inject("validateForm");
 
     const form = ref(null);
     const fileInput = ref(null);
+    const selectedPhotoFile = ref(null);
     const id = ref(null);
     const visible = ref(false);
     const confirmNewPassword = ref(null);
@@ -213,6 +213,8 @@
 
     const handleFileChange = (event) => {
         const file = event?.target?.files[0];
+        selectedPhotoFile.value = file;
+
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -243,10 +245,33 @@
         }).catch(e => console.error(e));
     }
 
-    const submit = () => {
-        if(form.value) {
-            showToastify('Em desenvolvimento', 'info');
-            //TODO BACKEND
+    const submit = async () => {
+        const errors = await validForm(form);
+        if(errors.valid) {
+            let newPhoto = false;
+
+            const formData = new FormData();
+                formData.append('id', id.value);
+                formData.append('name', user.value.name);
+                formData.append('fullName', user.value.fullName);
+                formData.append('funct', user.value.funct);
+                formData.append('sex', user.value.sex);
+                formData.append('user', user.value.user);
+                formData.append('newPassword', user.value.newPassword ?? null);
+                formData.append('active', user.value.active);
+
+            if (/^data:image\/.*;base64,/.test(user.value.photo)) {
+                formData.append('photo', selectedPhotoFile.value);
+                newPhoto = true;
+            }
+
+            await axios.put(`/users`, formData).then(response => {
+                if(newPhoto) setNewPhotoToken(`${id.value}_${selectedPhotoFile.value.name}`);
+                if(user.value.newPassword) {
+                    user.value.newPassword = null;
+                    confirmNewPassword.value = null
+                }
+            }).catch(e => console.error(e));
         }
     }
 

@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <Loading v-if="loading || !mounted"/>
-        <v-layout v-if="route.path !== '/login' && usernameToken()">
+        <v-layout v-if="route.path !== '/login'">
             <v-app-bar color="#000" class="pr-4">
                 <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" :disabled="loading"></v-app-bar-nav-icon>
 
@@ -37,7 +37,7 @@
                                     <v-card min-width="300">
                                         <v-list>
                                         <v-list-item
-                                            :prepend-avatar="dadosUser?.photo"
+                                            :prepend-avatar="pathPhotoPerfil"
                                             :title="(dadosUser?.sexo === 'M' ? 'Bem vindo ' : 'Bem vinda ') + (usernameToken() ?? '')"
                                             :subtitle="dadosUser?.funcao + ` Almeida's Cortes`"
                                         ></v-list-item>
@@ -110,7 +110,7 @@
                 </v-expansion-panels>
             </v-navigation-drawer>
 
-            <v-main class="h-100 px-5 bg-primary text-white">
+            <v-main class="px-5 bg-primary text-white" :class="loading ? 'max-height' : 'h-100'">
                 <NuxtPage />
             </v-main>
         </v-layout>
@@ -120,8 +120,9 @@
     </v-card>
 </template>
 <script setup>
-    import { usernameToken, tokenUserData } from '../services/tokenService';
+    import { usernameToken, tokenUserData, photoPath } from '../services/tokenService';
 
+    const config = useRuntimeConfig();
     const showToastify = inject('showToastify');
 
     const loading = inject("loading");
@@ -189,6 +190,7 @@
     const menu = ref(false);
     const dadosUser = ref(false);
     const backgroundImage = ref('/images/account.png');
+    const pathPhotoPerfil = ref(null);
 
     const goTo = (route) => {
         drawer.value = false;
@@ -206,24 +208,38 @@
         
         if(dados) {
             dadosUser.value = dados;
-            backgroundImage.value = dadosUser.value.photo;
+            backgroundImage.value = pathPhotoPerfil.value;
         } else {
             dadosUser.value = false;
         } 
     }
 
+    const setValuePathPhoto = (nv) => {
+        pathPhotoPerfil.value = `${config.public.API_BACKEND}/anexo/perfil/${nv}`;
+        setDadosUser();
+        console.log(nv)
+    }
+
     watch(() => route.fullPath, (nv) => {
         itemSelected.value = route.fullPath;
-        setDadosUser();
+        setValuePathPhoto(photoPath());
     });
 
+    watch(() => photoPath(), (nv) => {
+        setValuePathPhoto(nv);
+    });
+    
     onMounted(() => {
         itemSelected.value = route.fullPath;
         mounted.value = true;
-        setDadosUser();
+        setValuePathPhoto(photoPath());
     });
 </script>
 <style scoped>
+    .max-height {
+        height: 98dvh !important;
+    }
+    
     .h-100 {
         min-height: 100dvh !important;
     }
