@@ -50,7 +50,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         
         if(error?.response?.status === 403) {
             showToastfy("Por favor, efetue novamente o login!", "error");
-            sessionStorage.removeItem('token');
+            removeToken();
             setTimeout(() => {
                 router.push('/login');
             }, 1000 * 5);

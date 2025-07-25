@@ -69,6 +69,11 @@ export const tokenUserData = () => {
     }
 }
 
+export const removeToken = () => {
+    sessionStorage.removeItem('token');
+    setNewPhotoToken('global.png');
+}
+
 export const setToken = (data) => {
     sessionStorage.setItem('token', data);
 }

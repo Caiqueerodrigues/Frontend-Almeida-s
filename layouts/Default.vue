@@ -120,7 +120,7 @@
     </v-card>
 </template>
 <script setup>
-    import { usernameToken, tokenUserData, photoPath } from '../services/tokenService';
+    import { usernameToken, tokenUserData, photoPath, removeToken } from '../services/tokenService';
 
     const config = useRuntimeConfig();
     const showToastify = inject('showToastify');
@@ -197,7 +197,7 @@
         itemSelected.value = route;
         
         if(route === '/login') {
-            sessionStorage.removeItem('token');
+            removeToken();
         }
 
         navigateTo(route);
