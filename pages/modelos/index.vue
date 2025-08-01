@@ -107,7 +107,7 @@
     };
 
     const voltarListagem = (ev) => {
-        clientSelected.value = null;
+        //clientSelected.value = null;
         idModelo.value = null;
         showForm.value = ev;
     };
