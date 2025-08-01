@@ -259,7 +259,7 @@
                                     :disabled="!clienteSelecionado"
                                     @click="getNaoEntegues()"
                                 >
-                                    SALVAR
+                                    BUSCAR
                                 </v-btn>
                             </v-col>
                         </v-row>
@@ -402,6 +402,7 @@
     const getNaoEntegues = async () => {
         naoEntregues.value = true;
         const idClient = clients.value.find(item => item.nome === clienteSelecionado.value)?.id;
+        showModalRetirados.value = false;
         
         await axios.get(`/orders/undelivered/${idClient}`).then(response => {
             if(response.length > 0) {
