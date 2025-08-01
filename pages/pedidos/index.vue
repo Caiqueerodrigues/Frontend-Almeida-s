@@ -1,12 +1,12 @@
 <template>
     <v-row class="h-100 justify-center align-center">
-        <v-col cols="12" class="text-center">
+        <v-col cols="12" class="text-center pt-4">
             <h2 class="text-center text-secondary">
-                LISTAGEM DE PEDIDOS <br>
-                {{ devidos ? ' DEVIDOS' : textDate }}
+                LISTAGEM DE PEDIDOS  {{ naoEntregues ? 'NÃO ENTREGUES DE ' : '' }}<br>
+                {{ devidos ? ' DEVIDOS' : naoEntregues ? clienteSelecionado : textDate }}
             </h2>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" v-if="!naoEntregues">
             <v-row class="justify-center w-100">
                 <v-col cols="12" class="text-center" v-if="pedidos.length > 0">
                     <span v-if="!devidos" class="text-secondary text-h6 font-weight-bold">
@@ -43,9 +43,13 @@
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="12" v-if="pedidos.length === 0">
-            <h1 class="text-center text-secondary">
+        <v-col cols="12" v-if="pedidos.length === 0 ">
+            <h1 class="text-center text-secondary" v-if="!naoEntregues">
                 Não existem pedidos <br> {{ devidos ? '' : 'para a data selecionada'  }}
+            </h1>
+
+            <h1 class="text-center text-secondary" v-if="naoEntregues">
+                Não existem Não entregues para este cliente!
             </h1>
         </v-col>
         <v-col cols="12" class="text-center z-1">
@@ -54,7 +58,7 @@
                 class="rounded-xl mt-2" 
                 color="success" 
                 @click="showFormFunc()"
-                v-if="!devidos"
+                v-if="!devidos && !naoEntregues"
             >
                 CADASTRAR PEDIDO
             </v-btn>
@@ -71,10 +75,19 @@
             <v-btn 
                 variant="flat"
                 class="rounded-xl ml-4 mt-2" 
-                :color="devidos ? 'success' : 'warning'" 
-                @click="devidos ? getPedidos() : getPendentes()"
+                :color="devidos || naoEntregues ? 'success' : 'warning'" 
+                @click="devidos || naoEntregues ? getPedidos() : getPendentes()"
             >
-                {{ devidos ? 'BUSCAR PEDIDOS' : 'BUSCAR PENDENTE(S)' }}
+                {{ devidos || naoEntregues ? 'BUSCAR PEDIDOS' : 'BUSCAR PENDENTE(S)' }}
+            </v-btn>
+            <v-btn 
+                v-if="!devidos"
+                variant="flat"
+                class="rounded-xl ml-4 mt-2" 
+                color="warning"
+                @click="getClientes()"
+            >
+                BUSCAR NÃO ENTEGUES(S)
             </v-btn>
             <v-btn 
                 variant="flat"
@@ -120,7 +133,7 @@
                 <v-card
                     class="text-surface bg-primary text-center "
                     prepend-icon="mdi-border-color"
-                    :title="`Marcar pedido(s) como pago(s)`"
+                    :title="`Buscar pedido(s)não entregue(s) por cliente`"
                 >
                     <template #append>
                         <v-icon
@@ -186,6 +199,75 @@
         @setInactiveModal="showModalDate = $event"
         @confirma="marcarPagos($event)"
     />
+
+    <v-row v-if="showModalRetirados">
+        <v-col cols="12">
+            <v-dialog 
+                max-width="30%" 
+                height="40%" 
+                v-model="showModalRetirados"
+                persistent
+            >
+                <v-card
+                    class="text-surface bg-primary text-center "
+                    prepend-icon="mdi-border-color"
+                    :title="`Buscar pedidos não retirado(s)`"
+                >
+                    <template #append>
+                        <v-icon
+                            @click="showModalRetirados = false, clienteSelecionado = null"
+                            size="30"
+                        >
+                            mdi-close
+                        </v-icon>
+                    </template>
+                    <v-card-text class="px-0 pb-0">
+                        <v-divider :thickness="4" color="white" />
+                        <v-form ref="formPagos">
+                            <v-row class="justify-center">
+                                <v-col cols="11" class="mt-4">
+                                    <v-select
+                                        chips
+                                        class="w-100 mx-auto"
+                                        label="Selecione o cliente para buscar"
+                                        v-model="clienteSelecionado"
+                                        :items="clientsNames"
+                                        variant="outlined"
+                                        rounded="xl"
+                                    ></v-select>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </v-card-text>
+                    <template v-slot:actions>
+                        <v-row class="justify-center mb-4">
+                            <v-col cols="6" class="text-right">
+                                <v-btn
+                                    class="bg-primary text-white font-weight-bold rounded-xl mr-4"
+                                    size="large"
+                                    variant="outlined"
+                                    @click="showModalRetirados = false, clienteSelecionado = null"
+                                >
+                                    CANCELAR
+                                </v-btn>
+                            </v-col>
+                            <v-col cols="6" class="text-left">
+                                <v-btn
+                                    class="bg-success text-primary font-weight-bold rounded-xl px-6 py-2"
+                                    size="large"
+                                    variant="outlined"
+                                    :disabled="!clienteSelecionado"
+                                    @click="getNaoEntegues()"
+                                >
+                                    SALVAR
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </template>
+                </v-card>
+            </v-dialog>
+        </v-col>
+    </v-row>
 </template>
 <script setup>
     const axios = inject("axios");
@@ -194,6 +276,7 @@
     const formatteDateDB = inject("formatteDateDB");
     const selectedsPrint = ref([]);
     const showModalDate = ref(false);
+    const showModalRetirados = ref(false);
 
     const router = useRouter();
 
@@ -219,13 +302,19 @@
     const totalDevido = ref(0);
     const selectedDate = ref(new Date());
     const devidos = ref(false);
+    const naoEntregues = ref(false);
     const showTable = ref(true);
     const showModal = ref(false);
     const baixaVarios = ref({ quemRetirou: '', dataRetirada: selectedDate.value, ids: [] });
     const filterClient = ref('Todos');
+    const clients = ref(null);
+    const clientsNames = ref([]);
+    const clienteSelecionado = ref(null)
 
     const getPedidos = async () => {
         devidos.value = false;
+        naoEntregues.value = false;
+        clienteSelecionado.value = null;
         filterClient.value = 'Todos';
         selectedsPrint.value = [];
         let date = new Date(selectedDate.value);
@@ -242,6 +331,20 @@
                 pedidos.value = [];
             }
             resetCheckeds();
+        }).catch(err => console.error(err));
+    }
+
+    const getClientes = async () => {
+        if(clients.value) {
+            showModalRetirados.value = true;
+            return;
+        }
+        await axios.get('clients').then(response => {
+            if(response.length > 0) {
+                clientsNames.value = response.map(item => item.nome);
+                clients.value = response;
+                showModalRetirados.value = true;
+            }
         }).catch(err => console.error(err));
     }
 
@@ -267,6 +370,7 @@
         axios.put('/orders/withdrawn', baixaVarios.value).then(response => {
             closeModal();
             if(devidos.value) getPendentes();
+            else if(naoEntregues.value) getNaoEntegues();
             else getPedidos();
             resetCheckeds();
         }).catch(err => console.error(err));
@@ -280,6 +384,7 @@
 
     const getPendentes = async () => {
         devidos.value = true;
+        naoEntregues.value = false;
         filterClient.value = 'Todos';
         
         await axios.get('/orders/due').then(response => {
@@ -290,6 +395,22 @@
                 });
                 pedidos.value = response;
             } else pedidos.value = [];
+            resetCheckeds();
+        }).catch(err => console.error(err));
+    }
+
+    const getNaoEntegues = async () => {
+        naoEntregues.value = true;
+        const idClient = clients.value.find(item => item.nome === clienteSelecionado.value)?.id;
+        
+        await axios.get(`/orders/undelivered/${idClient}`).then(response => {
+            if(response.length > 0) {
+                response.forEach(item => {
+                    item.nomeCliente = item.client.nome;
+                });
+                pedidos.value = response;
+            } else pedidos.value = [];
+            showModalRetirados.value = false;
             resetCheckeds();
         }).catch(err => console.error(err));
     }

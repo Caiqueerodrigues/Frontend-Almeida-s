@@ -217,7 +217,6 @@
     const setValuePathPhoto = (nv) => {
         pathPhotoPerfil.value = `${config.public.API_BACKEND}/anexo/perfil/${nv}`;
         setDadosUser();
-        console.log(nv)
     }
 
     watch(() => route.fullPath, (nv) => {
