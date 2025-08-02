@@ -108,6 +108,7 @@
 
     const voltarListagem = (ev) => {
         //clientSelected.value = null;
+        getModelsClient(clientComplete.value[0].id)
         idModelo.value = null;
         showForm.value = ev;
     };
