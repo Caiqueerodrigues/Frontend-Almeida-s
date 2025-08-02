@@ -27,7 +27,7 @@
                 variant="outlined"
                 rounded="xl"
                 class="mr-4"
-                @click="voltarListagem(false)"
+                @click="clientSelected = null, idModelo = null, showForm = false"
             >
                 CANCELAR
             </v-btn>
