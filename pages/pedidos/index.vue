@@ -341,6 +341,7 @@
         }
         await axios.get('clients').then(response => {
             if(response.length > 0) {
+                clients.value = response;
                 clientsNames.value = response.map(item => item.nome);
                 clientsNames.value = [ 'Todos', ...clientsNames.value ];
                 showModalRetirados.value = true;
