@@ -342,7 +342,7 @@
         await axios.get('clients').then(response => {
             if(response.length > 0) {
                 clientsNames.value = response.map(item => item.nome);
-                clients.value = response;
+                clientsNames.value = [ 'Todos', ...clientsNames.value ];
                 showModalRetirados.value = true;
             }
         }).catch(err => console.error(err));
@@ -401,7 +401,9 @@
 
     const getNaoEntegues = async () => {
         naoEntregues.value = true;
-        const idClient = clients.value.find(item => item.nome === clienteSelecionado.value)?.id;
+        const idClient = clienteSelecionado.value !== 'Todos' ?
+            clients.value.find(item => item.nome === clienteSelecionado.value)?.id :
+            "Todos";
         showModalRetirados.value = false;
         
         await axios.get(`/orders/undelivered/${idClient}`).then(response => {
