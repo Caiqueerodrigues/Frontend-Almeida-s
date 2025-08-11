@@ -193,7 +193,7 @@
             <v-col cols="12" md="4" v-if="!loading && pedido.modelo">
                 <AutoCompleteMultiple 
                     v-capitalize-first
-                    :label="'Quem cortou'"
+                    :label="'Quem Concluiu'"
                     :items="cortadores"
                     :selecteds="pedido.quemCortou"
                     :outsideList="true"
@@ -296,7 +296,7 @@ import { ModalRelatorios } from '#components';
         dataRetirada: null,
         quemCortou: null
     });
-    const cortadores = ref(['Paulo Sérgio', 'Márcio', "Paulo/Márcio"]);
+    const cortadores = ref(['Paulo Sérgio', 'Márcio', "Paulo/Márcio", "Drien"]);
     const clients = ref([]);
     const clientSelected = ref(null);
     const clientsNames = ref([]);
