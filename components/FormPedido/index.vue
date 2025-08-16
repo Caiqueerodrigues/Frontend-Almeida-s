@@ -487,9 +487,9 @@ import { ModalRelatorios } from '#components';
             dados.modelo = model[0];
 
             await axios.post("/orders/create-order", dados).then(response => {
-                // setTimeout(() => {
-                //     voltar(); 
-                // }, 1000);
+                setTimeout(() => {
+                    voltar(); 
+                }, 1000);
             }).catch(e => console.error(e));
         }
     };
