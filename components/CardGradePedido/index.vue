@@ -1,9 +1,9 @@
 <template>
     <div class="container" @mouseleave="emitEvent()" v-if="!props.plus">
         <div class="interno d-flex flex-column align-center pt-4">
-            <v-icon class="close" @click="addRemoveItem('remove')">
+           <!-- <v-icon class="close" @click="addRemoveItem('remove')">
                 mdi-close
-            </v-icon>
+            </v-icon> -->
             <v-text-field
                 rounded="xl"
                 class="mb-2 w-75"
