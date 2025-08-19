@@ -1,4 +1,7 @@
 import { decodeJwt } from "jose";
+import axios from 'axios';
+
+let refreshTimeout = null;
 
 export const isLoggedIn = () => {
     if (process.client) {
@@ -36,6 +39,7 @@ const tokenDecoded = () => {
         try {
             const decoded = decodeJwt(token);
             
+            if(!refreshTimeout) agendamentoRefresh(token)
             return decoded;
         } catch (err) {
             sessionStorage.removeItem("token");
@@ -78,6 +82,7 @@ export const setToken = (data) => {
     sessionStorage.setItem('token', data);
     const decoded = decodeJwt(data);
     setNewPhotoToken(decoded?.photo);
+    agendamentoRefresh(data);
 }
 
 export const setNewPhotoToken = (nome) => {
@@ -88,4 +93,50 @@ let photoPathPrivate = ref(tokenDecoded()?.photo ?? 'global.png');
 
 export const photoPath = () => {
     return photoPathPrivate.value;
+}
+
+const agendamentoRefresh = (token) => {
+    const payload = decodeJwt(token);
+    if (!payload || !payload.exp) return;
+
+    const expiration = payload.exp;
+    const now = Date.now() / 1000;
+    const skew = 30; // 30s antes do expirar
+    const timeout = Math.max(((expiration - now) - skew) * 1000, 0);
+
+    clearRefresh();
+    refreshTimeout = setTimeout(() => refreshToken(), timeout);
+}
+
+const refreshToken = async () => {
+    const token = sessionStorage.getItem("token");
+    const config = useRuntimeConfig();
+    const apiBackend = config.public.API_BACKEND;
+
+    if (!token) {
+        console.error("Token não encontrado!");
+        return;
+    }
+
+    const axiosInstance = axios.create({
+        baseURL: apiBackend,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+
+    try {
+        const response = await axiosInstance.get('/users/refresh-token');
+        setToken(response.data.response);
+        agendamentoRefresh(response.data.response);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const clearRefresh = () => {
+    if (refreshTimeout) {
+        clearTimeout(refreshTimeout);
+        refreshTimeout = undefined;
+    }
 }

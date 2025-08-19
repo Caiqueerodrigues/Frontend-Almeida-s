@@ -32,9 +32,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     axiosInstance.interceptors.response.use(response => {
         loading.value = false;
-        if(!response.config.url.includes('/users'))  {
-            setToken(response?.headers?.get('Authorization').split(" ")[1]);
-        }
         if (response.config.url.includes('/report/generate') || response.config.url.includes('report/generate')) {
             if(response.data.MsgAlerta !== "" && response.data.response === "" ) return showToastfy(response.data.msgAlerta, "warning");
             return response.data

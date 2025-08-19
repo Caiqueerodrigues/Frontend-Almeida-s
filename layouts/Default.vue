@@ -62,7 +62,7 @@
                                             <v-btn
                                                 color="primary"
                                                 variant="text"
-                                                @click="menu = false, goTo('/login')"
+                                                @click="menu = false, logout()"
                                             >
                                                 <v-icon>mdi-power</v-icon>
                                                 Sair
@@ -124,6 +124,7 @@
 
     const config = useRuntimeConfig();
     const showToastify = inject('showToastify');
+    const axios = inject('axios');
 
     const loading = inject("loading");
     const route = useRoute()
@@ -195,10 +196,6 @@
     const goTo = (route) => {
         drawer.value = false;
         itemSelected.value = route;
-        
-        if(route === '/login') {
-            removeToken();
-        }
 
         navigateTo(route);
     };
@@ -217,6 +214,13 @@
     const setValuePathPhoto = (nv) => {
         pathPhotoPerfil.value = `${config.public.API_BACKEND}/anexo/perfil/${nv}`;
         setDadosUser();
+    }
+
+    const logout = () => {
+        axios.get('/users/logout').then(resp => {
+            navigateTo('login');
+            removeToken();
+        })
     }
 
     watch(() => route.fullPath, (nv) => {
