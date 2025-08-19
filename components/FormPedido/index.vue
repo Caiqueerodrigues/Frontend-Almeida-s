@@ -269,6 +269,7 @@
     <ModalRelatorios 
         :withOutFilter="true"
         :idPedido="props.id"
+        title="Imprimir Fichas"
         :isActiveModal="showModalReport"
         @setInactiveModal="showModalReport = $event"
     />

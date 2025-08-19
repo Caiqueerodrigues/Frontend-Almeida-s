@@ -11,7 +11,7 @@
                     <v-card
                         class="text-surface bg-primary text-center "
                         prepend-icon="mdi-finance"
-                        :title="`Relatórios`"
+                        :title="`${props.title ?? 'Relatórios'}`"
                     >
                         <template #append>
                             <v-icon
@@ -83,7 +83,7 @@
                                         v-model="filters.report"
                                         :items="!props.withOutFilter ? 
                                             [ 'COMPLETO', 'FECHAMENTO CLIENTE' ] :
-                                            [ 'CLIENTE', 'FICHA DE CORTE' ]"
+                                            [ 'FICHAS GERAIS', 'CLIENTE', 'FICHA DE CORTE' ]"
                                         variant="outlined"
                                         rounded="xl"
                                         :disabled="pdf || filters.firstFilter === 'PERÍODO'"
@@ -108,7 +108,10 @@
                                     />
                                 </v-col>
                             </v-row>
-                            <v-row v-if="filters.firstFilter || props.withOutFilter" class="justify-center">
+                            <v-row 
+                                v-if="(filters.firstFilter && !props.withOutFilter) || (props.withOutFilter && filters.report !== 'FICHAS GERAIS')" 
+                                class="justify-center"
+                            >
                                 <v-col 
                                     cols="10"
                                     md="6"
@@ -187,7 +190,7 @@
     const loading = ref(false);
 
     const emit = defineEmits(['setInactiveModal'])
-    const props = defineProps([ 'isActiveModal', 'date', 'withOutFilter', 'idPedido' ]);
+    const props = defineProps([ 'isActiveModal', 'date', 'withOutFilter', 'idPedido', 'title' ]);
 
     const mobile = ref(false);
     const filters = ref(
@@ -237,6 +240,10 @@
             if(!props.withOutFilter) {
                 data.firstFilter = data.firstFilter.replaceAll(" ", "_");
             } else {
+                data.client = 0;
+                data.firstFilter = "CLIENTE";
+                data.idPedidos = [props.idPedido];
+                data.situation = 'TODOS';
                 data.idPedido = props.idPedido;
                 data.period = [];
             }
@@ -326,7 +333,7 @@
     });
 
     watch(() => filters.value.report, (nv) => {
-        if(nv === 'FECHAMENTO CLIENTE') filters.value.quantidadeVias = 1;
+        if(nv === 'FECHAMENTO CLIENTE' || nv === 'FICHAS GERAIS') filters.value.quantidadeVias = 1;
         else filters.value.quantidadeVias = 2;
     })
 
@@ -335,7 +342,7 @@
             checkMobile();
         } else {
             pdf.value = props.pdf;
-            filters.value.report = "CLIENTE";
+            filters.value.report = "FICHAS GERAIS";
         }
         window.addEventListener('resize', checkMobile);
     });
