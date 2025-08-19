@@ -244,12 +244,23 @@
                 <v-btn
                     variant="flat"
                     color="success"
+                    class="mr-2"
                     rounded="xl"
                     @click="validateForm()"
                     :disabled="!pedido.modelo"
                     :loading="loading"
                 >
                     SALVAR
+                </v-btn>
+                <v-btn
+                    variant="flat"
+                    color="warning"
+                    rounded="xl"
+                    @click="showModalConfirmation = true"
+                    :disabled="(!props.id || props.id === '0') || pedido.dataPagamento"
+                    :loading="loading"
+                >
+                    APAGAR
                 </v-btn>
             </v-col>
         </v-row>
@@ -261,6 +272,18 @@
         :isActiveModal="showModalReport"
         @setInactiveModal="showModalReport = $event"
     />
+
+    <DialogConfirmation 
+        :showModal="showModalConfirmation"
+        :idPedido="props.id"
+        textCancel="CANCELAR"
+        textConfirm="CONFIRMAR"
+        msg="Tem certeza que deseja apagar as informações deste pedido e seu histórico?"
+        msg2="Esta ação não pode ser desfeita"
+        @setInactiveModal="showModalConfirmation = $event"
+        @confirmAction="apagarPedido()"
+
+    />
 </template>
 <script setup>
 import { ModalRelatorios } from '#components';
@@ -271,6 +294,7 @@ import { ModalRelatorios } from '#components';
     const validForm = inject("validateForm");
     const router = useRouter();
     const formatteDateDB = inject("formatteDateDB");
+    const route = useRoute();
 
     const props = defineProps([ 'id' ]);
     
@@ -296,10 +320,11 @@ import { ModalRelatorios } from '#components';
         dataRetirada: null,
         quemCortou: null
     });
-    const cortadores = ref(['Paulo Sérgio',  "Drien", "Paulo/Drien", 'Márcio', "Paulo/Márcio"]);
+    const cortadores = ref(['Paulo Sérgio',  "Drien", "Paulo/Drien", 'Márcio', "Paulo/Márcio", "Caroll", "Caíque"]);
     const clients = ref([]);
     const clientSelected = ref(null);
     const clientsNames = ref([]);
+    const showModalConfirmation = ref(false);
     const modelos = ref([]);
     const materiais = ref([]);
     const nomesColunas = ref([
@@ -480,7 +505,7 @@ import { ModalRelatorios } from '#components';
             await axios.put("/orders", dados).then(response => {
                 setTimeout(() => {
                     voltar(); 
-                }, 1000);
+                }, 500);
             }).catch(e => console.error(e));
         } else {
             const model = modelos.value.filter(item => item.id === dados.modelo);
@@ -488,8 +513,8 @@ import { ModalRelatorios } from '#components';
 
             await axios.post("/orders/create-order", dados).then(response => {
                 setTimeout(() => {
-                    voltar(); 
-                }, 1000);
+                    router.push(`/pedido/${response}?reload=true`);
+                }, 500);
             }).catch(e => console.error(e));
         }
     };
@@ -516,9 +541,21 @@ import { ModalRelatorios } from '#components';
             quemAssinou: null,
             quemCortou: null
         }
-        
+    
+        if(route.query.reload) {
+            router.push('/pedidos');
+            return;
+        }
         router.back();
     };
+
+    const apagarPedido = async () => {
+        showModalConfirmation.value = false;
+
+        await axios.delete(`orders/${props.id}`).then(response => {
+            router.push('/pedidos');
+        }).catch(err => console.error(err));
+    }
 
     watch(() => clientSelected.value, (nv) => {
         if(nv) {
