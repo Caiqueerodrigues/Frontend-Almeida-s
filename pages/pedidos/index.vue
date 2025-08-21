@@ -282,8 +282,8 @@
 
     const formPagos = ref(null);
     const nomesColunas = ref([
-        { title: ' ', align: 'center', key: 'checkbox', maxWidth: '100px' },
-        { title: 'ID pedido', align: 'center', key: 'id', maxWidth: '60px' },
+        { title: ' ', align: 'center', key: 'checkbox', maxWidth: '50px' },
+        { title: 'ID pedido', align: 'center', key: 'id', maxWidth: '100px' },
         { title: 'Cliente', align: 'center', key: 'nomeCliente' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
         { title: 'Hora pedido', align: 'center', key: 'dataPedido', maxWidth: '120px' },
