@@ -173,7 +173,7 @@
     });
 
     const totalReceber = computed(() => {
-        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalDinheiro, 0);
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalDinheiro, 0).toFixed(2);
     });
 
     watch(() => date.value, (nv) => {
