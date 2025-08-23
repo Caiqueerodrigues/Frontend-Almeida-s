@@ -3,7 +3,7 @@
         <v-row class="justify-center py-4">
             <v-col cols="12">
                 <h2 class="text-center text-secondary pt-3">
-                    {{ props.id > 0 ? "EDITAR O " : "CADASTRAR UM NOVO " }} PEDIDO {{ props.id > 0 ? " " + props.id : '' }}
+                    {{ props.id > 0 ? "EDITAR O " : "CADASTRAR UM NOVO " }} PEDIDO {{ props.id > 0 ? "- ID " + props.id : '' }}
                 </h2>
             </v-col>
             <v-col cols="12" class="text-secondary">
