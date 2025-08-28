@@ -91,7 +91,7 @@
     const nomesColunas = ref([
         { title: 'ID pedido', align: 'center', key: 'id' },
         { title: 'Nome', align: 'center', key: 'nome' },
-        { title: 'Dia', align: 'center', key: 'dia' },
+        { title: 'Dia', align: 'center', key: 'dia', width: '120px' },
         { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
         { title: 'Rendimento', align: 'center', key: 'modelo.rendimento' },
         { title: 'Cor(es)', align: 'center', key: 'cor' },

@@ -70,7 +70,7 @@
                     <v-col cols="12" md="6">
                         <v-text-field
                             rounded="xl"
-                            label="Total de pares"
+                            label="Total de pares ou mts"
                             v-model="pedido.totalPares"
                             type="number"
                             variant="outlined"
