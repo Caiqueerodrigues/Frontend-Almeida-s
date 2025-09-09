@@ -174,6 +174,11 @@
             title: "Gestão",
             items: [
                 {
+                    title: 'Financeiro',
+                    route: '/financeiro',
+                    icon: 'mdi-currency-usd',
+                },
+                {
                     title: 'Clientes',
                     route: '/clientes',
                     icon: 'mdi-account-tie',
