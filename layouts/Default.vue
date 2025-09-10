@@ -83,7 +83,7 @@
                 temporary
             >
                 <p class="font-weight-bold ml-2 text-center text-secondary my-4 d-flex align-center pointer" @click="goTo('/perfil')">
-                    <img :src="backgroundImage" alt="Avatar do usuário" class="mr-2" style="width: 40px">
+                    <img :src="backgroundImage" class="mr-2" style="width: 40px">
                     Bem vind{{ dadosUser?.sexo === "M" ? 'o' : 'a' }} {{ usernameToken() ?? '' }}
                 </p>
                 <v-expansion-panels variant="accordion">

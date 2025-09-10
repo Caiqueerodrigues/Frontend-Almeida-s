@@ -49,8 +49,8 @@
                 title="Listagem de modelos"
                 :items="modelos"
                 :headers="nomesColunas" 
-                :acaoVer="true"
-                :redirect="true"
+                :acaoVer="false"
+                :redirect="false"
                 @verId="showFormFunc($event)"
             />
         </v-col>

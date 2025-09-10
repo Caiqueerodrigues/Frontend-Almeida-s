@@ -145,6 +145,8 @@
 
         if (isCheckbox) return;
 
+        if(item.tipo) return emitId(item)
+
         if (props.redirect) {
             redirect(item);
         }
