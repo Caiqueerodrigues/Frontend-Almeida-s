@@ -45,6 +45,17 @@
                 rounded="xl"
             ></v-select>
         </v-col>
+        <v-col cols="2">
+            <v-select
+                chips
+                label="Tipo Serviço"
+                v-model="filter.tipo"
+                :items="[ 'Todos', 'Corte', 'Debruagem', 'Dublagem' ]"
+                :disabled="clientes.length === 1"
+                variant="outlined"
+                rounded="xl"
+            ></v-select>
+        </v-col>
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  > 0">
             <DataTable
                 :title="'Listagem de pedidos ' + pedidosFiltrados.length"
@@ -103,13 +114,14 @@
         { title: 'Observação', align: 'center', key: 'obs', maxWidth: '250px' },
     ]);
     const showModalRelatorios = ref(false);
-    const filter = ref({ client: 'Todos', situation: 'Todos' });
+    const filter = ref({ client: 'Todos', situation: 'Todos', tipo: "Todos" });
 
     const getPedidos = async () => {
         const initialDate = formatteDateDB(date.value[0]).split("T")[0];
         const finalDate = formatteDateDB(date.value[1]).split("T")[0];
         filter.value.client = "Todos";
         filter.value.situation = "Todos";
+        filter.value.tipo = "Todos";
 
         await axios.get(`/orders/period/${initialDate}/${finalDate}`).then(response => {
             pedidos.value = [];
@@ -168,6 +180,18 @@
         if(filter.value.situation !== "Todos") {
             const situation = filter.value.situation === 'Devidos' ? "Não" : "Sim";
             filtrados = filtrados.filter(pedido => pedido?.jaFoiPago === situation);
+        }
+
+        if (filter.value.tipo !== 'Todos') {
+            if(filter.value.tipo !== 'Corte') {
+                filtrados = filtrados.filter(pedido =>
+                    pedido.modelo?.tipo.toLowerCase().includes(filter.value.tipo.toLowerCase())
+                );
+            } else {
+                filtrados = filtrados.filter(pedido =>
+                    !pedido.modelo?.tipo.toLowerCase().includes('dublagem') && !pedido.modelo?.tipo.toLowerCase().includes('debruagem')
+                );
+            }
         }
         return filtrados
     });

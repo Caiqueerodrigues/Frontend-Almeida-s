@@ -91,6 +91,12 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
+            <v-col cols="12" class="pl-7 text-center">
+                <FormAtivo
+                    :value-inicial="modelo.ativo"
+                    @setValue="modelo.ativo = $event"
+                />
+            </v-col>
             <v-col cols="12" class="pl-7">
                 <v-textarea
                     v-capitalize-first
@@ -250,7 +256,8 @@
         cronometragem: 0,
         obs: "",
         fotos: [],
-        tipoMaterial: 'Metro'
+        tipoMaterial: 'Metro',
+        ativo: false,
     });
     const photoInput = ref(null);
     const idsFotos = ref([]);

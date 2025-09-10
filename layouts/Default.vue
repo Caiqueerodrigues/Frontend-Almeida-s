@@ -30,7 +30,7 @@
                                         <v-btn
                                             v-bind="props"
                                         >
-                                            <img :src="backgroundImage" alt="Avatar do usuário" style="width: 40px">
+                                            <img :src="backgroundImage" style="width: 40px">
                                         </v-btn>
                                     </template>
 

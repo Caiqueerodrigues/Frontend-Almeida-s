@@ -50,6 +50,7 @@
                 :items="modelos"
                 :headers="nomesColunas" 
                 :acaoVer="true"
+                :redirect="true"
                 @verId="showFormFunc($event)"
             />
         </v-col>
@@ -69,7 +70,7 @@
         { title: 'Unidade Medida', align: 'center', key: 'unidadeMedida' },
         { title: 'Referência', align: 'center', key: 'refOrdem' },
         { title: 'Observação', align: 'center', key: 'obs' },
-        { title: 'Ação', align: 'center', key: 'ver' },
+        { title: 'Está ativo?', align: 'center', key: 'ativo', width: '60px' },
     ]);
 
     const clients = ref([]);

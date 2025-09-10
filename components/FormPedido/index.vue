@@ -382,7 +382,7 @@ import { ModalRelatorios } from '#components';
     const getModelos = async (idClient) => {
         modelos.value = [];
         
-        await axios.get(`/models/client/${idClient}`).then(response => {
+        await axios.get(`/models/client/${idClient}/active`).then(response => {
             if(response.length > 0) {
                 modelos.value = response;
             };

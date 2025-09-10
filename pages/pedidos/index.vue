@@ -41,6 +41,17 @@
                         rounded="xl"
                     ></v-select>
                 </v-col>
+                <v-col cols="12" md="3">
+                    <v-select
+                        chips
+                        class="w-75 mx-auto"
+                        label="Tipo de Serviço"
+                        v-model="filterService"
+                        :items="[ 'Todos', 'Corte', 'Debruagem', 'Dublagem' ]"
+                        variant="outlined"
+                        rounded="xl"
+                    ></v-select>
+                </v-col>
             </v-row>
         </v-col>
         <v-col cols="12" v-if="pedidos.length === 0 ">
@@ -310,12 +321,14 @@
     const clients = ref(null);
     const clientsNames = ref([]);
     const clienteSelecionado = ref(null)
+    const filterService = ref('Todos')
 
     const getPedidos = async () => {
         devidos.value = false;
         naoEntregues.value = false;
         clienteSelecionado.value = null;
         filterClient.value = 'Todos';
+        filterService.value = 'Todos';
         selectedsPrint.value = [];
         let date = new Date(selectedDate.value);
         const dateFormatted = formatteDateDB(date);
@@ -387,6 +400,7 @@
         devidos.value = true;
         naoEntregues.value = false;
         filterClient.value = 'Todos';
+        filterService.value = 'Todos';
         
         await axios.get('/orders/due').then(response => {
             selectedsPrint.value = [];
@@ -429,9 +443,29 @@
 
     const pedidosFiltrados = computed(() => {
         resetCheckeds();
-        if (!filterClient.value || filterClient.value === "Todos") return pedidos.value;
+        if (!filterClient.value || filterClient.value === "Todos" && filterService.value === 'Todos') return pedidos.value;
 
-        return pedidos.value.filter(pedido => pedido.client?.nome === filterClient.value);
+        let pedidosSelecionados = [];
+
+        if (filterService.value !== 'Todos') {
+            if(filterService.value !== 'Corte') {
+                pedidosSelecionados = pedidos.value.filter(pedido =>
+                    pedido.modelo?.tipo.toLowerCase().includes(filterService.value.toLowerCase())
+                );
+            } else {
+                pedidosSelecionados = pedidos.value.filter(pedido =>
+                    !pedido.modelo?.tipo.toLowerCase().includes('dublagem') && !pedido.modelo?.tipo.toLowerCase().includes('debruagem')
+                );
+            }
+        }
+
+        if (filterClient.value && filterClient.value !== "Todos") {
+            pedidosSelecionados = pedidosSelecionados.length > 0 ? 
+                pedidosSelecionados.filter(pedido => pedido.client?.nome === filterClient.value) : 
+                pedidos.value.filter(pedido => pedido.client?.nome === filterClient.value);
+        }
+
+        return pedidosSelecionados;
     });
 
     const totalReceber = computed(() => {

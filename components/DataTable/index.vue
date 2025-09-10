@@ -83,6 +83,16 @@
                         </v-icon>
                     </div>
                 </template>
+                <template v-slot:[`item.ativo`]="{ item }">
+                    <div class="centered-cell">
+                        <v-icon v-if="item.ativo" size="40" class="text-success">
+                            mdi-check
+                        </v-icon>
+                        <v-icon v-if="!item.ativo" size="40" class="text-error">
+                            mdi-close
+                        </v-icon>
+                    </div>
+                </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
                     <div class="centered-cell">
