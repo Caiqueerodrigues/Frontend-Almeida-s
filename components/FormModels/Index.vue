@@ -257,7 +257,7 @@
         obs: "",
         fotos: [],
         tipoMaterial: 'Metro',
-        ativo: false,
+        ativo: true,
     });
     const photoInput = ref(null);
     const idsFotos = ref([]);
