@@ -304,7 +304,7 @@
         { title: 'Preço par', align: 'center', key: 'modelo.preco' },
         { title: 'Total pares', align: 'center', key: 'totalPares', maxWidth: '80px' },
         { title: 'Obs.', align: 'center', key: 'obs', maxWidth: '250px' },
-        { title: 'Quem cortou', align: 'center', key: 'quemCortou', maxWidth: '80px' },
+        { title: 'Quem concluiu', align: 'center', key: 'quemCortou', maxWidth: '80px' },
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
         { title: 'Pago?', align: 'center', key: 'jaFoiPago', maxWidth: '80px' },
     ]);

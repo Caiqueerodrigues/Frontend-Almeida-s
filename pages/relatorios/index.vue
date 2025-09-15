@@ -109,7 +109,7 @@
         { title: 'Total de pares', align: 'center', key: 'totalPares' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
         { title: 'Pago?', align: 'center', key: 'jaFoiPago' },
-        { title: 'Quem cortou', align: 'center', key: 'quemCortou' },
+        { title: 'Quem concluiu', align: 'center', key: 'quemCortou' },
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
         { title: 'Observação', align: 'center', key: 'obs', maxWidth: '250px' },
     ]);

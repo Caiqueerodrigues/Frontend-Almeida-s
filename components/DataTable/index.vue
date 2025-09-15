@@ -68,6 +68,11 @@
                         R$ {{ formattePrice(item.precoPar) }}
                     </div>
                 </template>
+                <template v-slot:[`item.valorCompra`]="{ item }">
+                    <div class="centered-cell">
+                        R$ {{ formattePrice(item.valorCompra) }}
+                    </div>
+                </template>
                 <template v-slot:[`item.cor`]="{ item }">
                     <div class="centered-cell">
                         {{ getDadosJoin(item.cor) }}
@@ -145,7 +150,7 @@
 
         if (isCheckbox) return;
 
-        if(item.tipo) return emitId(item)
+        if(item.tipo || item.anotacoes) return emitId(item)
 
         if (props.redirect) {
             redirect(item);
