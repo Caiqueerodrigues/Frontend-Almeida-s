@@ -80,8 +80,29 @@
             >
                 SALVAR
             </v-btn>
+            <v-btn
+                variant="flat"
+                color="warning"
+                rounded="xl"
+                @click="showModalConfirmation = true"
+                :disabled="(!id || id === '0')"
+                :loading="loading"
+            >
+                APAGAR
+            </v-btn>
         </v-col>
     </v-row>
+    <DialogConfirmation 
+        :showModal="showModalConfirmation"
+        title="Apagar Lançamento"
+        :idPedido="id"
+        textCancel="CANCELAR"
+        textConfirm="CONFIRMAR"
+        msg="Tem certeza que deseja apagar as informações deste lançamento?"
+        msg2="Esta ação não pode ser desfeita"
+        @setInactiveModal="showModalConfirmation = $event"
+        @confirmAction="apagarlancamento()"
+    />
 </template>
 <script setup>
     import { SEGUIMENTOS } from '~/constantes/seguimentos';
@@ -94,6 +115,7 @@
 
     const id = ref(null);
     const loading = ref(false);
+    const showModalConfirmation = ref(false);
     const showForm = ref(true);
 
     const lancamento = ref({
@@ -166,16 +188,26 @@
         if(id.value) {
             axios.put('exit', lancamento.value).then(response => {
                 setTimeout(() => {
-                    router.push('/financeiro')
+                    voltar();
                 }, 1000);
             }).catch(err => console.error(err));
         }else {
             axios.post('exit/create', lancamento.value).then(response => {
                 setTimeout(() => {
-                    router.push('/financeiro')
+                    voltar();
                 }, 1000);
             }).catch(err => console.error(err));
         }
+    }
+
+    const apagarlancamento = async () => {
+        showModalConfirmation.value = false;
+
+        await axios.delete(`exit/${id.value}`).then(response => {
+            setTimeout(() => {
+                voltar();
+            }, 1000);
+        }).catch(err => console.error(err));
     }
 
     const voltar = () => {

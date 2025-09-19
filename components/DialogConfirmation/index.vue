@@ -8,7 +8,7 @@
         <v-card
             class="text-surface bg-primary text-center "
             prepend-icon="mdi-border-color"
-            :title="`Aapagar Pedido`"
+            :title="props.title ?? `Apagar Pedido`"
         >
             <template #append>
                 <v-icon
@@ -53,7 +53,7 @@
     </v-dialog>
 </template>
 <script setup>
-    const props = defineProps([ 'showModal', 'idPedido', 'msg', 'msg2', 'textCancel', 'textConfirm' ]);
+    const props = defineProps([ 'showModal', 'title', 'idPedido', 'msg', 'msg2', 'textCancel', 'textConfirm' ]);
     const emit = defineEmits([ 'setInactiveModal', 'confirmAction' ]);
 
     const emitEvent = (event, value) => {
