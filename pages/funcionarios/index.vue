@@ -446,36 +446,36 @@
     }
 
     .container-anotacoes {
-    width: 100%;
-    margin: 20px auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
+        width: 100%;
+        margin: 20px auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
 
-.container-anotacoes p {
-    padding: 20px;
-    width: 200px;
-    background: #fdfd96;
-    border-radius: 10px;
-    color: #A60014;
-    font-weight: bold;
-    font-weight: bold;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
-}
+    .container-anotacoes p {
+        padding: 20px;
+        width: 200px;
+        background: #fdfd96;
+        border-radius: 10px;
+        color: #A60014;
+        font-weight: bold;
+        font-weight: bold;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+    }
 
-.container-anotacoes p:hover {
-    transform: rotate(-2deg) scale(1.05);
-}
+    .container-anotacoes p:hover {
+        transform: rotate(-2deg) scale(1.05);
+    }
 
-.text-nao-pago {
-    color: #E90049;
-}
+    .text-nao-pago {
+        color: #E90049;
+    }
 </style>
