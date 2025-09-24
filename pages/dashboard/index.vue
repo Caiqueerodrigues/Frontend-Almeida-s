@@ -1,41 +1,89 @@
 <template>
     <v-row class="justify-center ga-4 pt-8">
-        <v-col cols="10" class="bg-graph rounded-xl h-25">
-            <Charts
-                :labels="['A', 'B', 'C']"
-                :data="[5, 15, 25]"
-                type="bar"
-                title="Meu Gráfico de Barras"
+        <v-col cols="12" class="text-center">
+            <h2 class="text-secondary">Entradas e Saídas Gerais do Período</h2>
+        </v-col>
+        <v-col cols="12" class="text-center">
+            <VueDatePicker 
+                class="w-50 mx-auto"
+                v-model="date" 
+                range 
+                autoApply
+                locale="pt-BR"
+                dark
+                format="dd/MM/yyyy"
+                :clearable="false"
+                :min-date="new Date('2000-01-01')"
+                :max-date="new Date()"
             />
         </v-col>
-        <v-col cols="5" class="bg-graph rounded-xl h-25">
+        <v-col cols="10" class="container-graph rounded-xl">
             <Charts
-                :labels="['Janeiro', 'Fevereiro', 'Março']"
-                :data="[10, 20, 30]"
+                :labels="labels"
+                :data="dataLine"
                 type="line"
-                title="Meu Gráfico de Linhas"
+                title="Entradas e Saídas Gerais do Período"
             />
         </v-col>
-        <v-col cols="5" class="bg-graph rounded-xl h-25">
+        <v-col cols="5" class="container-graph rounded-xl">
             <Charts
-                :labels="['A', 'B', 'C']"
-                :data="[5, 15, 25]"
+                :labels="labels"
+                :data="dataBar"
+                type="bar"
+                title="Rendimento por Tipo de Serviço"
+            />
+        </v-col>
+        <v-col cols="5" class="container-graph rounded-xl">
+            <Charts
+                :labels="[ 'Corte', 'Debruagem', 'Dublagem' ]"
+                :data="dataPie"
                 type="pie"
-                title="Meu Gráfico de Pizza"
-            />
-        </v-col>
-        <v-col cols="5" class="bg-graph rounded-xl h-25">
-            <Charts
-                :labels="['A', 'B', 'C']"
-                :data="[{ x: 1, y: 5 }, { x: 2, y: 15 }, { x: 3, y: 25 }]"
-                type="scatter"
-                title="Meu Gráfico de Dispersão"
+                title="Gastos por Tipo de Serviço"
             />
         </v-col>
     </v-row>
 </template>
-<style scooped>
-    .bg-graph {
+<script setup>
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css';
+
+    const date = ref([new Date(), new Date()]);
+
+    const labels = ref(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']);
+    const dataLine = ref([
+        { label: 'Receitas 120,00', data: [10.00, 20.50, -30.00, 40.00, -20.00, 50.00, 60.00, 220.00, -150.00, 15.00] },
+        { label: 'Despesas 100,00', data: [5.00, 15.00, 25.00, -35.00, 250.00, -15.00, 150.00, 50.00, -20.00, 10.00, 100.00] }
+    ]);
+    const dataBar = ref ([
+        { label: 'Corte', data: [5.00, 15.00, 25.00, -35.00, 250.00, -15.00, 150.00, 50.00, -20.00, 10.00, 100.00] },
+        { label: 'Debruagem', data: [10.00, 20.00, -30.00, 40.00, -20.00, 50.00, 60.00, 220.00, -150.00, 15.00] },
+        { label: 'Dublagem', data: [5.00, 15.00, 25.00, -35.00, 250.00, -15.00, 150.00, 50.00, -20.00, 10.00, 100.00] }
+    ]);
+    const dataPie = ref([ 5.00, 15.00, 25.00 ]);
+</script>
+<style scoped>
+    .container-graph {
         background-color: #f5f5f5ab;
+    }
+
+    :deep(.dp__input) {
+        background-color: #A60014;
+        border-radius: 20px;
+        border-color: #eeff00;
+        color: #eeff00;
+        font-weight: bold;
+        padding-block: 15px;
+        margin-top: -20px;
+    }
+
+    :deep(.dp__menu) {
+        border-radius: 20px;
+        border-color: #eeff00;
+        font-weight: bold;
+        padding-bottom: 20px;
+    }
+
+    :deep(.dp__input_icon) {
+        top: 32%;
     }
 </style>

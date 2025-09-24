@@ -2,6 +2,7 @@
     <v-row class="justify-center ma-4">
         <v-col cols="12" class="text-center d-flex justify-space-between align-center mb-4">
             <h2 class="text-secondary">{{ props.title }}</h2>
+            <h2 class="text-secondary">{{ props.subTitle }}</h2>
             <v-btn 
                 variant="flat" 
                 class="rounded-xl" 
@@ -30,6 +31,7 @@ const props = defineProps({
     data: Array,
     type: { type: String, default: 'doughnut' },
     title: String,
+    subTitle: String,
     options: Object
 });
 
@@ -47,8 +49,8 @@ const defaultOptions = {
             }
         },
         tooltip: {
-            titleColor: '#000',
-            bodyColor: '#000',
+            titleColor: '#Fff',
+            bodyColor: '#FFF',
             callbacks: {
                 label: function (context) {
                     return context.label + ': ' + context.raw;
@@ -79,15 +81,32 @@ const randomColors = () => {
     }
 };
 
-const dataChart = computed(() => ({
-    labels: props.labels,
-    datasets: [
-        {
-            data: props.data,
-            backgroundColor: backgroundColor.value
-        }
-    ]
-}));
+const dataChart = computed(() => {
+    // Se props.data for array de arrays/objetos, monta datasets múltiplos
+    if (Array.isArray(props.data) && props.data.length && typeof props.data[0] === 'object' && props.data[0].data) {
+        return {
+            labels: props.labels,
+            datasets: props.data.map((ds, idx) => ({
+                label: ds.label || `Linha ${idx + 1}`,
+                data: ds.data,
+                borderColor: ds.borderColor || backgroundColor.value[idx] || '#1976D2',
+                backgroundColor: ds.backgroundColor || backgroundColor.value[idx] || '#1976D2',
+                fill: false
+            }))
+        };
+    }
+    // Caso padrão (um dataset)
+    return {
+        labels: props.labels,
+        datasets: [
+            {
+                label: props.title || 'Dados',
+                data: props.data,
+                backgroundColor: backgroundColor.value
+            }
+        ]
+    };
+});
 
 const mountGraph = async () => {
     let chartName = '';
