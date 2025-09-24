@@ -68,10 +68,6 @@
             <span class="text-h5 text-secondary font-weight-bold">
                 Total Faturado no período é R$ {{ totalReceber }}
             </span>
-            <Charts 
-                :labels="dataChart.labels"
-                :data="dataChart.data"
-            />
         </v-col>
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  === 0">
             <span class="text-secondary text-h5 font-weight-bold">
@@ -138,30 +134,7 @@
             }
         }).catch(e => console.error(e));
     }
-
-    const dataChart = computed(() => {
-        const labels = [];
-        const data = [];
-        const nomesIndex = {};
-        
-        pedidosFiltrados.value.forEach(item => {
-            const nomeCliente = item.client?.nome || "Desconhecido";
-            
-            if (nomesIndex[nomeCliente] !== undefined) {
-                data[nomesIndex[nomeCliente]] += item.totalDinheiro;
-            } else {
-                nomesIndex[nomeCliente] = labels.length;
-                labels.push(nomeCliente);
-                data.push(item.totalDinheiro);
-            }
-        });
-
-        return {
-            labels,
-            data
-        };
-    })
-
+    
     const clientes = computed(() => {
         const nomes = ['Todos'];
         pedidos.value.map(item => {
