@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     axiosInstance.interceptors.request.use(config => {
         loading.value = true; 
         
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;

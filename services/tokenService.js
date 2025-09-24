@@ -4,27 +4,27 @@ import axios from 'axios';
 let refreshTimeout = null;
 
 export const isLoggedIn = () => {
-    if (process.client) {
-        const token = sessionStorage.getItem("token");
+    if (typeof window !== 'undefined') {
+        const token = localStorage.getItem("token");
         return !!token;
     }
 };
 
 export const tokenValido = () => {
-    if (process.client) {
-        const token = sessionStorage.getItem("token");
+    if (typeof window !== 'undefined') {
+        const token = localStorage.getItem("token");
         if (!token) return false;
 
         try {
             const decoded = decodeJwt(token);
 
             if (decoded.exp && decoded.exp < Date.now() / 1000) {
-                sessionStorage.removeItem("token");
+                localStorage.removeItem("token");
                 return false;
             }
             return true;
         } catch (err) {
-            sessionStorage.removeItem("token");
+            localStorage.removeItem("token");
             return false;
         }
     }
@@ -32,8 +32,8 @@ export const tokenValido = () => {
 };
 
 const tokenDecoded = () => {
-    if (process.client) {
-        const token = sessionStorage.getItem("token");
+    if (typeof window !== 'undefined') {
+        const token = localStorage.getItem("token");
         if (!token) return "";
 
         try {
@@ -42,7 +42,6 @@ const tokenDecoded = () => {
             if(!refreshTimeout) agendamentoRefresh(token)
             return decoded;
         } catch (err) {
-            sessionStorage.removeItem("token");
             return false;
         }
     }
@@ -74,12 +73,12 @@ export const tokenUserData = () => {
 }
 
 export const removeToken = () => {
-    sessionStorage.removeItem('token');
+    localStorage.removeItem('token');
     setNewPhotoToken('global.png');
 }
 
 export const setToken = (data) => {
-    sessionStorage.setItem('token', data);
+    localStorage.setItem('token', data);
     const decoded = decodeJwt(data);
     setNewPhotoToken(decoded?.photo);
     agendamentoRefresh(data);
@@ -109,7 +108,7 @@ const agendamentoRefresh = (token) => {
 }
 
 const refreshToken = async () => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const config = useRuntimeConfig();
     const apiBackend = config.public.API_BACKEND;
 
