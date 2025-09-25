@@ -1,7 +1,7 @@
 import { defineNuxtPlugin } from '#app';
 import { decodeJwt } from 'jose';
 import axios from 'axios';
-import { setToken } from '~/services/tokenService';
+import { removeToken, setToken } from '~/services/tokenService';
 
 export default defineNuxtPlugin((nuxtApp) => {
     const baseURL = useRuntimeConfig().public.API_BACKEND;

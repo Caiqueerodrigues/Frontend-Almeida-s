@@ -57,6 +57,9 @@
             ></v-select>
         </v-col>
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  > 0">
+            <span class="text-h5 text-secondary font-weight-bold">
+                Total Faturado no período é R$ {{ totalReceber }}
+            </span>
             <DataTable
                 :title="'Listagem de pedidos ' + pedidosFiltrados.length"
                 :items="pedidosFiltrados"
@@ -65,9 +68,6 @@
                 :redirect="true"
                 class="mb-2"
             />
-            <span class="text-h5 text-secondary font-weight-bold">
-                Total Faturado no período é R$ {{ totalReceber }}
-            </span>
         </v-col>
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  === 0">
             <span class="text-secondary text-h5 font-weight-bold">

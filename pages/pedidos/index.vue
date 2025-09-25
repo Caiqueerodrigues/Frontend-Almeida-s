@@ -381,7 +381,7 @@
         baixaVarios.value.dataRetirada = formatteDateDB(new Date(baixaVarios.value.dataRetirada));
         baixaVarios.value.ids = selectedsPrint.value;
 
-        axios.put('/orders/withdrawn', baixaVarios.value).then(response => {
+        await axios.put('/orders/withdrawn', baixaVarios.value).then(response => {
             closeModal();
             if(devidos.value) getPendentes();
             else if(naoEntregues.value) getNaoEntegues();

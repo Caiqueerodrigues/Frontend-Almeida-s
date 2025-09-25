@@ -17,7 +17,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
                 return navigateTo("/pedidos");
             } else return;
         }
-        console.log(loggedIn, tokenOK);
+        
         if (!loggedIn || !tokenOK) {
             return navigateTo("/login");
         }
