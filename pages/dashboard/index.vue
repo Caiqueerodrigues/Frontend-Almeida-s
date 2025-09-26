@@ -39,17 +39,17 @@
         <v-col cols="10" class="container-graph rounded-xl">
             <Charts
                 :labels="labels"
-                :data="dataLine"
-                type="line"
-                title="Entradas e Saídas Gerais do Período"
+                :data="dataBar"
+                type="bar"
+                :title="'Rendimento por Tipo de Serviço R$ ' + (dataBar.reduce((a, b) => a + b.data.reduce((c, d) => c + d, 0), 0)).toFixed(2)"
             />
         </v-col>
         <v-col cols="10" md="5" class="container-graph rounded-xl">
             <Charts
                 :labels="labels"
-                :data="dataBar"
-                type="bar"
-                title="Rendimento por Tipo de Serviço"
+                :data="dataLine"
+                type="line"
+                :title="'Entradas e Saídas Gerais do Período R$ ' + (dataLine.length === 2 ? (dataLine[0].data.reduce((a, b) => a + b, 0) - dataLine[1].data.reduce((a, b) => a + b, 0)).toFixed(2) : '0.00')"
             />
         </v-col>
         <v-col cols="10" md="5" class="container-graph rounded-xl">
@@ -57,7 +57,7 @@
                 :labels="[ 'Corte', 'Debruagem', 'Dublagem' ]"
                 :data="dataPie"
                 type="pie"
-                title="Gastos por Tipo de Serviço"
+                :title="'Gastos por Tipo de Serviço R$ ' + (dataPie.reduce((a, b) => a + b, 0)).toFixed(2)"
             />
         </v-col>
     </v-row>
@@ -71,17 +71,10 @@
 
     const date = ref([new Date(), new Date()]);
 
-    const labels = ref(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']);
-    const dataLine = ref([
-        { label: 'Receitas 120,00', data: [10.00, 20.50, -30.00, 40.00, -20.00, 50.00, 60.00, 220.00, -150.00, 15.00] },
-        { label: 'Despesas 100,00', data: [5.00, 15.00, 25.00, -35.00, 250.00, -15.00, 150.00, 50.00, -20.00, 10.00, 100.00] }
-    ]);
-    const dataBar = ref ([
-        { label: 'Corte', data: [5.00, 15.00, 25.00, -35.00, 250.00, -15.00, 150.00, 50.00, -20.00, 10.00, 100.00] },
-        { label: 'Debruagem', data: [10.00, 20.00, -30.00, 40.00, -20.00, 50.00, 60.00, 220.00, -150.00, 15.00] },
-        { label: 'Dublagem', data: [5.00, 15.00, 25.00, -35.00, 250.00, -15.00, 150.00, 50.00, -20.00, 10.00, 100.00] }
-    ]);
-    const dataPie = ref([ 5.00, 15.00, 25.00 ]);
+    const labels = ref([]);
+    const dataLine = ref([]);
+    const dataBar = ref ([]);
+    const dataPie = ref([]);
 
     const navigateTo = (route) => {
         router.push(route);

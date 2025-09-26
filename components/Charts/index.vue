@@ -12,12 +12,13 @@
                 TROCAR CORES
             </v-btn>
         </v-col>
-        <v-col cols="12" md="12">
+        <v-col cols="12" md="12" class="chart-container">
             <component
                 :is="chartComponent"
                 :chartData="dataChart"
                 :options="mergedOptions"
                 v-if="isClient && chartComponent"
+                style="width:100%;height:100%;"
             />
         </v-col>
     </v-row>
@@ -157,3 +158,19 @@ onMounted(() => {
     }
 });
 </script>
+<style scoped>
+    .chart-container {
+        width: 100%;
+        max-width: 100%;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .chart-container canvas {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+</style>
