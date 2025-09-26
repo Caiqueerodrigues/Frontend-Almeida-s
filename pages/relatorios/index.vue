@@ -156,15 +156,7 @@
         }
 
         if (filter.value.tipo !== 'Todos') {
-            if(filter.value.tipo !== 'Corte') {
-                filtrados = filtrados.filter(pedido =>
-                    pedido.modelo?.tipo.toLowerCase().includes(filter.value.tipo.toLowerCase())
-                );
-            } else {
-                filtrados = filtrados.filter(pedido =>
-                    !pedido.modelo?.tipo.toLowerCase().includes('dublagem') && !pedido.modelo?.tipo.toLowerCase().includes('debruagem')
-                );
-            }
+            filtrados = pedidos.value.filter(pedido => pedido.categoria.toLowerCase() === filter.value.tipo.toLowerCase());
         }
         return filtrados
     });

@@ -67,7 +67,7 @@
             </v-col>
             <v-col cols="12">
                 <v-row class="justify-center" v-if="!loading && pedido.modelo">
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="4">
                         <v-text-field
                             rounded="xl"
                             label="Total de pares ou mts"
@@ -78,7 +78,7 @@
                             @input="formateddPrice($event), calculateTotal()"
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="4">
                         <v-text-field
                             rounded="xl"
                             label="Total do pedido"
@@ -88,6 +88,17 @@
                             :rules="[(value) => !!value || 'O total é obrigatório!']"
                             @input="formateddPrice($event)"
                         ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <v-select
+                            chips
+                            label="Categoria do serviço"
+                            v-model="pedido.categoria"
+                            :items="[ 'CORTE', 'DUBLAGEM', 'DEBRUAGEM' ]"
+                            :rules="[(value) => !!value || 'A categoria é obrigatória!']"
+                            variant="outlined"
+                            rounded="xl"
+                        ></v-select>
                     </v-col>
                 </v-row>
             </v-col>
@@ -319,7 +330,8 @@ import { ModalRelatorios } from '#components';
         cor: [],
         quemAssinou: null,
         dataRetirada: null,
-        quemCortou: null
+        quemCortou: null,
+        categoria: null,
     });
     const cortadores = ref(['Paulo Sérgio',  "Drien", "Paulo/Drien", 'Márcio', "Paulo/Márcio", "Caroll", "Caíque"]);
     const clients = ref([]);
@@ -376,6 +388,7 @@ import { ModalRelatorios } from '#components';
             if(response.dataRetirada) pedido.value.dataRetirada = new Date(response.dataRetirada);
             pedido.value.quemAssinou = response.quemAssinou;
             pedido.value.quemCortou = response.quemCortou;
+            pedido.value.categoria = response.categoria;
         }).catch(e => console.error(e));
     }
 
@@ -493,6 +506,7 @@ import { ModalRelatorios } from '#components';
         dados.totalDinheiro = Number(pedido.value.totalDinheiro);
         dados.totalPares = Number(pedido.value.totalPares);
         dados.quemCortou = pedido.value.quemCortou;
+        dados.categoria = pedido.value.categoria;
         
         let gradeString = "";
         pedido.value.grade.map((item , i) => {
@@ -540,7 +554,8 @@ import { ModalRelatorios } from '#components';
             cor: [],
             tipoRecebido: [],
             quemAssinou: null,
-            quemCortou: null
+            quemCortou: null,
+            categoria: null,
         }
     
         if(route.query.reload) {

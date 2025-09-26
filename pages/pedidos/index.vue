@@ -281,6 +281,8 @@
     </v-row>
 </template>
 <script setup>
+import { SEGUIMENTOS } from '~/constantes/seguimentos';
+
     const axios = inject("axios");
     const loading = inject("loading");
     const formattePrice = inject("formattePrice");
@@ -448,15 +450,7 @@
         let pedidosSelecionados = [];
 
         if (filterService.value !== 'Todos') {
-            if(filterService.value !== 'Corte') {
-                pedidosSelecionados = pedidos.value.filter(pedido =>
-                    pedido.modelo?.tipo.toLowerCase().includes(filterService.value.toLowerCase())
-                );
-            } else {
-                pedidosSelecionados = pedidos.value.filter(pedido =>
-                    !pedido.modelo?.tipo.toLowerCase().includes('dublagem') && !pedido.modelo?.tipo.toLowerCase().includes('debruagem')
-                );
-            }
+            pedidosSelecionados = pedidos.value.filter(pedido => pedido.categoria.toLowerCase() === filterService.value.toLowerCase());
         }
 
         if (filterClient.value && filterClient.value !== "Todos") {

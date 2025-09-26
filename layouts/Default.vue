@@ -86,12 +86,13 @@
                     <img :src="backgroundImage" class="mr-2" style="width: 40px">
                     Bem vind{{ dadosUser?.sexo === "M" ? 'o' : 'a' }} {{ usernameToken() ?? '' }}
                 </p>
-                <v-expansion-panels variant="accordion">
+                <v-expansion-panels variant="accordion" v-model="expandedPanel">
                     <v-expansion-panel
                         v-for="item in items" 
                         :key="item.title"
                         class="bg-transparent font-weight-bold text-default px-2 pb-3"
                         :title="item.title"
+                        
                     >
                         <template v-slot:text>
                             <v-btn
@@ -197,12 +198,19 @@
     const dadosUser = ref(false);
     const backgroundImage = ref('/images/account.png');
     const pathPhotoPerfil = ref(null);
+    const expandedPanel = ref([]);
 
     const goTo = (route) => {
         drawer.value = false;
         itemSelected.value = route;
 
         navigateTo(route);
+    };
+
+    const findPanelIndex = (route) => {
+        return items.value.findIndex(panel =>
+            panel.items.some(subItem => subItem.route === route)
+        );
     };
 
     const setDadosUser = () => {
@@ -231,6 +239,11 @@
     watch(() => route.fullPath, (nv) => {
         itemSelected.value = route.fullPath;
         setValuePathPhoto(photoPath());
+    });
+
+    watch(itemSelected, (nv) => {
+        const idx = findPanelIndex(nv);
+        expandedPanel.value = idx !== -1 ? [idx] : [];
     });
 
     watch(() => photoPath(), (nv) => {
