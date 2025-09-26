@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     const axiosInstance = axios.create({
         baseURL: baseURL,
-        timeout: 15000, 
+        timeout: 1000 * 20, 
     });
 
     axiosInstance.interceptors.request.use(config => {
@@ -51,7 +51,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             removeToken();
             setTimeout(() => {
                 router.push('/login');
-            }, 1000 * 20);
+            }, 1000 * 5);
         }
         
         return Promise.reject(error);
