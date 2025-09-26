@@ -51,7 +51,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             removeToken();
             setTimeout(() => {
                 router.push('/login');
-            }, 1000 * 5);
+            }, 1000 * 10);
         }
         
         return Promise.reject(error);
