@@ -109,7 +109,6 @@
         const now = new Date();
         const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
         date.value = [firstDay, now];
-        getDados();
     });
 </script>
 <style scoped>
