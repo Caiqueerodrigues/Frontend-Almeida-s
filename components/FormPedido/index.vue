@@ -94,7 +94,7 @@
                             chips
                             label="Categoria do serviço"
                             v-model="pedido.categoria"
-                            :items="[ 'CORTE', 'DUBLAGEM', 'DEBRUAGEM' ]"
+                            :items="[ 'Corte', 'Dublagem', 'Debruagem' ]"
                             :rules="[(value) => !!value || 'A categoria é obrigatória!']"
                             variant="outlined"
                             rounded="xl"
