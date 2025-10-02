@@ -81,16 +81,10 @@
     }
 
     const getDados = async () => {
-        // const initialDate = date.value[0].toISOString().split("T")[0];
-        // const finalDate = date.value[1].toISOString().split("T")[0];
+        const initialDate = date.value[0].toISOString().split("T")[0];
+        const finalDate = date.value[1].toISOString().split("T")[0];
 
-        const initialDate = new Date(date.value[0].toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }));
-        const finalDate = new Date(date.value[1].toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }));
-    
-        const formattedInitialDate = initialDate.toISOString().split("T")[0];
-        const formattedFinalDate = finalDate.toISOString().split("T")[0];
-
-        await axios.get(`finance/${formattedInitialDate}/${formattedFinalDate}`).then(response => {
+        await axios.get(`finance/${initialDate}/${finalDate}`).then(response => {
             labels.value = response.labels;
             dataBar.value = response.dataBar;
             dataPie.value = response.dataPie;
