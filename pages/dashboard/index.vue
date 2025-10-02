@@ -90,7 +90,7 @@
         const formattedInitialDate = initialDate.toISOString().split("T")[0];
         const formattedFinalDate = finalDate.toISOString().split("T")[0];
 
-        await axios.get(`finance/${initialDate}/${finalDate}`).then(response => {
+        await axios.get(`finance/${formattedInitialDate}/${formattedFinalDate}`).then(response => {
             labels.value = response.labels;
             dataBar.value = response.dataBar;
             dataPie.value = response.dataPie;
