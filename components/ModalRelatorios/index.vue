@@ -31,7 +31,7 @@
                                         chips
                                         label="Tipo de filtro"
                                         v-model="filters.firstFilter"
-                                        :items="[ 'CLIENTE', 'PERÍODO', 'CLIENTE E PERÍODO', 'SITUAÇÃO', 'MENSAL' ]"
+                                        :items="[ 'CATEGORIA SERVIÇO', 'CLIENTE', 'PERÍODO', 'CLIENTE E PERÍODO', 'SITUAÇÃO', 'MENSAL' ]"
                                         variant="outlined"
                                         rounded="xl"
                                         :disabled="pdf"
@@ -75,7 +75,7 @@
                                     cols="10" 
                                     md="5" 
                                     class="pa-0 text-center" 
-                                    v-if="(filters.firstFilter && (filters.period || filters.client)) || props.withOutFilter"
+                                    v-if="(filters.firstFilter && (filters.period || filters.client)  && filters.firstFilter !== 'CATEGORIA SERVIÇO') || props.withOutFilter"
                                 >
                                     <v-select
                                         chips
@@ -92,7 +92,7 @@
                                 <v-col 
                                     cols="10" 
                                     class="pa-0 text-center mb-6" 
-                                    v-if="filters.firstFilter === 'CLIENTE E PERÍODO' || filters.firstFilter === 'PERÍODO' || filters.firstFilter === 'MENSAL'"
+                                    v-if="filters.firstFilter === 'CLIENTE E PERÍODO' || filters.firstFilter === 'PERÍODO' || filters.firstFilter === 'MENSAL' || filters.firstFilter === 'CATEGORIA SERVIÇO'"
                                 >
                                     <VueDatePicker 
                                         v-model="filters.period" 
@@ -109,7 +109,7 @@
                                 </v-col>
                             </v-row>
                             <v-row 
-                                v-if="(filters.firstFilter && !props.withOutFilter) || (props.withOutFilter && filters.report !== 'FICHAS GERAIS')" 
+                                v-if="(filters.firstFilter && !props.withOutFilter && filters.firstFilter !== 'CATEGORIA SERVIÇO') || (props.withOutFilter && filters.report !== 'FICHAS GERAIS')" 
                                 class="justify-center"
                             >
                                 <v-col 
@@ -131,6 +131,30 @@
                                     <v-btn @click="shareFile" color="success" rounded="xl" class="mx-2" variant="flat">
                                         Compartilhar
                                     </v-btn>
+                                </v-col>
+                            </v-row>
+                            <v-row v-if="filters.firstFilter === 'CATEGORIA SERVIÇO'" class="justify-center">
+                                <v-col cols="5" class="mx-auto">
+                                    <v-select
+                                        chips
+                                        label="Categoria de serviço"
+                                        v-model="filters.category"
+                                        :items="SEGUIMENTOS"
+                                        variant="outlined"
+                                        rounded="xl"
+                                        :disabled="pdf"
+                                    ></v-select>
+                                </v-col>
+                                <v-col cols="5" class="mx-auto">
+                                    <v-select
+                                        chips
+                                        label="Categoria de serviço"
+                                        v-model="filters.tipo"
+                                        :items="[ 'Somente Serviços', 'Serviços e Saídas', 'Saídas' ]"
+                                        variant="outlined"
+                                        rounded="xl"
+                                        :disabled="pdf"
+                                    ></v-select>
                                 </v-col>
                             </v-row>
                             <v-row v-if="pdf">
@@ -168,7 +192,6 @@
                                     size="large"
                                     variant="outlined"
                                     :loading="loading"
-                                    :disabled="pdf"
                                     @click="validateFilters()"
                                 >
                                     Buscar
@@ -184,6 +207,7 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
+    import { SEGUIMENTOS } from '~/constantes/seguimentos';
 
     const axios = inject('axios');
     const showToastify = inject('showToastify');
@@ -199,6 +223,8 @@
             client: null,
             period: props.date,
             report: null,
+            category: null,
+            tipo: null,
             situation: null,
             idPedidos: [],
             quantidadeVias: 2
@@ -219,10 +245,12 @@
     const validateFilters = () => {
         let showMessage = false;
         if(!props.withOutFilter) {
-            if(!filters.value.report || !filters.value.situation || (filters.value.firstFilter === "CLIENTE" && !filters.value.client)){
+            if((!filters.value.report || !filters.value.situation || (filters.value.firstFilter === "CLIENTE" && !filters.value.client)) && filters.value.firstFilter !== "CATEGORIA SERVIÇO") {
                 showMessage = true;
             }
             if((filters.value.firstFilter === "PERÍODO" || filters.value.firstFilter === "CLIENTE E PERÍODO" || filters.value.firstFilter === "MENSAL") && filters.value.period.length !== 2) showMessage = true;
+
+            if(filters.value.firstFilter === 'CATEGORIA SERVIÇO' && (!filters.value.category || !filters.value.tipo || !filters.value.period)) showMessage = true;
         } else {
             if(!filters.value.report) showMessage = true;
         }
@@ -247,7 +275,7 @@
                 data.idPedido = props.idPedido;
                 data.period = [];
             }
-            data.report = data.report.replaceAll(" ", "_");
+            data.report = data.report;
             
         
         loading.value = true;
@@ -313,6 +341,8 @@
             report: null,
             situation: null,
             idPedidos: [],
+            tipo: null,
+            category: null,
             quantidadeVias: 2,
         };
     }
@@ -323,13 +353,15 @@
     }
 
     watch(() => filters.value.firstFilter, (nv, ov) => {
-        if(ov !== 'CLIENTE' && ov !== 'CLIENTE E PERÍODO' && (nv === 'CLIENTE' || nv === 'CLIENTE E PERÍODO') && clientes.value.length === 0) {
+        if(ov !== 'CATEGORIA SERVIÇO' &&  ov !== 'CLIENTE' && ov !== 'CLIENTE E PERÍODO' && (nv === 'CLIENTE' || nv === 'CLIENTE E PERÍODO') && clientes.value.length === 0) {
             getClientes();
         }
 
         if(nv === "PERÍODO") filters.value.report = 'COMPLETO';
         filters.value.client = null;
         if(nv === "MENSAL") filters.value.period = [];
+        
+        if(nv === "CATEGORIA SERVIÇO") filters.value.report = 'CATEGORIA';
     });
 
     watch(() => filters.value.report, (nv) => {

@@ -10,7 +10,7 @@
                 SELECIONE O DIA OU PERÍODO
             </span>
         </v-col>
-        <v-col cols="4" md="4" v-if="!loading">
+        <v-col cols="4" v-if="!loading">
             <VueDatePicker 
                 v-model="date" 
                 range 
@@ -23,7 +23,7 @@
                 :max-date="new Date()"
             />
         </v-col>
-        <v-col cols="4" md="4">
+        <v-col cols="3">
             <v-select
                 chips
                 label="Cliente"
@@ -59,6 +59,10 @@
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  > 0">
             <span class="text-h5 text-secondary font-weight-bold">
                 Total Faturado no período é R$ {{ totalReceber }}
+            </span>
+            <br>
+            <span class="text-h5 text-secondary font-weight-bold">
+                Total de pares/metros {{ totalPares }}
             </span>
             <DataTable
                 :title="'Listagem de pedidos ' + pedidosFiltrados.length"
@@ -102,7 +106,7 @@
         { title: 'Modelo', align: 'center', key: 'modelo.tipo' },
         { title: 'Rendimento', align: 'center', key: 'modelo.rendimento' },
         { title: 'Cor(es)', align: 'center', key: 'cor' },
-        { title: 'Total de pares', align: 'center', key: 'totalPares' },
+        { title: 'Total de pares/mts', align: 'center', key: 'totalPares' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
         { title: 'Pago?', align: 'center', key: 'jaFoiPago' },
         { title: 'Quem concluiu', align: 'center', key: 'quemCortou' },
@@ -134,6 +138,10 @@
             }
         }).catch(e => console.error(e));
     }
+
+    const totalPares = computed(() => {
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0);
+    });
     
     const clientes = computed(() => {
         const nomes = ['Todos'];

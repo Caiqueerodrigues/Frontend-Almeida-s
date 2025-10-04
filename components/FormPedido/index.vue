@@ -313,7 +313,16 @@ import { ModalRelatorios } from '#components';
     const showModalReport = ref(false);
 
     const form = ref(null);
-    const dateSelected = ref(new Date(router.currentRoute.value.query.date))
+    const dateSelected = ref(
+        (() => {
+            const dateStr = router.currentRoute.value.query.date;
+            if (!dateStr) return new Date();
+
+            const date = new Date(dateStr);
+            date.setHours(date.getHours() - 3);
+            return date;
+        })()
+    )
     const pedido = ref({
         client: null,
         modelo: null,

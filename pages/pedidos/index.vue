@@ -11,6 +11,9 @@
                 <v-col cols="12" class="text-center" v-if="pedidos.length > 0">
                     <span v-if="!devidos" class="text-secondary text-h6 font-weight-bold">
                         TOTAL FATURADO R$ {{ formattePrice(totalReceber) }}
+                    </span><br>
+                    <span class="text-secondary text-h6 font-weight-bold">
+                        Total de pares/metros {{ totalPares }}
                     </span>
                     <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
                         TOTAL SELECIONADO PARA BAIXA R$ {{ formattePrice(totalDevido) }}
@@ -303,8 +306,8 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         { title: 'Modelo', align: 'center', key: 'modelo.tipo', maxWidth: '280px' },
         { title: 'Rend.', align: 'center', key: 'modelo.rendimento', maxWidth: '80px' },
         { title: 'Cor(es)', align: 'center', key: 'cor', maxWidth: '180px' },
-        { title: 'Preço par', align: 'center', key: 'modelo.preco' },
-        { title: 'Total pares', align: 'center', key: 'totalPares', maxWidth: '80px' },
+        { title: 'Preço par/metro', align: 'center', key: 'modelo.preco' },
+        { title: 'Total pares/mts', align: 'center', key: 'totalPares', maxWidth: '80px' },
         { title: 'Obs.', align: 'center', key: 'obs', maxWidth: '250px' },
         { title: 'Quem concluiu', align: 'center', key: 'quemCortou', maxWidth: '80px' },
         { title: 'Quem retirou', align: 'center', key: 'quemAssinou' },
@@ -435,6 +438,10 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         }).catch(err => console.error(err));
     }
 
+    const totalPares = computed(() => {
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0);
+    });
+
     const clientes = computed(() => {
         const nomes = ['Todos'];
         pedidos.value.map(item => {
@@ -475,7 +482,12 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     }
 
     const showFormFunc = (ev = 0) => {
-        router.push(`/pedido/${ev}${ev === 0 ? '?date=' + selectedDate.value.toISOString() : ''}`);
+        const date = new Date(selectedDate.value);
+        date.setHours(date.getHours() - 3);
+
+        const dateUTC3 = date.toISOString().replace('Z', '');
+
+        router.push(`/pedido/${ev}${ev === 0 ? '?date=' + dateUTC3 : ''}`);
     };
 
     const impressao = async () => {
