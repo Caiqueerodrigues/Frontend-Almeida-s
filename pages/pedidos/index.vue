@@ -439,7 +439,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     }
 
     const totalPares = computed(() => {
-        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0);
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0).toFixed(2);
     });
 
     const clientes = computed(() => {
