@@ -65,6 +65,7 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
+    import { formatDateToUTC3 } from '~/services/helpers';
 
     const router = useRouter();
     const axios = inject('axios');
@@ -81,14 +82,7 @@
     }
 
     const getDados = async () => {
-        const formatDateToUTC3 = (date) => {
-            const utc3Offset = -3 * 60; // -3 horas em minutos
-            const localTime = new Date(date.getTime() + utc3Offset * 60000);
-            const year = localTime.getUTCFullYear();
-            const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(localTime.getUTCDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        };
+        
 
         const initialDate = formatDateToUTC3(date.value[0]);
         const finalDate = formatDateToUTC3(date.value[1]);

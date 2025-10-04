@@ -11,8 +11,7 @@
         :model-type="props.format"
         :format="format"
         auto-apply
-        enable-seconds
-        time-picker-inline
+        
         month-name-format="long"
         :name="props.name"
         dark
@@ -32,12 +31,23 @@
     const dateSelected = ref(props.date && props.date instanceof Date ? props.date.toISOString() : null);
     
     const format = (date) => {
-        const adjustedDate = new Date(date.getTime() - (3 * 60 * 60 * 1000));
+        // const adjustedDate = new Date(date.getTime() - (3 * 60 * 60 * 1000));
 
-        let day = adjustedDate.getDate();
-        const month = adjustedDate.getMonth() + 1;
-        const year = adjustedDate.getFullYear();
-        const hour = adjustedDate
+        // let day = adjustedDate.getDate();
+        // const month = adjustedDate.getMonth() + 1;
+        // const year = adjustedDate.getFullYear();
+        // const hour = adjustedDate
+        //     .toISOString()
+        //     .split("T")[1]
+        //     .split('.')[0];
+
+        // return props.onlyDate ?
+        //     `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year}` :
+        //     `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year} ${hour}`;
+        let day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        const hour = date
             .toISOString()
             .split("T")[1]
             .split('.')[0];

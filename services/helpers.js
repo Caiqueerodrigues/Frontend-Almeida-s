@@ -34,3 +34,12 @@ export function getDadosJoin (item) {
     
     return item[0];
 }
+
+export function formatDateToUTC3 (date) {
+    const utc3Offset = -3 * 60; // -3 horas em minutos
+    const localTime = new Date(date.getTime() + utc3Offset * 60000);
+    const year = localTime.getUTCFullYear();
+    const month = String(localTime.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(localTime.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
