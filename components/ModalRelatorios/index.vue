@@ -275,7 +275,7 @@
                 data.idPedido = props.idPedido;
                 data.period = [];
             }
-            data.report = data.report;
+            data.report = data.report.replaceAll(" ", "_");
             
         
         loading.value = true;
