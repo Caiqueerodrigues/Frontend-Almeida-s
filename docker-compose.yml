@@ -1,0 +1,13 @@
+version: '2.2'
+
+services:
+  frontend:
+    build: .
+    container_name: almeidas-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      JWT_SECRET: ASDasdhjknfghjn123132lkdfasd
+      # Adicione variáveis de ambiente do frontend aqui, se necessário
+    restart: always

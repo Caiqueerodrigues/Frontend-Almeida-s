@@ -1,0 +1,52 @@
+name: "Deploy Frontend VPS"
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  build_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v5
+
+      - name: Docker Login
+        uses: docker/login-action@v3.6.0
+        with:
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6.18.0
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            caiqueerodrigues/almeidas-frontend:v1
+            caiqueerodrigues/almeidas-frontend:latest
+            caiqueerodrigues/almeidas-frontend:${{ github.sha }}
+
+      - name: Copiar docker-compose.yml para o servidor
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          source: "docker-compose.yml"
+          target: "/almeidas-frontend"
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        timeout-minutes: 60
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          script: |
+            cd /almeidas-frontend
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
+            docker image prune -af
