@@ -16,6 +16,11 @@ jobs:
         with:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
+          
+      - name: Criar .env para build
+        run: |
+          echo "API_BACKEND=http://localhost:3003" > .env
+          echo "JWT_SECRET=ASDasdhjknfghjn123132lkdfasd" >> .env
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.18.0
