@@ -378,9 +378,12 @@ import { ModalRelatorios } from '#components';
             clientSelected.value = `${response.client.nome} - ${response.client.telefone}`;
             modelos.value.push(response.modelo);
             pedido.value.modelo = response.modelo;
-            pedido.value.dataPedido = new Date(response.dataPedido);
-            if(response.dataPagamento) pedido.value.dataPagamento = new Date(response.dataPagamento);
-            if(response.dataFinalizado) pedido.value.dataFinalizado = new Date(response.dataFinalizado);
+            // pedido.value.dataPedido = new Date(response.dataPedido);
+            // if(response.dataPagamento) pedido.value.dataPagamento = new Date(response.dataPagamento);
+            // if(response.dataFinalizado) pedido.value.dataFinalizado = new Date(response.dataFinalizado);
+            // pedido.value.dataPedido = response.dataPedido;
+            // if(response.dataPagamento) pedido.value.dataPagamento = response.dataPagamento;
+            // if(response.dataFinalizado) pedido.value.dataFinalizado = response.dataFinalizado;
             pedido.value.relatorioCliente = response.relatorioCliente;
             pedido.value.totalDinheiro = response.totalDinheiro;
             pedido.value.totalPares = response.totalPares;
@@ -394,7 +397,27 @@ import { ModalRelatorios } from '#components';
                 pedido.value.grade.push({  id: Date.now() + Math.random(), grade: item.split(":")[0] , qtd: Number(item.split(":")[1]) });
             });
             
-            if(response.dataRetirada) pedido.value.dataRetirada = new Date(response.dataRetirada);
+            if (response.dataPedido) {
+                const dataPedido = new Date(response.dataPedido);
+                dataPedido.setHours(dataPedido.getHours() - 3);
+                pedido.value.dataPedido = dataPedido;
+            }
+            if (response.dataPagamento) {
+                const dataPagamento = new Date(response.dataPagamento);
+                dataPagamento.setHours(dataPagamento.getHours() - 3);
+                pedido.value.dataPagamento = dataPagamento;
+            }
+            if (response.dataFinalizado) {
+                const dataFinalizado = new Date(response.dataFinalizado);
+                dataFinalizado.setHours(dataFinalizado.getHours() - 3);
+                pedido.value.dataFinalizado = dataFinalizado;
+            }
+            if (response.dataRetirada) {
+                const dataRetirada = new Date(response.dataRetirada);
+                dataRetirada.setHours(dataRetirada.getHours() - 3);
+                pedido.value.dataRetirada = dataRetirada;
+            }
+
             pedido.value.quemAssinou = response.quemAssinou;
             pedido.value.quemCortou = response.quemCortou;
             pedido.value.categoria = response.categoria;
@@ -505,10 +528,14 @@ import { ModalRelatorios } from '#components';
     const submitPedido = async () => {
         let dados = { ...pedido.value };
 
-        dados.dataPedido = formatteDateDB(pedido.value.dataPedido);
-        dados.dataFinalizado = pedido.value.dataFinalizado ? formatteDateDB(pedido.value.dataFinalizado) : null;
-        dados.dataPagamento = pedido.value.dataPagamento ? formatteDateDB(pedido.value.dataPagamento) : null;
-        dados.dataRetirada = pedido.value.dataRetirada ? formatteDateDB(pedido.value.dataRetirada) : null;
+        // dados.dataPedido = formatteDateDB(pedido.value.dataPedido);
+        dados.dataPedido = pedido.value.dataPedido.toISOString().split('.')[0];
+        // dados.dataFinalizado = pedido.value.dataFinalizado ? formatteDateDB(pedido.value.dataFinalizado) : null;
+        // dados.dataPagamento = pedido.value.dataPagamento ? formatteDateDB(pedido.value.dataPagamento) : null;
+        // dados.dataRetirada = pedido.value.dataRetirada ? formatteDateDB(pedido.value.dataRetirada) : null;
+        dados.dataFinalizado = pedido.value.dataFinalizado ? pedido.value.dataFinalizado.toISOString().split('.')[0] : null;
+        dados.dataPagamento = pedido.value.dataPagamento ? pedido.value.dataPagamento.toISOString().split('.')[0] : null;
+        dados.dataRetirada = pedido.value.dataRetirada ? pedido.value.dataRetirada.toISOString().split('.')[0] : null;
         dados.tipoRecebido = pedido.value.tipoRecebido.join(",");
         dados.rendimentoParesMetro = pedido.value.rendimentoParesMetro ? pedido.value.rendimentoParesMetro.join(",") : null;
         dados.cor = pedido.value.cor ? pedido.value.cor.join(", ") : null;
