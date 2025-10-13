@@ -49,3 +49,20 @@ input[type="number"] {
     --v-field-border-opacity: 1;
     color: #eeff00 !important;
 }
+
+.texto-truncado {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-wrap: break-word !important;
+    width: 100% !important;
+}
+    
+.custom-tooltip .v-overlay__content {
+    background-color: #fff !important;
+    border-radius: 8px !important;
+    color: black !important;
+    font-weight: bold;
+}

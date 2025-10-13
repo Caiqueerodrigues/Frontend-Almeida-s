@@ -12,9 +12,6 @@
                     <span v-if="!devidos" class="text-secondary text-h6 font-weight-bold">
                         TOTAL FATURADO R$ {{ formattePrice(totalReceber) }}
                     </span><br>
-                    <span class="text-secondary text-h6 font-weight-bold">
-                        Total de pares/metros {{ totalPares }}
-                    </span>
                     <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
                         TOTAL SELECIONADO PARA BAIXA R$ {{ formattePrice(totalDevido) }}
                     </span><br>
@@ -125,7 +122,7 @@
         </v-col>
         <v-col cols="12" class="text-center pb-12" v-if="pedidos.length > 0 && showTable">
             <DataTable 
-                :title="'Listagem de Pedidos ' + pedidosFiltrados.length"
+                :title="'Listagem de Pedidos ' + pedidosFiltrados.length + ' - ' + 'Total de pares/metros ' + totalPares"
                 :items="pedidosFiltrados"
                 :headers="nomesColunas" 
                 :acaoVer="true"
@@ -439,7 +436,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     }
 
     const totalPares = computed(() => {
-        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0).toFixed(2);
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0).toFixed(0);
     });
 
     const clientes = computed(() => {

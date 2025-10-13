@@ -13,7 +13,7 @@
                 @click:row="handleRowClick"
             >
                 <template v-slot:[`item.situacao`]="{ item }">
-                    <div class="centered-cell">
+                    <div class="centered-cell texto-truncado">
                         <v-chip :color="item.ativo ? 'success' : 'primary'" text-color="white">
                             <v-icon v-if="item.icons">
                                 {{ item.situacao }}
@@ -33,53 +33,146 @@
                 </template>
 
                 <template v-slot:[`item.nome`]="{ item }">
-                    <div class="centered-cell">
-                        {{ item.nome }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="item.nome" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    {{ item.nome }}
+                                </span>
+                            </template>
+                        </v-tooltip>
+                    </div>
+                </template>
+
+                <template v-slot:[`item.nomeCliente`]="{ item }">
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="item.nomeCliente" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    {{ item.nomeCliente }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.dia`]="{ item }">
-                    <div class="centered-cell">
+                    <div class="centered-cell texto-truncado">
                         {{ item.dia }}
                     </div>
                 </template>
 
                 <template v-slot:[`item.preco`]="{ item }">
-                    <div class="centered-cell">
-                        R$ {{ formattePrice(item.preco) }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="'R$ ' + formattePrice(item.preco)" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    R$ {{ formattePrice(item.preco) }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.totalDinheiro`]="{ item }">
-                    <div class="centered-cell">
-                        R$ {{ formattePrice(item.totalDinheiro) }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="'R$ ' + formattePrice(item.totalDinheiro)" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    R$ {{ formattePrice(item.totalDinheiro) }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.dataPedido`]="{ item }">
-                    <div class="centered-cell">
-                        {{ getHours(item.dataPedido) }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="getHours(item.dataPedido)" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    {{ getHours(item.dataPedido) }}
+                                </span>
+                            </template>
+                        </v-tooltip>
+                    </div>
+                </template>
+                <template v-slot:[`item.modelo.tipo`]="{ item }">
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="item.modelo.tipo" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    {{ item.modelo.tipo }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.modelo.preco`]="{ item }">
-                    <div class="centered-cell">
-                        R$ {{ formattePrice(item.modelo.preco) }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="'R$ ' + formattePrice(item.modelo.preco)" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    R$ {{ formattePrice(item.modelo.preco) }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.precoPar`]="{ item }">
-                    <div class="centered-cell">
-                        R$ {{ formattePrice(item.precoPar) }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="'R$ ' + formattePrice(item.precoPar)" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    R$ {{ formattePrice(item.precoPar) }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.valorCompra`]="{ item }">
-                    <div class="centered-cell">
-                        R$ {{ formattePrice(item.valorCompra) }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="'R$ ' + formattePrice(item.valorCompra)" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    R$ {{ formattePrice(item.valorCompra) }}
+                                </span>
+                            </template>
+                        </v-tooltip>
+                    </div>
+                </template>
+                <template v-slot:[`item.obs`]="{ item }">
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="item.obs" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    {{ item.obs }}
+                                </span>
+                            </template>
+                        </v-tooltip>
+                    </div>
+                </template>
+                <template v-slot:[`item.quemCortou`]="{ item }">
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="item.quemCortou" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    {{ item.quemCortou }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.cor`]="{ item }">
-                    <div class="centered-cell">
-                        {{ getDadosJoin(item.cor) }}
+                    <div class="centered-cell texto-truncado">
+                        <v-tooltip :text="getDadosJoin(item.cor)" class="custom-tooltip">
+                            <template v-slot:activator="{ props }">
+                                <span v-bind="props">
+                                    {{ getDadosJoin(item.cor) }}
+                                </span>
+                            </template>
+                        </v-tooltip>
                     </div>
                 </template>
                 <template v-slot:[`item.jaFoiPago`]="{ item }">
-                    <div class="centered-cell">
+                    <div class="centered-cell texto-truncado">
                         <v-icon v-if="item.jaFoiPago === 'Sim'" size="40" class="text-success">
                             mdi-check
                         </v-icon>
@@ -89,7 +182,7 @@
                     </div>
                 </template>
                 <template v-slot:[`item.ativo`]="{ item }">
-                    <div class="centered-cell">
+                    <div class="centered-cell texto-truncado">
                         <v-icon v-if="item.ativo" size="40" class="text-success">
                             mdi-check
                         </v-icon>
@@ -100,7 +193,7 @@
                 </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
-                    <div class="centered-cell">
+                    <div class="centered-cell texto-truncado">
                         <v-btn variant="text" @click="emitId(item)">
                             <v-icon v-if="props.acaoVer">
                                 mdi-pencil

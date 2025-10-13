@@ -61,11 +61,8 @@
                 Total Faturado no período é R$ {{ totalReceber }}
             </span>
             <br>
-            <span class="text-h5 text-secondary font-weight-bold">
-                Total de pares/metros {{ totalPares }}
-            </span>
             <DataTable
-                :title="'Listagem de pedidos ' + pedidosFiltrados.length"
+                :title="'Listagem de pedidos ' + pedidosFiltrados.length + ' - ' + 'Total de pares/metros ' + totalPares"
                 :items="pedidosFiltrados"
                 :headers="nomesColunas"
                 :acaoVer="true"
@@ -140,7 +137,7 @@
     }
 
     const totalPares = computed(() => {
-        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0).toFixed(2);
+        return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0).toFixed(0);
     });
     
     const clientes = computed(() => {
