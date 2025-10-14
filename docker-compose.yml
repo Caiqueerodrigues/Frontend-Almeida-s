@@ -10,5 +10,5 @@ services:
     environment:
       NODE_ENV: production
       JWT_SECRET: ASDasdhjknfghjn123132lkdfasd
-      API_BACKEND: http://localhost:3003
+      API_BACKEND: /api
     restart: always
