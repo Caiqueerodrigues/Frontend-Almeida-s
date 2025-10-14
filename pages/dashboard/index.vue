@@ -39,6 +39,14 @@
         <v-col cols="10" class="container-graph rounded-xl">
             <Charts
                 :labels="labels"
+                :data="dataBarRecebimentos"
+                type="bar"
+                :title="'Recebimentos R$ ' + (dataBarRecebimentos.reduce((a, b) => a + b.data.reduce((c, d) => c + d, 0), 0)).toFixed(2)"
+            />
+        </v-col>
+        <v-col cols="10" class="container-graph rounded-xl">
+            <Charts
+                :labels="labels"
                 :data="dataBar"
                 type="bar"
                 :title="'Rendimento por Tipo de Serviço R$ ' + (dataBar.reduce((a, b) => a + b.data.reduce((c, d) => c + d, 0), 0)).toFixed(2)"
@@ -75,6 +83,7 @@
     const labels = ref([]);
     const dataLine = ref([]);
     const dataBar = ref ([]);
+    const dataBarRecebimentos = ref ([]);
     const dataPie = ref([]);
 
     const navigateTo = (route) => {
@@ -92,6 +101,7 @@
             dataBar.value = response.dataBar;
             dataPie.value = response.dataPie;
             dataLine.value = response.dataLine;
+            dataBarRecebimentos.value = response.dataPaidBar;
         }).catch(error => {
             console.error(error);
         });

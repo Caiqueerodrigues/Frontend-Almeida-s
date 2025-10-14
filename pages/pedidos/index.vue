@@ -444,7 +444,8 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         pedidos.value.map(item => {
             if(!nomes.includes(item.client.nome)) nomes.push(item.client.nome)
         })
-        return nomes;
+        const nomesOrdenados = ['Todos', ...nomes.slice(1).sort((a, b) => a.localeCompare(b))];
+        return nomesOrdenados;
     });
 
     const pedidosFiltrados = computed(() => {
