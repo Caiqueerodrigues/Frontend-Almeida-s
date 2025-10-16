@@ -18,6 +18,7 @@
                 title="DATA DA COMPRA"
                 :date="lancamento.dataCompra"
                 :onlyDate="true"
+                :future="true"
                 name="dataCompra"
                 @dateEmit="lancamento.dataCompra = $event"
             />

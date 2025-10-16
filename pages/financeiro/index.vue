@@ -1,7 +1,7 @@
 <template>
     <v-row class="pt-4 justify-center align-center">
         <v-col cols="10">
-            <h2 class="text-center text-secondary">
+            <h2 class="text-center text-secondary mb-3">
                 LISTAGEM DE LANÇAMENTOS
             </h2>
             <div class="d-flex">
@@ -59,6 +59,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
 
     const axios = inject('axios');
     const formattePrice = inject("formattePrice");
+    const formatteDateDB = inject("formatteDateDB");
     
     const router = useRouter();
 
@@ -122,9 +123,11 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         saidas.value = [];
         typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }}
 
-        let date = selectedDate.value;
-            date.setHours(date.getHours() - 3);
-            date = date.toISOString().split("T")[0];
+        let date = new Date(selectedDate.value);
+        // let date = selectedDate.value;
+            // date.setHours(date.getHours() - 3);
+            const dateFormatted = formatteDateDB(date);
+            date = dateFormatted.split("T")[0];
 
         await axios.post('/exit', { date: date }).then(response => {
             if(response.length > 0) {

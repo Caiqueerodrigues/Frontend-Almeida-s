@@ -7,7 +7,7 @@
         v-model="dateSelected"
         locale="pt-BR"
         :min-date="new Date('2000-01-01')"
-        :max-date="new Date()"
+        :max-date="props.future ? null : new Date()"
         :model-type="props.format"
         :format="format"
         auto-apply
@@ -25,7 +25,7 @@
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
     
-    const props = defineProps([ 'title', 'range', 'format', 'name', 'date', 'onlyDate', 'clearable', 'class', 'disabled' ]);
+    const props = defineProps([ 'title', 'range', 'format', 'name', 'date', 'onlyDate', 'clearable', 'class', 'disabled', 'future' ]);
     const emit = defineEmits([ 'dateEmit' ]);
 
     const dateSelected = ref(props.date && props.date instanceof Date ? props.date.toISOString() : null);

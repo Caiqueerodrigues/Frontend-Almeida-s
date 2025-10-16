@@ -342,7 +342,7 @@ import { ModalRelatorios } from '#components';
         quemCortou: null,
         categoria: null,
     });
-    const cortadores = ref(['Paulo Sérgio',  "Drien", "Paulo/Drien", 'Márcio', "Paulo/Márcio", "Caroll", "Caíque"]);
+    const cortadores = ref(['Paulo Sérgio',  "Drien", "Paulo/Drien", "Caroll", "Caíque", "Drien/Tai" ]);
     const clients = ref([]);
     const clientSelected = ref(null);
     const clientsNames = ref([]);
