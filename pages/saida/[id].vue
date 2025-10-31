@@ -59,7 +59,7 @@
                 label="Anotações"
                 counter
                 cleareble
-                maxlength="255"
+                maxlength="2000"
             ></v-textarea>
         </v-col>
         <v-col cols="10" class="text-center">

@@ -62,7 +62,7 @@
         </v-col>
         <v-col cols="10" md="5" class="container-graph rounded-xl">
             <Charts
-                :labels="[ 'Corte', 'Debruagem', 'Dublagem' ]"
+                :labels="[ 'Geral', 'Corte', 'Debruagem', 'Dublagem' ]"
                 :data="dataPie"
                 type="pie"
                 :title="'Gastos por Tipo de Serviço R$ ' + (dataPie.reduce((a, b) => a + b, 0)).toFixed(2)"
