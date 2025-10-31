@@ -283,6 +283,7 @@
 <script setup>
 import { SEGUIMENTOS } from '~/constantes/seguimentos';
 import moment from 'moment-timezone';
+import 'moment/dist/locale/pt-br';
 
     const axios = inject("axios");
     const loading = inject("loading");
@@ -523,9 +524,14 @@ import moment from 'moment-timezone';
     }
     
     const getDateAtualBrasilia = (data = moment().tz('America/Sao_Paulo').toDate()) => {
-        const date = moment(data).tz('America/Sao_Paulo').format('dddd, DD [de] MMMM [de] YYYY');
+        const date = moment(data)
+            .tz('America/Sao_Paulo')
+            .locale('pt-br')
+            .format('dddd, DD [de] MMMM [de] YYYY');
+
         return date.charAt(0).toUpperCase() + date.slice(1);
     };
+
 
     const setSelecteds = (ev) => {
         selectedsPrint.value = ev;
