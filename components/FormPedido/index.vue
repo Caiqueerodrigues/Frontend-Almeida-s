@@ -60,7 +60,7 @@
                             :clearable="true"
                             :date="pedido.dataPagamento"
                             name="dataPagamento"
-                            @dateEmit="pedido.dataPagamento = $event"
+                            @dateEmit="fomatDate('pagamento', $event)"
                         />
                     </v-col>
                 </v-row>
@@ -229,7 +229,7 @@
                     name="dataRetirada"
                     :date="pedido.dataRetirada"
                     :clearable="true"
-                    @dateEmit="pedido.dataRetirada = $event"
+                    @dateEmit="fomatDate('finalizado', $event)"
                 />
             </v-col>
             <v-col cols="12" class="text-center">
@@ -626,6 +626,15 @@ import { ModalRelatorios } from '#components';
             modelos.value = [];
         }
     });
+
+    const fomatDate = (local, value) => {
+        const tipos = {
+            'finalizado': () => pedido.value.dataRetirada = value.setHours(value.getHours() - 3),
+            'pagamento': () => pedido.value.dataPagamento = value.setHours(value.getHours() - 3)
+        }
+
+        tipos[local]()
+    }
 
     onMounted(() => {
         if(props.id && props.id !== '0') getPedido();
