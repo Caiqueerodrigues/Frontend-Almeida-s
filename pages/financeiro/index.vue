@@ -63,7 +63,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     
     const router = useRouter();
 
-    const seguimentos = [ 'Todos', ...SEGUIMENTOS ]
+    const seguimentos = [ 'Todos', 'Geral', ...SEGUIMENTOS ]
     const dragContainer = ref(null);
     const saidas = ref([]);
     const selectedDate = ref(new Date());
@@ -74,11 +74,13 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         "Corte": "#FFEB8D",
         "Dublagem": "#A5D6A7",
         "Debruagem": "#F8B4D9",
+        "Geral": "#FfB4a7",
     })
     const typesLayout = ref({
         "Corte": { x: 5, y: 5, offsetY: 120 },
         "Dublagem": { x: 305, y: 5, offsetY: 120 },
         "Debruagem": { x: 605, y: 5, offsetY: 120 },
+        "Geral": { x: 905, y: 5, offsetY: 120 },
     });
 
     const onDragStart = (idx) => {
@@ -107,6 +109,9 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
                 } else if (saida.tipoServico === 'Debruagem') {
                     x = 5;
                     y = 5;
+                } else if (saida.tipoServico === 'Geral') {
+                    x = 905;
+                    y = 5;
                 }
             }
 
@@ -121,7 +126,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     const getSaidas = async () => {
         filterService.value = 'Todos';
         saidas.value = [];
-        typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }}
+        typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }, "Geral": { x: 905, y: 5, offsetY: 120 }}
 
         let date = new Date(selectedDate.value);
         // let date = selectedDate.value;

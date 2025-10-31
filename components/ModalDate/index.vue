@@ -30,7 +30,7 @@
                                     name="dataPagemento"
                                     :date="null"
                                     :onlyDate="true"
-                                    @dateEmit="selectedDate = $event"
+                                    @dateEmit="fomatDate($event)"
                                 />
                             </v-col>
                         </v-row>
@@ -73,6 +73,7 @@
     }
     
     const confirmar = () => {
+        selectedDate.value = new Date(selectedDate.value.setHours(selectedDate.value.getHours() - 3))
         emit('confirma', selectedDate.value);
     }
 </script>

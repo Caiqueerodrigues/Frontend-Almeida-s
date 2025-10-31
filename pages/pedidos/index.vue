@@ -369,7 +369,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         
         const dados = { 
             ids: selectedsPrint.value,
-            date: formatteDateDB(date)
+            date: date
         }
         
         await axios.put('/orders/updatePayment', dados).then(response => {

@@ -2,9 +2,12 @@
     <v-form ref="form">
         <v-row class="h-100 justify-center align-center">
             <v-col cols="12">
-                <h2 class="text-center text-secondary py-4">
+                <h2 class="text-center text-secondary pt-4">
                     Olá, {{ usernameToken() }}
                 </h2>
+                <h4 class="text-center text-secondary">
+                    {{ user.funct }}
+                </h4>
             </v-col>
 
             <v-col 

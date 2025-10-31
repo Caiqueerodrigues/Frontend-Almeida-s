@@ -629,8 +629,14 @@ import { ModalRelatorios } from '#components';
 
     const fomatDate = (local, value) => {
         const tipos = {
-            'finalizado': () => pedido.value.dataRetirada = value.setHours(value.getHours() - 3),
-            'pagamento': () => pedido.value.dataPagamento = value.setHours(value.getHours() - 3)
+            'finalizado': () => {
+                if(value) pedido.value.dataRetirada = new Date(value.setHours(value.getHours() - 3))
+                else pedido.value.dataRetirada = null;
+            },
+            'pagamento': () => {
+                if(value) pedido.value.dataPagamento = new Date(value.setHours(value.getHours() - 3))
+                else pedido.value.dataPagamento = null;
+            }
         }
 
         tipos[local]()

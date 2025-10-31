@@ -20,7 +20,7 @@
                 :onlyDate="true"
                 :future="true"
                 name="dataCompra"
-                @dateEmit="lancamento.dataCompra = $event"
+                @dateEmit="lancamento.dataCompra = fomatDate($event)"
             />
         </v-col>
         <v-col cols="5" class="d-flex">
@@ -40,7 +40,7 @@
             <AutoCompleteMultiple 
                 v-capitalize-first
                 :label="'Seguimento'"
-                :items="SEGUIMENTOS"
+                :items="['Geral', ...SEGUIMENTOS]"
                 :selecteds="lancamento.tipoServico"
                 :outsideList="false"
                 :type="'text'"
@@ -209,6 +209,10 @@
                 voltar();
             }, 1000);
         }).catch(err => console.error(err));
+    }
+
+    const fomatDate = (value) => {
+        if(value) lancamento.value.dataCompra = new Date(value.setHours(value.getHours() - 3))
     }
 
     const voltar = () => {
