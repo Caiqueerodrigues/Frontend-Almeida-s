@@ -6,8 +6,8 @@
         :class="props.class"
         v-model="dateSelected"
         locale="pt-BR"
-        :min-date="new Date('2000-01-01')"
-        :max-date="props.future ? null : new Date()"
+        :min-date="minDate"
+        :max-date="props.future ? null : now"
         :model-type="props.format"
         :format="format"
         auto-apply
@@ -24,41 +24,39 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
-    
+    import moment from 'moment-timezone';
+
     const props = defineProps([ 'title', 'range', 'format', 'name', 'date', 'onlyDate', 'clearable', 'class', 'disabled', 'future' ]);
     const emit = defineEmits([ 'dateEmit' ]);
 
-    const dateSelected = ref(props.date && props.date instanceof Date ? props.date.toISOString() : null);
-    
+    const timeZone = 'America/Sao_Paulo';
+
+    const dateSelected = ref(
+        props.date && props.date instanceof Date
+            ? moment(props.date).tz(timeZone).toDate()
+            : null
+    );
+    const minDate = moment('2000-01-01').tz(timeZone).toDate();
+    const now = moment().tz(timeZone).toDate();
+
     const format = (date) => {
-        // const adjustedDate = new Date(date.getTime() - (3 * 60 * 60 * 1000));
-
-        // let day = adjustedDate.getDate();
-        // const month = adjustedDate.getMonth() + 1;
-        // const year = adjustedDate.getFullYear();
-        // const hour = adjustedDate
-        //     .toISOString()
-        //     .split("T")[1]
-        //     .split('.')[0];
-
-        // return props.onlyDate ?
-        //     `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year}` :
-        //     `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year} ${hour}`;
-        let day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        const hour = date
-            .toISOString()
-            .split("T")[1]
-            .split('.')[0];
+        const mDate = moment(date).tz(timeZone);
+        const day = mDate.format('DD');
+        const month = mDate.format('MM');
+        const year = mDate.format('YYYY');
+        const hour = mDate.format('HH:mm:ss');
 
         return props.onlyDate ?
-            `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year}` :
-            `${String(day).padStart(2, "0")}-${String(month).padStart(2, "0")}-${year} ${hour}`;
+            `${day}-${month}-${year}` :
+            `${day}-${month}-${year} ${hour}`;
     }
 
     const emitEvento = () => {
-        emit("dateEmit", dateSelected.value);
+        if (dateSelected.value) {
+            emit("dateEmit", moment(dateSelected.value).tz(timeZone).toDate());
+        } else {
+            emit("dateEmit", null);
+        }
     }
 </script>
 <style scoped>

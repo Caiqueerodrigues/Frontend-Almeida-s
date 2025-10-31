@@ -56,6 +56,7 @@
 </template>
 <script setup>
 import { SEGUIMENTOS } from '~/constantes/seguimentos';
+import moment from 'moment-timezone';
 
     const axios = inject('axios');
     const formattePrice = inject("formattePrice");
@@ -66,7 +67,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     const seguimentos = [ 'Todos', 'Geral', ...SEGUIMENTOS ]
     const dragContainer = ref(null);
     const saidas = ref([]);
-    const selectedDate = ref(new Date());
+    const selectedDate = ref(moment().tz('America/Sao_Paulo').toDate());
     const filterService = ref('Todos');
     const draggingIdx = ref(null);
 
@@ -122,19 +123,16 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         }
     };
 
-
     const getSaidas = async () => {
         filterService.value = 'Todos';
         saidas.value = [];
         typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }, "Geral": { x: 905, y: 5, offsetY: 120 }}
 
-        let date = new Date(selectedDate.value);
-        // let date = selectedDate.value;
-            // date.setHours(date.getHours() - 3);
-            const dateFormatted = formatteDateDB(date);
-            date = dateFormatted.split("T")[0];
+        let date = moment(selectedDate.value).tz('America/Sao_Paulo').toDate();
+        const dateFormatted = formatteDateDB(date);
+        const dateString = dateFormatted.split("T")[0];
 
-        await axios.post('/exit', { date: date }).then(response => {
+        await axios.post('/exit', { date: dateString }).then(response => {
             if(response.length > 0) {
                 saidas.value = response.map(saida => {
                     const layout = typesLayout.value[saida.tipoServico];
@@ -158,8 +156,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     });
 
     const setDate = (ev) => {
-        const date = new Date(ev);
-        selectedDate.value = date;
+        selectedDate.value = moment(ev).tz('America/Sao_Paulo').toDate();
         getSaidas();
     }
 

@@ -24,59 +24,57 @@
                 title="Listagem de Alterações"
                 :items="pedidos"
                 :headers="nomesColunas" 
-                :acaoVer="true"
+                :acaoVer="false"
+                :redirect="true"
                 @verId="showFormFunc($event)"
             />
         </v-col>
     </v-row>
 </template>
 <script setup>
+    import moment from 'moment-timezone';
+
     const axios = inject('axios');
     const formatteDateDB = inject("formatteDateDB");
     const router = useRouter();
 
     const nomesColunas = ref([
-        { title: 'ID pedido', align: 'center', key: 'idPedido', width: '10px' },
+        { title: 'ID pedido', align: 'center', key: 'id', width: '10px' },
         { title: 'Cliente', align: 'center', key: 'nomeCliente' },
         { title: 'Total', align: 'center', key: 'totalDinheiro' },
         { title: 'Modelo', align: 'center', key: 'modelo' },
         { title: 'Cor(es)', align: 'center', key: 'cor' },
-        { title: 'ID alteração', align: 'center', key: 'id', width: '10px' },
+        { title: 'ID alteração', align: 'center', key: 'idAlteracao', width: '10px' },
         { title: 'Operacao realizada', align: 'center', key: 'operacaoRealizada' },
         { title: 'Hora alteração', align: 'center', key: 'horaModificacao' },
         { title: 'Usuário', align: 'center', key: 'nomeUsuario' },
-        { title: 'Ações', align: 'center', key: 'ver' },
     ]);
-    const selectedDate = ref(new Date());
+    const selectedDate = ref(moment().tz('America/Sao_Paulo').toDate());
     const textDate = ref("");
     const pedidos = ref([]);
 
 
     const setDate = (ev) => {
-        const date = new Date(ev);
-        selectedDate.value = date;
+        selectedDate.value = moment(ev).tz('America/Sao_Paulo').toDate();
     }
 
     const getPedidos = async () => {
-        let date = new Date(selectedDate.value);
+        let date = moment(selectedDate.value).tz('America/Sao_Paulo').toDate();
         const dateFormatted = formatteDateDB(date);
         const dados = { date: dateFormatted };
 
         axios.post('/history-orders', dados).then(response => {
-            pedidos.value = response;
+            pedidos.value = response.map(item => ({
+                ...item,
+                id: item.idPedido,
+                idAlteracao: item.id,
+            }));
         })
     }
 
-    const getDateAtualBrasilia = (data = new Date()) => {
-        const date = new Date(data).toLocaleDateString('pt-BR', {
-            timeZone: 'America/Sao_Paulo',
-            weekday: 'long', 
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-
-        return date.replace(/^\w/, (c) => c.toUpperCase()).replace(/\s\w/g, (c) => c.toUpperCase());
+    const getDateAtualBrasilia = (data = moment().tz('America/Sao_Paulo').toDate()) => {
+        const date = moment(data).tz('America/Sao_Paulo').format('dddd, DD [de] MMMM [de] YYYY');
+        return date.charAt(0).toUpperCase() + date.slice(1);
     };
 
     const showFormFunc = (ev = 0) => {

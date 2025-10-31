@@ -282,6 +282,7 @@
 </template>
 <script setup>
 import { SEGUIMENTOS } from '~/constantes/seguimentos';
+import moment from 'moment-timezone';
 
     const axios = inject("axios");
     const loading = inject("loading");
@@ -313,7 +314,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     const textDate = ref("");
     const pedidos = ref([]);
     const totalDevido = ref(0);
-    const selectedDate = ref(new Date());
+    const selectedDate = ref(moment().tz('America/Sao_Paulo').toDate());
     const devidos = ref(false);
     const naoEntregues = ref(false);
     const showTable = ref(true);
@@ -332,7 +333,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
         filterClient.value = 'Todos';
         filterService.value = 'Todos';
         selectedsPrint.value = [];
-        let date = new Date(selectedDate.value);
+        let date = moment(selectedDate.value).tz('America/Sao_Paulo').toDate();
         const dateFormatted = formatteDateDB(date);
         const dados = { date: dateFormatted };
         
@@ -366,10 +367,10 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
 
     const marcarPagos = async (date) => {
         showModalDate.value = false;
-        
+        const dateUTC3 = moment(date).tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss');
         const dados = { 
             ids: selectedsPrint.value,
-            date: date
+            date: dateUTC3
         }
         
         await axios.put('/orders/updatePayment', dados).then(response => {
@@ -380,7 +381,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     }
 
     const marcarRetirados = async () => {
-        baixaVarios.value.dataRetirada = formatteDateDB(new Date(baixaVarios.value.dataRetirada));
+        baixaVarios.value.dataRetirada = moment(baixaVarios.value.dataRetirada).tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss');
         baixaVarios.value.ids = selectedsPrint.value;
 
         await axios.put('/orders/withdrawn', baixaVarios.value).then(response => {
@@ -395,7 +396,7 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     const closeModal = () => {
         resetCheckeds();
         showModal.value = false;
-        baixaVarios.value = { ids: [], date: selectedDate.value, quemRetirou: '' };
+        baixaVarios.value = { ids: [], dataRetirada: selectedDate.value, quemRetirou: '' };
     }
 
     const getPendentes = async () => {
@@ -480,12 +481,8 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     }
 
     const showFormFunc = (ev = 0) => {
-        const date = new Date(selectedDate.value);
-        date.setHours(date.getHours() - 3);
-
-        const dateUTC3 = date.toISOString().replace('Z', '');
-
-        router.push(`/pedido/${ev}${ev === 0 ? '?date=' + dateUTC3 : ''}`);
+        const date = moment(selectedDate.value).tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss');
+        router.push(`/pedido/${ev}${ev === 0 ? '?date=' + date : ''}`);
     };
 
     const impressao = async () => {
@@ -522,20 +519,12 @@ import { SEGUIMENTOS } from '~/constantes/seguimentos';
     }
 
     const setDate = (ev) => {
-        const date = new Date(ev);
-        selectedDate.value = date;
+        selectedDate.value = moment(ev).tz('America/Sao_Paulo').toDate();
     }
     
-    const getDateAtualBrasilia = (data = new Date()) => {
-        const date = new Date(data).toLocaleDateString('pt-BR', {
-            timeZone: 'America/Sao_Paulo',
-            weekday: 'long', 
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-
-        return date.replace(/^\w/, (c) => c.toUpperCase()).replace(/\s\w/g, (c) => c.toUpperCase());
+    const getDateAtualBrasilia = (data = moment().tz('America/Sao_Paulo').toDate()) => {
+        const date = moment(data).tz('America/Sao_Paulo').format('dddd, DD [de] MMMM [de] YYYY');
+        return date.charAt(0).toUpperCase() + date.slice(1);
     };
 
     const setSelecteds = (ev) => {

@@ -19,8 +19,8 @@
                 dark
                 format="dd/MM/yyyy"
                 :clearable="false"
-                :min-date="new Date('2000-01-01')"
-                :max-date="new Date()"
+                :min-date="minDate"
+                :max-date="now"
             />
         </v-col>
         <v-col cols="3">
@@ -90,11 +90,17 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
+    import moment from 'moment-timezone';
 
     const axios = inject("axios");
     const loading = inject("loading");
     const formatteDateDB = inject("formatteDateDB");
-    const date = ref([new Date(), new Date()]);
+    const date = ref([
+        moment().tz('America/Sao_Paulo').toDate(),
+        moment().tz('America/Sao_Paulo').toDate()
+    ]);
+    const minDate = moment('2000-01-01').tz('America/Sao_Paulo').toDate();
+    const now = moment().tz('America/Sao_Paulo').toDate();
     const pedidos = ref([]);
     const nomesColunas = ref([
         { title: 'ID pedido', align: 'center', key: 'id' },
@@ -114,8 +120,8 @@
     const filter = ref({ client: 'Todos', situation: 'Todos', tipo: "Todos" });
 
     const getPedidos = async () => {
-        const initialDate = formatteDateDB(date.value[0]).split("T")[0];
-        const finalDate = formatteDateDB(date.value[1]).split("T")[0];
+        const initialDate = moment(date.value[0]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
+        const finalDate = moment(date.value[1]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
         filter.value.client = "Todos";
         filter.value.situation = "Todos";
         filter.value.tipo = "Todos";
@@ -125,11 +131,11 @@
 
             if(response.length > 0) {
                 response.map(item => {
-                    const date = item.dataPedido.split('T')[0];
-                    const [ ano, mes , dia ] = date.split("-");
+                    const datePedido = moment(item.dataPedido).tz('America/Sao_Paulo');
+                    const dia = datePedido.format('DD-MM-YYYY');
 
                     pedidos.value.push(
-                        { ...item, totalDinheiro: item.totalDinheiro, dia: `${dia}-${mes}-${ano}` , nome: item.client.nome, id: item.id  }
+                        { ...item, totalDinheiro: item.totalDinheiro, dia, nome: item.client.nome, id: item.id }
                     );
                 });
             }

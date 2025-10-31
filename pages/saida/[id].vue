@@ -20,7 +20,7 @@
                 :onlyDate="true"
                 :future="true"
                 name="dataCompra"
-                @dateEmit="lancamento.dataCompra = fomatDate($event)"
+                @dateEmit="lancamento.dataCompra = formatDate($event)"
             />
         </v-col>
         <v-col cols="5" class="d-flex">
@@ -107,9 +107,9 @@
 </template>
 <script setup>
     import { SEGUIMENTOS } from '~/constantes/seguimentos';
+    import moment from 'moment-timezone';
 
     const showToastify = inject("showToastify")
-    const formatteDateDB = inject("formatteDateDB")
     const axios = inject("axios")
     const router = useRouter();
     const route = useRoute();
@@ -122,7 +122,7 @@
     const lancamento = ref({
         id: null,
         dataRegistro: null,
-        dataCompra: new Date(),
+        dataCompra: moment().tz('America/Sao_Paulo').toDate(),
         valorCompra: 0,
         tipoServico: null,
         anotacoes: ''
@@ -153,8 +153,8 @@
             loading.value = false;
             showForm.value = true;
 
-            response.dataCompra = new Date(response.dataCompra + "T04:00:00.000")
-            response.dataRegistro = new Date(response.dataRegistro)
+            response.dataCompra = moment(response.dataCompra).tz('America/Sao_Paulo').toDate();
+            response.dataRegistro = moment(response.dataRegistro).tz('America/Sao_Paulo').toDate();
             lancamento.value = response;
         }).catch(err => {
             showForm.value = true;
@@ -181,9 +181,9 @@
     }
 
     const submit = () => {
-        const dataCompra = lancamento.value.dataCompra; 
-        if (dataCompra.getHours() !== 1 && dataCompra.getMinutes() !== 0 && dataCompra.getSeconds() !== 0) {
-            lancamento.value.dataCompra = formatteDateDB(lancamento.value.dataCompra);
+        lancamento.value.dataCompra = moment(lancamento.value.dataCompra).tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss');
+        if (lancamento.value.dataRegistro) {
+            lancamento.value.dataRegistro = moment(lancamento.value.dataRegistro).tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss');
         }
 
         if(id.value) {
@@ -211,8 +211,9 @@
         }).catch(err => console.error(err));
     }
 
-    const fomatDate = (value) => {
-        if(value) lancamento.value.dataCompra = new Date(value.setHours(value.getHours() - 3))
+    const formatDate = (value) => {
+        if(value) return moment(value).tz('America/Sao_Paulo').toDate();
+        else return null;
     }
 
     const voltar = () => {

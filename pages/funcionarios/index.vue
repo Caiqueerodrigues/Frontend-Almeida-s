@@ -195,12 +195,16 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
+    import moment from 'moment-timezone';
 
     const axios = inject("axios");
     const showToastify = inject("showToastify");
     const formatteDateDB = inject("formatteDateDB");
 
-    const date = ref([new Date(), new Date()]);
+    const date = ref([
+        moment().tz('America/Sao_Paulo').toDate(),
+        moment().tz('America/Sao_Paulo').toDate()
+    ]);
     const mensagens = ref([
         { id: 1, texto: '44 horas semanais (5 dias trabalhados)' },
         { id: 2, texto: '88 horas quinzenais (10 dias trabalhos, duas semanas)' },
@@ -212,11 +216,9 @@
     const valorHora = ref(17.099);
     const filter= ref('Todos');
     const checkedAll = ref(false);
-    
+
     const adjustedDate = (date) => {
-        const newDate = new Date(date);
-        newDate.setHours(newDate.getHours() + 3);
-        return newDate;
+        return moment(date).tz('America/Sao_Paulo').toDate();
     };
 
     const marcarPago = (item, index) => {
@@ -224,8 +226,8 @@
     }
 
     const getDados = async () => {
-        const dateInitial = formatteDateDB(date.value[0]).split("T")[0];
-        const dateFinal = formatteDateDB(date.value[1]).split("T")[0];
+        const dateInitial = moment(date.value[0]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
+        const dateFinal = moment(date.value[1]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
         dados.value = [];
         selecteds.value = [];
         valorHora.value = 17.099;
@@ -236,7 +238,7 @@
             .then(response => {
                 if(response && response.length > 0) {
                     response.forEach(item => {
-                        item.date = item.date + 'T00:00:00';
+                        item.date = moment(item.date).tz('America/Sao_Paulo').toDate();
                         item.checked = false;
                     })
                     dados.value = response;
@@ -256,7 +258,6 @@
         let hours = value.slice(0, 2);
         let minutes = value.slice(2, 4);
 
-        
         let formatted = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
         
         item.horarios[index] = formatted;
@@ -336,7 +337,7 @@
     }
 
     const formatDate = (d) => {
-        return d?.toISOString().split('T')[0];
+        return moment(d).tz('America/Sao_Paulo').format('YYYY-MM-DD');
     };
 
     const checkboxSelected = (item, index) => {
@@ -356,8 +357,7 @@
             return;
         }
 
-        let adjustedDate = new Date(item.date);
-            adjustedDate.setHours(adjustedDate.getHours() - 3);
+        let adjustedDate = moment(item.date).tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss');
 
         let dadosEnviar = { ...item, date: adjustedDate };
         dadosEnviar.horarios = item.horarios.filter(item => item !== "00:00").join(", ");
@@ -376,7 +376,7 @@
     const addRegistro = () => {
         let novoRegistro = {
             nomeFuncionario: '',
-            date: null,
+            date: moment().tz('America/Sao_Paulo').toDate(),
             horarios: ['00:00', '00:00'],
             status: false
         };

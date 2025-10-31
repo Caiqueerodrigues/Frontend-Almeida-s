@@ -171,6 +171,7 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
+    import moment from 'moment-timezone';
     import { idUserToken, setNewPhotoToken, usernameToken } from '~/services/tokenService';
 
     const axios = inject("axios");
@@ -233,17 +234,14 @@
 
     const formatDate = (date) => {
         if (!date) return '';
-        const d = new Date(date);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        const hours = String(d.getHours()).padStart(2, '0');
-        const minutes = String(d.getMinutes()).padStart(2, '0');
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
+        const d = moment(date).tz('America/Sao_Paulo');
+        return d.format('DD/MM/YYYY HH:mm');
     };
 
     const getDados = () => {
         axios.get(`/users/${id.value}`).then(response => {
+            response.firstLogin = response.firstLogin ? moment(response.firstLogin).tz('America/Sao_Paulo').toDate() : '';
+            response.lastLogin = response.lastLogin ? moment(response.lastLogin).tz('America/Sao_Paulo').toDate() : '';
             user.value = response;
         }).catch(e => console.error(e));
     }

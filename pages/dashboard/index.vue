@@ -13,8 +13,8 @@
                 dark
                 format="dd/MM/yyyy"
                 :clearable="false"
-                :min-date="new Date('2000-01-01')"
-                :max-date="new Date()"
+                :min-date="minDate"
+                :max-date="now"
             />
         </v-col>
         <v-col cols="12" class="d-flex ga-3 justify-center">
@@ -73,12 +73,15 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
-    import { formatDateToUTC3 } from '~/services/helpers';
+    import moment from 'moment-timezone';
 
     const router = useRouter();
     const axios = inject('axios');
 
-    const date = ref([new Date(), new Date()]);
+    const now = moment().tz('America/Sao_Paulo');
+    const firstDay = moment().tz('America/Sao_Paulo').startOf('month');
+    const date = ref([firstDay.toDate(), now.toDate()]);
+    const minDate = moment('2000-01-01').tz('America/Sao_Paulo').toDate();
 
     const labels = ref([]);
     const dataLine = ref([]);
@@ -91,10 +94,8 @@
     }
 
     const getDados = async () => {
-        
-
-        const initialDate = formatDateToUTC3(date.value[0]);
-        const finalDate = formatDateToUTC3(date.value[1]);
+        const initialDate = moment(date.value[0]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
+        const finalDate = moment(date.value[1]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
         
         await axios.get(`finance/${initialDate}/${finalDate}`).then(response => {
             labels.value = response.labels;
@@ -112,9 +113,7 @@
     });
 
     onBeforeMount(() => {
-        const now = new Date();
-        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-        date.value = [firstDay, now];
+        getDados();
     });
 </script>
 <style scoped>

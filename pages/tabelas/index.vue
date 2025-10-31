@@ -169,6 +169,7 @@
   import { formatteDateBrasilia, generateIdRandom } from '~/services/helpers';
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css';
+  import moment from 'moment-timezone';
 
   const axios = inject('axios');
   const validateForm = inject('validateForm');
@@ -187,7 +188,7 @@
       id: generateIdRandom(6, true),
       nome: '',
       isNew: true,
-      createdAt: new Date(), //formatteDateBrasilia(new Date(), false),
+      createdAt: moment().tz('America/Sao_Paulo').toDate(),
       columns: [ 
         { title: 'Nova coluna', align: 'center', key: '1' },
         { title: 'Ações', align: 'center', key: 'actions', sortable: false, width: '50px' }
@@ -210,15 +211,15 @@
             tabelasArray.forEach(tabela => {
               tabela.isNew = false;
               tabela.id = item.id;
-              tabela.createdAt = formatteDateBrasilia(new Date(item.createdAt), false);
-              if(item.updatedAt) tabela.updatedAt = formatteDateBrasilia(new Date(item.updatedAt), false);
+              tabela.createdAt = moment(item.createdAt).tz('America/Sao_Paulo').toDate();
+              if(item.updatedAt) tabela.updatedAt = moment(item.updatedAt).tz('America/Sao_Paulo').toDate();
               if(!dados.value.tables.some(tab => tab.id === item.id)) dados.value.tables.push(tabela);
             })
           } else {
             tabelasArray.id = item.id;
             tabelasArray.isNew = false;
-            tabelasArray.createdAt = formatteDateBrasilia(new Date(item.createdAt), false);
-            if(item.updatedAt) tabelasArray.updatedAt = formatteDateBrasilia(new Date(item.updatedAt), false);
+            tabelasArray.createdAt = moment(item.createdAt).tz('America/Sao_Paulo').toDate();
+            if(item.updatedAt) tabelasArray.updatedAt = moment(item.updatedAt).tz('America/Sao_Paulo').toDate();
             if(!dados.value.tables.some(tab => tab.id === item.id)) dados.value.tables.push(tabelasArray);
           }
         });

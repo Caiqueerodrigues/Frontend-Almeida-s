@@ -30,7 +30,7 @@
                                     name="dataPagemento"
                                     :date="null"
                                     :onlyDate="true"
-                                    @dateEmit="fomatDate($event)"
+                                    @dateEmit="selectedDate = $event"
                                 />
                             </v-col>
                         </v-row>
@@ -63,6 +63,8 @@
     </v-row>
 </template>
 <script setup>
+    import moment from 'moment-timezone';
+
     const emit = defineEmits(['setInactiveModal', 'confirma'])
     const props = defineProps([ 'isActiveModal']);
 
@@ -73,8 +75,10 @@
     }
     
     const confirmar = () => {
-        selectedDate.value = new Date(selectedDate.value.setHours(selectedDate.value.getHours() - 3))
-        emit('confirma', selectedDate.value);
+        const dateUTC3 = selectedDate.value
+            ? moment(selectedDate.value).tz('America/Sao_Paulo').toDate()
+            : null;
+        emit('confirma', dateUTC3);
     }
 </script>
 <style scoped>

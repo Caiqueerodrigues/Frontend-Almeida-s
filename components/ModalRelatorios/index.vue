@@ -102,8 +102,8 @@
                                         dark
                                         format="dd/MM/yyyy"
                                         :clearable="false"
-                                        :min-date="new Date('2000-01-01')"
-                                        :max-date="new Date()"
+                                        :min-date="minDate"
+                                        :max-date="now"
                                         :disabled="pdf"
                                     />
                                 </v-col>
@@ -207,15 +207,19 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
+    import moment from 'moment';
     import { SEGUIMENTOS } from '~/constantes/seguimentos';
 
     const axios = inject('axios');
     const showToastify = inject('showToastify');
     const loading = ref(false);
+    const timeZone = 'America/Sao_Paulo';
 
     const emit = defineEmits(['setInactiveModal'])
     const props = defineProps([ 'isActiveModal', 'date', 'withOutFilter', 'idPedido', 'title' ]);
 
+    const minDate = moment('2000-01-01').tz(timeZone).toDate();
+    const now = moment().tz(timeZone).toDate();
     const mobile = ref(false);
     const filters = ref(
         {
@@ -264,9 +268,12 @@
     };
 
     const getReport = async () => {
+        console.log(filters.value)
         let data = { ...filters.value };
             if(!props.withOutFilter) {
                 data.firstFilter = data.firstFilter.replaceAll(" ", "_");
+                data.period[0] = moment(data.period[0]).tz(timeZone).format('YYYY-MM-DDTHH:mm:ss');
+                data.period[1] = moment(data.period[1]).tz(timeZone).format('YYYY-MM-DDTHH:mm:ss');
             } else {
                 data.client = 0;
                 data.firstFilter = "CLIENTE";

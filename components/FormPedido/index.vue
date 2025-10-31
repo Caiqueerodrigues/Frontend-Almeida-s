@@ -60,7 +60,7 @@
                             :clearable="true"
                             :date="pedido.dataPagamento"
                             name="dataPagamento"
-                            @dateEmit="fomatDate('pagamento', $event)"
+                            @dateEmit="formatDate('pagamento', $event)"
                         />
                     </v-col>
                 </v-row>
@@ -229,7 +229,7 @@
                     name="dataRetirada"
                     :date="pedido.dataRetirada"
                     :clearable="true"
-                    @dateEmit="fomatDate('finalizado', $event)"
+                    @dateEmit="formatDate('finalizado', $event)"
                 />
             </v-col>
             <v-col cols="12" class="text-center">
@@ -299,6 +299,7 @@
 </template>
 <script setup>
 import { ModalRelatorios } from '#components';
+import moment from 'moment-timezone';
 
     const axios = inject("axios");
     const loading = inject("loading");
@@ -312,14 +313,15 @@ import { ModalRelatorios } from '#components';
     
     const showModalReport = ref(false);
 
+    const timeZone = 'America/Sao_Paulo';
+
     const form = ref(null);
     const dateSelected = ref(
         (() => {
             const dateStr = router.currentRoute.value.query.date;
-            if (!dateStr) return new Date();
+            if (!dateStr) return moment().tz(timeZone).toDate();
 
-            const date = new Date(dateStr);
-            date.setHours(date.getHours() - 3);
+            const date = moment(dateStr).tz(timeZone).toDate();
             return date;
         })()
     )
@@ -378,12 +380,6 @@ import { ModalRelatorios } from '#components';
             clientSelected.value = `${response.client.nome} - ${response.client.telefone}`;
             modelos.value.push(response.modelo);
             pedido.value.modelo = response.modelo;
-            // pedido.value.dataPedido = new Date(response.dataPedido);
-            // if(response.dataPagamento) pedido.value.dataPagamento = new Date(response.dataPagamento);
-            // if(response.dataFinalizado) pedido.value.dataFinalizado = new Date(response.dataFinalizado);
-            // pedido.value.dataPedido = response.dataPedido;
-            // if(response.dataPagamento) pedido.value.dataPagamento = response.dataPagamento;
-            // if(response.dataFinalizado) pedido.value.dataFinalizado = response.dataFinalizado;
             pedido.value.relatorioCliente = response.relatorioCliente;
             pedido.value.totalDinheiro = response.totalDinheiro;
             pedido.value.totalPares = response.totalPares;
@@ -398,24 +394,16 @@ import { ModalRelatorios } from '#components';
             });
             
             if (response.dataPedido) {
-                const dataPedido = new Date(response.dataPedido);
-                dataPedido.setHours(dataPedido.getHours() - 3);
-                pedido.value.dataPedido = dataPedido;
+                pedido.value.dataPedido = moment(response.dataPedido).tz(timeZone).toDate();
             }
             if (response.dataPagamento) {
-                const dataPagamento = new Date(response.dataPagamento);
-                dataPagamento.setHours(dataPagamento.getHours() - 3);
-                pedido.value.dataPagamento = dataPagamento;
+                pedido.value.dataPagamento = moment(response.dataPagamento).tz(timeZone).toDate();
             }
             if (response.dataFinalizado) {
-                const dataFinalizado = new Date(response.dataFinalizado);
-                dataFinalizado.setHours(dataFinalizado.getHours() - 3);
-                pedido.value.dataFinalizado = dataFinalizado;
+                pedido.value.dataFinalizado = moment(response.dataFinalizado).tz(timeZone).toDate();
             }
             if (response.dataRetirada) {
-                const dataRetirada = new Date(response.dataRetirada);
-                dataRetirada.setHours(dataRetirada.getHours() - 3);
-                pedido.value.dataRetirada = dataRetirada;
+                pedido.value.dataRetirada = moment(response.dataRetirada).tz(timeZone).toDate();
             }
 
             pedido.value.quemAssinou = response.quemAssinou;
@@ -528,14 +516,10 @@ import { ModalRelatorios } from '#components';
     const submitPedido = async () => {
         let dados = { ...pedido.value };
 
-        // dados.dataPedido = formatteDateDB(pedido.value.dataPedido);
-        dados.dataPedido = pedido.value.dataPedido.toISOString().split('.')[0];
-        // dados.dataFinalizado = pedido.value.dataFinalizado ? formatteDateDB(pedido.value.dataFinalizado) : null;
-        // dados.dataPagamento = pedido.value.dataPagamento ? formatteDateDB(pedido.value.dataPagamento) : null;
-        // dados.dataRetirada = pedido.value.dataRetirada ? formatteDateDB(pedido.value.dataRetirada) : null;
-        dados.dataFinalizado = pedido.value.dataFinalizado ? pedido.value.dataFinalizado.toISOString().split('.')[0] : null;
-        dados.dataPagamento = pedido.value.dataPagamento ? pedido.value.dataPagamento.toISOString().split('.')[0] : null;
-        dados.dataRetirada = pedido.value.dataRetirada ? pedido.value.dataRetirada.toISOString().split('.')[0] : null;
+        dados.dataPedido = pedido.value.dataPedido ? moment(pedido.value.dataPedido).tz(timeZone).format('YYYY-MM-DDTHH:mm:ss') : null;
+        dados.dataFinalizado = pedido.value.dataFinalizado ? moment(pedido.value.dataFinalizado).tz(timeZone).format('YYYY-MM-DDTHH:mm:ss') : null;
+        dados.dataPagamento = pedido.value.dataPagamento ? moment(pedido.value.dataPagamento).tz(timeZone).format('YYYY-MM-DDTHH:mm:ss') : null;
+        dados.dataRetirada = pedido.value.dataRetirada ? moment(pedido.value.dataRetirada).tz(timeZone).format('YYYY-MM-DDTHH:mm:ss') : null;
         dados.tipoRecebido = pedido.value.tipoRecebido.join(",");
         dados.rendimentoParesMetro = pedido.value.rendimentoParesMetro ? pedido.value.rendimentoParesMetro.join(",") : null;
         dados.cor = pedido.value.cor ? pedido.value.cor.join(", ") : null;
@@ -627,14 +611,14 @@ import { ModalRelatorios } from '#components';
         }
     });
 
-    const fomatDate = (local, value) => {
+    const formatDate = (local, value) => {
         const tipos = {
             'finalizado': () => {
-                if(value) pedido.value.dataRetirada = new Date(value.setHours(value.getHours() - 3))
+                if(value) pedido.value.dataRetirada = moment(value).tz(timeZone).toDate();
                 else pedido.value.dataRetirada = null;
             },
             'pagamento': () => {
-                if(value) pedido.value.dataPagamento = new Date(value.setHours(value.getHours() - 3))
+                if(value) pedido.value.dataPagamento = moment(value).tz(timeZone).toDate();
                 else pedido.value.dataPagamento = null;
             }
         }
