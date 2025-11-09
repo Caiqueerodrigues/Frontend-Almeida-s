@@ -372,8 +372,9 @@
     });
 
     watch(() => filters.value.report, (nv) => {
-        if(nv === 'FECHAMENTO CLIENTE' || nv === 'FICHAS GERAIS') filters.value.quantidadeVias = 1;
-        else filters.value.quantidadeVias = 2;
+        if(nv === 'FECHAMENTO CLIENTE' || nv === 'FICHAS GERAIS' || (nv === "COMPLETO" && filters.value.firstFilter === "PERÍODO")) {
+            filters.value.quantidadeVias = 1;
+        } else filters.value.quantidadeVias = 2;
     })
 
     onMounted(() => {
