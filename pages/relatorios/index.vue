@@ -167,7 +167,7 @@
         }
 
         if (filter.value.tipo !== 'Todos') {
-            filtrados = pedidos.value.filter(pedido => pedido.categoria.toLowerCase() === filter.value.tipo.toLowerCase());
+            filtrados = filtrados.filter(pedido => pedido.categoria.toLowerCase() === filter.value.tipo.toLowerCase());
         }
         return filtrados
     });
