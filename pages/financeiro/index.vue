@@ -5,12 +5,15 @@
                 LISTAGEM DE LANÇAMENTOS
             </h2>
             <div class="d-flex">
-                <DatePicker 
-                    name="dataListagemSaidas"
-                    class="w-25"
-                    :date="selectedDate"
-                    :onlyDate="true"
-                    @dateEmit="setDate($event)"
+                <VueDatePicker 
+                    v-model="selectedDate" 
+                    range 
+                    class="mt-4"
+                    autoApply
+                    locale="pt-BR"
+                    dark
+                    format="dd/MM/yyyy"
+                    :clearable="false"
                 />
                 <v-select
                     chips
@@ -55,8 +58,10 @@
     </v-row>
 </template>
 <script setup>
-import { SEGUIMENTOS } from '~/constantes/seguimentos';
-import moment from 'moment-timezone';
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css';
+    import { SEGUIMENTOS } from '~/constantes/seguimentos';
+    import moment from 'moment-timezone';
 
     const axios = inject('axios');
     const formattePrice = inject("formattePrice");
@@ -67,9 +72,12 @@ import moment from 'moment-timezone';
     const seguimentos = [ 'Todos', 'Geral', ...SEGUIMENTOS ]
     const dragContainer = ref(null);
     const saidas = ref([]);
-    const selectedDate = ref(moment().tz('America/Sao_Paulo').toDate());
     const filterService = ref('Todos');
     const draggingIdx = ref(null);
+
+    const now = moment().tz('America/Sao_Paulo').toDate();
+    const firstDay = moment().tz('America/Sao_Paulo').startOf('month');
+    const selectedDate = ref([firstDay.toDate(), now]);
 
     const colors = ref({
         "Corte": "#FFEB8D",
@@ -128,17 +136,17 @@ import moment from 'moment-timezone';
         saidas.value = [];
         typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }, "Geral": { x: 905, y: 5, offsetY: 120 }}
 
-        let date = moment(selectedDate.value).tz('America/Sao_Paulo').toDate();
-        const dateFormatted = formatteDateDB(date);
-        const dateString = dateFormatted.split("T")[0];
+        const date = formatteDateDB(moment(selectedDate.value[0]).tz('America/Sao_Paulo').toDate()).split("T")[0];
+        const dateFinal = formatteDateDB(moment(selectedDate.value[1]).tz('America/Sao_Paulo').toDate()).split("T")[0];
 
-        await axios.post('/exit', { date: dateString }).then(response => {
+        await axios.post('/exit', { date: date, dateFinal: dateFinal }).then(response => {
             if(response.length > 0) {
                 saidas.value = response.map(saida => {
                     const layout = typesLayout.value[saida.tipoServico];
                     
-                    const updatedSaida = {
+                    let updatedSaida = {
                         ...saida,
+                        dataCompra: moment(saida.dataCompra).format('DD/MM/YYYY'),
                         x: layout.x,
                         y: layout.y,
                     };
@@ -154,11 +162,6 @@ import moment from 'moment-timezone';
     const totalSaidas = computed(() => {
         return saidasFiltrados.value.reduce((acc , item) => acc + item.valorCompra, 0);
     });
-
-    const setDate = (ev) => {
-        selectedDate.value = moment(ev).tz('America/Sao_Paulo').toDate();
-        getSaidas();
-    }
 
     const saidasFiltrados = computed(() => {
         if (filterService.value === 'Todos') return saidas.value;
@@ -187,6 +190,10 @@ import moment from 'moment-timezone';
         router.push(`saida/${id}`);
     }
 
+    watch(selectedDate, (nv) => {
+        if(nv) getSaidas();
+    });
+
     watch(saidasFiltrados, (novasSaidas) => {
         novasSaidas.forEach(saida => {
             if (saida.x === undefined) saida.x = 0;
@@ -196,7 +203,28 @@ import moment from 'moment-timezone';
 
     getSaidas();
 </script>
-<style scooped>
+<style scoped>
+    :deep(.dp__input) {
+        background-color: #A60014;
+        border-radius: 20px;
+        border-color: #eeff00;
+        color: #eeff00;
+        font-weight: bold;
+        padding-block: 15px;
+        margin-top: -20px;
+    }
+
+    :deep(.dp__menu) {
+        border-radius: 20px;
+        border-color: #eeff00;
+        font-weight: bold;
+        padding-bottom: 20px;
+    }
+
+    :deep(.dp__input_icon) {
+        top: 32%;
+    }
+    
     .btn-cadastrar {
         height: 55px !important;
         padding-inline: 40px !important;

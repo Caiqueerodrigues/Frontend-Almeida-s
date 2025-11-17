@@ -8,6 +8,9 @@
         @dragstart="onDragStart"
         @click="emitEvent(saida.id)"
     >
+        <p class="text-center text-secondary">
+            DATA: <strong>{{ saida.dataCompra }}</strong><br>
+        </p>
         <p class="text-center">
             SEGUIMENTO: <strong>{{ saida.tipoServico }}</strong><br>
         </p>
