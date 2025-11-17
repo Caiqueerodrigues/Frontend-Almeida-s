@@ -198,7 +198,7 @@
                     label="Observação"
                     counter
                     cleareble
-                    maxlength="255"
+                    maxlength="2000"
                 ></v-textarea>
             </v-col>
             <v-col cols="12" md="4" v-if="!loading && pedido.modelo">

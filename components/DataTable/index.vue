@@ -212,6 +212,8 @@
 <script setup>
     import { getDadosJoin } from '~/services/helpers';
 
+    const showToastify = inject('showToastify');
+
     const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect', 'itemComplete' ]);
     const emit = defineEmits([ 'verId', 'selecteds' ]);
     const formattePrice = inject('formattePrice');
@@ -246,6 +248,10 @@
         if(item.tipo || item.anotacoes) return emitId(item)
 
         if (props.redirect) {
+            if(item.operacaoRealizada && item.operacaoRealizada === 'Pedido apagado') {
+                showToastify('Não é possível navegar para pedidos que foram apagados.', 'info');
+                return;
+            }
             redirect(item);
         }
     };
