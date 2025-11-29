@@ -547,8 +547,9 @@ import 'moment/dist/locale/pt-br';
     }
 
     const totalSelecionado = computed(() => {
-        return  selectedsPrint.value.length > 0 ? 
-                selectedsPrint.value.reduce((acc , item) => acc + item.totalDinheiro, 0) :
+        const pedidosDevidosSelecionados = pedidos.value.filter(item => selectedsPrint.value.includes(item.id));
+        return  pedidosDevidosSelecionados.length > 0 ? 
+                pedidosDevidosSelecionados.reduce((acc , item) => acc + item.totalDinheiro, 0) :
                 0;
     });
 
