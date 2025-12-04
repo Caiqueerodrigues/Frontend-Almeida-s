@@ -3,7 +3,7 @@
         <v-col cols="12" class="text-center">
             <h2 class="text-secondary">Entradas e Saídas Gerais do Período</h2>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="11" md="2">
             <div
                 class="postit bg-default"
             >
@@ -21,7 +21,7 @@
                 </p>
             </div>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="11" md="2">
             <div
                 class="postit bg-default"
             >
@@ -39,7 +39,7 @@
                 </p>
             </div>
         </v-col>
-        <v-col cols="4" class="text-center mt-4 d-flex flex-column align-center justify-center">
+        <v-col cols="11" md="4" class="text-center mt-4 d-flex flex-column align-center justify-center">
             <VueDatePicker 
                 class="w-100 mx-auto"
                 v-model="date" 
@@ -52,7 +52,7 @@
                 :min-date="minDate"
                 :max-date="now"
             />
-            <div class="d-flex w-100 ga-12 mt-4">
+            <div class="botao-container">
                 <v-btn 
                     variant="flat" 
                     class="rounded-xl" 
@@ -71,7 +71,7 @@
                 </v-btn>
             </div>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="11" md="2">
             <div
                 class="postit bg-default"
             >
@@ -89,7 +89,7 @@
                 </p>
             </div>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="11" md="2">
             <div
                 class="postit bg-default"
             >
@@ -257,5 +257,14 @@
 
     .bg-default {
         background-color: #f5f5f5ab;
+    }
+
+    .botao-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        width: 100%;
+        margin-top: 16px;
+        justify-content: space-between;
     }
 </style>
