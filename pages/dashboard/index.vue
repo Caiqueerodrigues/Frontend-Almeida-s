@@ -234,7 +234,7 @@
     .postit {
         user-select: none;
         cursor: grab;
-        padding: 20px;
+        padding: 20px 10px;
         width: 100%;
         min-height: 100px;
         color: #A60014;
