@@ -14,7 +14,7 @@
                     Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[0].pedidosLancados : 0 }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosPagos : 0 }}
+                    Pedidos Pagos: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosPagos : 0 }}
                 </p>
                 <p class="text-center text-secondary">
                     Gastos: {{ detailsCategory.length > 0 ? detailsCategory[0].gastos : 0 }}
@@ -29,10 +29,10 @@
                     <strong>DEBRUAGEM:</strong><br>
                 </p>
                 <p class="text-center text-success">
-                    Pedidos Concluídos: <strong>{{ detailsCategory.length > 0 ? detailsCategory[1].pedidosLancados : 0 }}</strong><br>
+                    Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[1].pedidosLancados : 0 }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosPagos : 0 }}
+                    Pedidos Pagos: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosPagos : 0 }}
                 </p>
                 <p class="text-center text-secondary">
                     Gastos: {{ detailsCategory.length > 0 ? detailsCategory[1].gastos : 0 }}
@@ -79,10 +79,10 @@
                     <strong>DUBLAGEM:</strong><br>
                 </p>
                 <p class="text-center text-success">
-                    Pedidos Concluídos: <strong>{{ detailsCategory.length > 0 ? detailsCategory[2].pedidosLancados : 0 }}</strong><br>
+                    Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[2].pedidosLancados : 0 }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosPagos : 0 }}
+                    Pedidos Pagos: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosPagos : 0 }}
                 </p>
                 <p class="text-center text-secondary">
                     Gastos: {{ detailsCategory.length > 0 ? detailsCategory[2].gastos : 0 }}
@@ -97,10 +97,10 @@
                     <strong>GERAIS:</strong><br>
                 </p>
                 <p class="text-center text-success">
-                    Pedidos Concluídos: <strong>{{ getTotal(detailsCategory.map(item => item.pedidosLancados)) }}</strong><br>
+                    Pedidos Cadastrados: <strong>{{ getTotal(detailsCategory.map(item => item.pedidosLancados)) }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Recebidos: {{ getTotal(detailsCategory.map(item => item.pedidosPagos)) }}
+                    Pedidos Pagos: {{ getTotal(detailsCategory.map(item => item.pedidosPagos)) }}
                 </p>
                 <p class="text-center text-secondary">
                     Gastos: {{ getTotal(detailsCategory.map(item => item.gastos)) }}
