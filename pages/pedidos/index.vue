@@ -108,11 +108,7 @@
                 @click="showModalDate = true"
                 v-if="devidos"
             >
-                MARCAR COMO PAGO(S) {{ 
-                    selectedsPrint.length > 0 ? 
-                        '- (' + selectedsPrint.length  + ')' + ' - R$ ' + totalSelecionado : 
-                        '' 
-                }}
+                MARCAR COMO PAGO(S) - R$ {{ formattePrice(totalDevido) }}
             </v-btn>
             <v-btn 
                 variant="flat"
@@ -545,13 +541,6 @@ import 'moment/dist/locale/pt-br';
             totalDevido.value += pedidosDevidosSelecionados.reduce((acc, item) => acc + item.totalDinheiro, 0);
         }
     }
-
-    const totalSelecionado = computed(() => {
-        const pedidosDevidosSelecionados = pedidos.value.filter(item => selectedsPrint.value.includes(item.id));
-        return  pedidosDevidosSelecionados.length > 0 ? 
-                pedidosDevidosSelecionados.reduce((acc , item) => acc + item.totalDinheiro, 0) :
-                0;
-    });
 
     watch(() => selectedDate.value, (nv) => {
         if(nv) {

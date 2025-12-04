@@ -278,4 +278,9 @@
         word-break: break-word;
         white-space: normal
     }
+
+    :deep(tr.v-data-table__tr.v-data-table__tr--clickable:hover) {
+        background-color: #ad5021 !important;
+        transition: background 0.5s;
+    }
 </style>
