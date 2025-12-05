@@ -198,7 +198,7 @@
                             <v-icon v-if="props.acaoVer">
                                 mdi-pencil
                             </v-icon>
-                            <v-icon v-if="!props.acaoVer" size="30" :class="item === selectedItem ? 'text-success' : '' ">
+                            <v-icon v-if="!props.acaoVer" size="30" :class=" itemEqualItemSelected(item) ? 'text-success' : '' ">
                                 mdi-check-bold
                             </v-icon>
                         </v-btn>
@@ -214,7 +214,7 @@
 
     const showToastify = inject('showToastify');
 
-    const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect', 'itemComplete' ]);
+    const props = defineProps([ 'title', 'items', 'headers', 'acaoVer', 'redirect', 'itemComplete', 'selectedItem' ]);
     const emit = defineEmits([ 'verId', 'selecteds' ]);
     const formattePrice = inject('formattePrice');
     const selectedItem = ref(false);
@@ -231,6 +231,10 @@
 
         emit('selecteds', selectedEmitItems.value);
     }
+
+    const itemEqualItemSelected = (item) => {
+        return item === selectedItem.value || item.id === props.selectedItem?.id;
+    };
 
     const emitId = (item) => {
         selectedItem.value = item;

@@ -29,6 +29,7 @@
                     :headers="nomesColunas"
                     :acaoVer="false"
                     :itemComplete="true"
+                    :selectedItem="pedido.modelo"
                     @verId="setModelo($event)"
                 />
             </v-col>
@@ -266,12 +267,23 @@
                 <v-btn
                     variant="flat"
                     color="warning"
+                    class="mr-2"
                     rounded="xl"
                     @click="showModalConfirmation = true"
                     :disabled="(!props.id || props.id === '0') || pedido.dataPagamento"
                     :loading="loading"
                 >
                     APAGAR
+                </v-btn>
+                <v-btn
+                    variant="flat"
+                    color="blue"
+                    rounded="xl"
+                    @click="showModalConfirmationClone = true"
+                    :disabled="(!props.id || props.id === '0')"
+                    :loading="loading"
+                >
+                    CLONAR PEDIDO
                 </v-btn>
             </v-col>
         </v-row>
@@ -290,11 +302,22 @@
         :idPedido="props.id"
         textCancel="CANCELAR"
         textConfirm="CONFIRMAR"
-        msg="Tem certeza que deseja apagar as informações deste pedido e seu histórico?"
+        msg="Tem certeza que deseja apagar as informações deste pedido?"
         msg2="Esta ação não pode ser desfeita"
         @setInactiveModal="showModalConfirmation = $event"
         @confirmAction="apagarPedido()"
+    />
 
+    <DialogConfirmation 
+        :showModal="showModalConfirmationClone"
+        :idPedido="props.id"
+        title="Clonar Pedido"
+        textCancel="CANCELAR"
+        textConfirm="CONFIRMAR"
+        msg="Tem certeza que deseja Clonar as informações deste pedido?"
+        msg2="Este novo pedido, precisará ser revisado!"
+        @setInactiveModal="showModalConfirmationClone = $event"
+        @confirmAction="clonePedido()"
     />
 </template>
 <script setup>
@@ -362,6 +385,7 @@ import moment from 'moment-timezone';
         { title: 'Unidade medida', align: 'center', key: 'unidadeMedida' },
         { title: 'Ação', align: 'center', key: 'ver' },
     ]);
+    const showModalConfirmationClone = ref(false);
 
     const getClientes = async () => {
         await axios.get("/clients/active").then(response => {
@@ -409,6 +433,8 @@ import moment from 'moment-timezone';
             pedido.value.quemAssinou = response.quemAssinou;
             pedido.value.quemCortou = response.quemCortou;
             pedido.value.categoria = response.categoria;
+
+            if(!pedido.value.dataPagamento) getModelos(pedido.value.client.id);
         }).catch(e => console.error(e));
     }
 
@@ -430,11 +456,27 @@ import moment from 'moment-timezone';
         }).catch(err => console.error(err));
     }
 
+    const clonePedido = async () => {
+        showModalConfirmationClone.value = false;
+
+        await axios.post(`/orders/clone/${props.id}`).then(response => {
+            showToastify("Pedido clonado com sucesso!", "success");
+            setTimeout(() => {
+                router.push(`/pedido/${response}?reload=true`);
+            }, 500);
+        }).catch(e => console.error(e));
+    }
+
     const setModelo = (modelo) => {
+        if(modelo.id === pedido.value.modelo?.id) return;
+
+        if(props.id !== '0') showToastify('O Modelo do pedido foi alterado! Para cancelar, clique no botão "Voltar"', "info");
+
         pedido.value.rendimentoParesMetro = [];
 
         pedido.value.relatorioCliente = modelo.refOrdem;
-        pedido.value.modelo = modelo.id;
+        pedido.value.modelo = props.id !== '0' ? modelo : modelo.id;
+        pedido.value.totalDinheiro = Number(Number(modelo.preco) * Number(pedido.value.totalPares)).toFixed(3);
         pedido.value.rendimentoParesMetro.push(modelo.rendimento);
     }
 
