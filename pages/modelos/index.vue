@@ -81,7 +81,7 @@
     const idModelo = ref(null);
 
     const getClients = async () => {
-        await axios.get('/clients').then(response => {
+        await axios.get('/clients/active').then(response => {
             if(response.length > 0) {
                 response.forEach(client => {
                     clientsNames.value.push(`${client.nome} - ${client.telefone}`);

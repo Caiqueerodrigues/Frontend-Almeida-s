@@ -49,7 +49,6 @@
         await axios.get('/clients').then(response => {
             response.forEach(client => {
                 client.icons = true;
-                client.ativo = client.ativo ? 'Sim' : 'Não'
             });
             clients.value = response;
         }).catch(err => console.error(err));
