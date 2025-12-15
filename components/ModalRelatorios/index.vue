@@ -336,6 +336,12 @@
                 showToastify('Não foi possível compartilhar o arquivo. Use o botão de download.', 'warning');
             }
         }
+
+        //Para redirecionamento direto para o whats
+        // const link = document.createElement('a');
+        // link.href = 'https://api.whatsapp.com/send?text='
+        // link.target = '_blank';
+        // link.click();
     };
 
     const clearFilters= () => {

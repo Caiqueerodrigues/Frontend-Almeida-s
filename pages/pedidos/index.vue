@@ -8,19 +8,32 @@
         </v-col>
         <v-col cols="12" v-if="!naoEntregues">
             <v-row class="justify-center w-100">
-                <v-col cols="12" class="text-center" v-if="pedidos.length > 0">
-                    <span v-if="!devidos" class="text-secondary text-h6 font-weight-bold">
-                        TOTAL FATURADO R$ {{ formattePrice(totalReceber) }}
-                    </span><br>
-                    <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
-                        TOTAL SELECIONADO PARA BAIXA R$ {{ formattePrice(totalDevido) }}
-                    </span><br>
-                    <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
-                        {{ pedidosFiltrados.length }} PEDIDOS DEVIDOS 
-                    </span><br>
-                    <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
-                        R$ {{ formattePrice(totalReceber) }} A RECEBER
+                <v-col cols="12" class="text-center d-flex justify-center align-center" v-if="pedidos.length > 0">
+                    <span v-if="showValues">
+                        <span v-if="!devidos" class="text-secondary text-h6 font-weight-bold">
+                            TOTAL FATURADO R$ {{ formattePrice(totalReceber) }}
+                        </span><br>
+                        <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
+                            TOTAL SELECIONADO PARA BAIXA R$ {{ formattePrice(totalDevido) }}
+                        </span><br>
+                        <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
+                            {{ pedidosFiltrados.length }} PEDIDOS DEVIDOS 
+                        </span><br>
+                        <span v-if="devidos" class="text-secondary text-h6 font-weight-bold">
+                            R$ {{ formattePrice(totalReceber) }} A RECEBER
+                        </span>
                     </span>
+                    <span v-else>
+                        <span class="text-secondary text-h6 font-weight-bold">
+                            *******************************************
+                        </span>
+                    </span>
+                    <v-btn 
+                        :icon="showValues ? 'mdi-eye-off' : 'mdi-eye'" 
+                        variant="plain" 
+                        :class="{'text-secondary ml-2': true,  'mt-n6': showValues && !devidos, 'mt-6': showValues && devidos }" 
+                        @click="showValues = !showValues"
+                    ></v-btn>
                 </v-col>
                 <v-col cols="12" md="4" v-if="!devidos">
                     <DatePicker 
@@ -214,10 +227,10 @@
     <v-row v-if="showModalRetirados">
         <v-col cols="12">
             <v-dialog 
-                max-width="30%" 
-                height="40%" 
                 v-model="showModalRetirados"
                 persistent
+                :max-width="$vuetify.display.smAndDown ? '100vw' : '30vw'"
+                :style="$vuetify.display.smAndDown ? 'height:100%' : 'height:40%'"
             >
                 <v-card
                     class="text-surface bg-primary text-center "
@@ -326,8 +339,10 @@ import 'moment/dist/locale/pt-br';
     const clientsNames = ref([]);
     const clienteSelecionado = ref(null)
     const filterService = ref('Todos')
+    const showValues = ref(false);
 
     const getPedidos = async () => {
+        showValues.value = false;
         devidos.value = false;
         naoEntregues.value = false;
         clienteSelecionado.value = null;
@@ -384,6 +399,7 @@ import 'moment/dist/locale/pt-br';
     const marcarRetirados = async () => {
         baixaVarios.value.dataRetirada = moment(baixaVarios.value.dataRetirada).tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss');
         baixaVarios.value.ids = selectedsPrint.value;
+        showValues.value = false;
 
         await axios.put('/orders/withdrawn', baixaVarios.value).then(response => {
             closeModal();
@@ -401,6 +417,7 @@ import 'moment/dist/locale/pt-br';
     }
 
     const getPendentes = async () => {
+        showValues.value = false;
         devidos.value = true;
         naoEntregues.value = false;
         filterClient.value = 'Todos';
@@ -419,6 +436,7 @@ import 'moment/dist/locale/pt-br';
     }
 
     const getNaoEntegues = async () => {
+        showValues.value = false;
         naoEntregues.value = true;
         const idClient = clienteSelecionado.value !== 'Todos' ?
             clients.value.find(item => item.nome === clienteSelecionado.value)?.id :

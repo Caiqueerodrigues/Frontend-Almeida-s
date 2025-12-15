@@ -57,9 +57,23 @@
             ></v-select>
         </v-col>
         <v-col cols="12" class="text-center" v-if="!loading && pedidos.length  > 0">
-            <span class="text-h5 text-secondary font-weight-bold">
-                Total Faturado no período é R$ {{ totalReceber }}
+            <span v-if="showValues">
+                <span class="text-h5 text-secondary font-weight-bold">
+                    Total Faturado no período é R$ {{ totalReceber }}
+                </span>
             </span>
+            <span v-else>
+                <span class="text-secondary text-h6 font-weight-bold">
+                    *******************************************
+                </span>
+            </span>
+            <v-btn 
+                :icon="showValues ? 'mdi-eye-off' : 'mdi-eye'" 
+                variant="plain" 
+                :class="{'text-secondary ml-2': true,  'mt-n6': showValues && !devidos, 'mt-6': showValues && devidos }" 
+                @click="showValues = !showValues"
+            ></v-btn>
+
             <br>
             <DataTable
                 :title="'Listagem de pedidos ' + pedidosFiltrados.length + ' - ' + 'Total de pares/metros ' + totalPares"
@@ -118,6 +132,7 @@
     ]);
     const showModalRelatorios = ref(false);
     const filter = ref({ client: 'Todos', situation: 'Todos', tipo: "Todos" });
+    const showValues = ref(false);
 
     const getPedidos = async () => {
         const initialDate = moment(date.value[0]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
