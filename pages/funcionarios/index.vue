@@ -15,14 +15,13 @@
             </div>
         </v-col>
 
-        <v-col cols="6" class="d-flex justify-end">
+        <v-col cols="12" md="6" class="d-flex justify-end">
             <VueDatePicker 
                 v-model="date" 
                 range 
                 autoApply
                 locale="pt-BR"
                 dark
-                class="w-50"
                 format="dd/MM/yyyy"
                 :clearable="false"
                 :min-date="new Date('2000-01-01')"
@@ -30,10 +29,9 @@
                 @update:modelValue="getDados()"
             />
         </v-col>
-        <v-col cols="6" >
+        <v-col cols="12" md="6" >
             <v-select
                 chips
-                class="w-50"
                 label="Funcionário"
                 v-model="filter"
                 :items="nomes"
@@ -121,7 +119,7 @@
 
         <v-col cols="12" v-for="(item, index) in filtrados" :key="index" class="py-0">
             <v-row class="ma-0 pa-0 align-center">
-                <v-col cols="2" class="py-0 d-flex">
+                <v-col cols="5" md="2" class="py-0 d-flex">
                     <v-checkbox-btn
                         v-if="formatDate(date[0]) !== formatDate(date[1]) && !item.status"
                         v-model="item.checked"

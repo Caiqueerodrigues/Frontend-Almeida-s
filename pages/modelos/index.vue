@@ -22,7 +22,7 @@
                 @voltar="voltarListagem($event)"
             />
         </v-col>
-        <v-col cols="12" class="text-center" v-if="!showForm && clientComplete">
+        <v-col cols="12" md="6" class="text-center" v-if="!showForm && clientComplete">
             <v-btn 
                 variant="outlined"
                 rounded="xl"
@@ -31,6 +31,8 @@
             >
                 CANCELAR
             </v-btn>
+        </v-col>
+        <v-col cols="12" md="6" class="text-center" v-if="!showForm && clientComplete">
             <v-btn
                 variant="flat"
                 color="success"

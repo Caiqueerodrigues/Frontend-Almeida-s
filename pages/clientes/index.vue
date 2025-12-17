@@ -24,7 +24,8 @@
                 title="Listagem de clientes cadastrados"
                 :items="clients"
                 :headers="nomesColunas" 
-                :acaoVer="true"
+                :acaoVer="false"
+                :redirect="false"
                 @verId="showFormFunc($event)"
             />
         </v-col>
@@ -40,8 +41,7 @@
         { title: 'Telefone', align: 'center', key: 'telefone' }, 
         { title: 'Razão Social', align: 'center', key: 'razaoSocial' }, 
         { title: 'Observação', align: 'center', key: 'obs' }, 
-        { title: 'Está ativo?', align: 'center', key: 'ativo' }, 
-        { title: 'Ação', align: 'center', key: 'ver' }, 
+        { title: 'Está ativo?', align: 'center', key: 'ativo' },
     ]);
     const clients = ref([]);
 

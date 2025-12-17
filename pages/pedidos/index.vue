@@ -25,7 +25,7 @@
                     </span>
                     <span v-else>
                         <span class="text-secondary text-h6 font-weight-bold">
-                            *******************************************
+                            ************
                         </span>
                     </span>
                     <v-btn 
@@ -149,7 +149,7 @@
     <v-row v-if="showModal">
         <v-col cols="12">
             <v-dialog 
-                max-width="50%" 
+                max-width="600px" 
                 height="95%" 
                 v-model="showModal"
                 persistent
@@ -194,7 +194,7 @@
                         </v-form>
                     </v-card-text>
                     <template v-slot:actions>
-                        <v-col cols="12">
+                        <v-col cols="12" class="text-center mb-4">
                             <v-btn
                                 class="bg-primary text-white font-weight-bold rounded-xl mr-4"
                                 size="large"

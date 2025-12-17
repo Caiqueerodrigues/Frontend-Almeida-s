@@ -36,26 +36,30 @@
                         </v-row>
                     </v-card-text>
                     <template v-slot:actions>
-                        <v-col cols="12">
-                            <v-btn
-                                class="text-primary font-weight-bold rounded-xl mr-6"
-                                size="large"
-                                color="white"
-                                variant="outlined"
-                                @click="setInactiveModal()"
-                            >
-                                CANCELAR
-                            </v-btn>
-                            <v-btn
-                                class="bg-success text-primary font-weight-bold rounded-xl"
-                                size="large"
-                                variant="outlined"
-                                @click="confirmar()"
-                                :disabled="selectedDate === null"
-                            >
-                                CONFIRMAR
-                            </v-btn>
-                        </v-col>
+                        <v-row class="justify-center pb-4">
+                            <v-col cols="12" md="6">
+                                <v-btn
+                                    class="text-primary font-weight-bold rounded-xl mr-6"
+                                    size="large"
+                                    color="white"
+                                    variant="outlined"
+                                    @click="setInactiveModal()"
+                                >
+                                    CANCELAR
+                                </v-btn>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-btn
+                                    class="bg-success text-primary font-weight-bold rounded-xl"
+                                    size="large"
+                                    variant="outlined"
+                                    @click="confirmar()"
+                                    :disabled="selectedDate === null"
+                                >
+                                    CONFIRMAR
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                     </template>
                 </v-card>
             </v-dialog>

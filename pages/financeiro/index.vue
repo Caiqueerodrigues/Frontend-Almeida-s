@@ -1,39 +1,45 @@
 <template>
     <v-row class="pt-4 justify-center align-center">
-        <v-col cols="10">
+        <v-col cols="11">
             <h2 class="text-center text-secondary mb-3">
                 LISTAGEM DE LANÇAMENTOS
             </h2>
-            <div class="d-flex">
-                <VueDatePicker 
-                    v-model="selectedDate" 
-                    range 
-                    class="mt-4"
-                    autoApply
-                    locale="pt-BR"
-                    dark
-                    format="dd/MM/yyyy"
-                    :clearable="false"
-                />
-                <v-select
-                    chips
-                    class="w-25 mx-4"
-                    label="Tipo de Serviço"
-                    v-model="filterService"
-                    :items="seguimentos"
-                    variant="outlined"
-                    rounded="xl"
-                ></v-select>
-                <v-btn 
-                    variant="flat" 
-                    class="rounded-xl btn-cadastrar" 
-                    color="success"
-                    @click="showFormFunc()"
-                >
-                    CADASTRAR LANÇAMENTO
-                </v-btn>
-            </div>
-            <h2 v-if="saidas.length > 0" class="text-center text-secondary">
+        </v-col>
+        <v-col cols="12" md="2">
+            <VueDatePicker 
+                v-model="selectedDate" 
+                range 
+                class="mt-4"
+                autoApply
+                locale="pt-BR"
+                dark
+                format="dd/MM/yyyy"
+                :clearable="false"
+            />
+        </v-col>
+        <v-col cols="12" md="3" class="mt-5">
+            <v-select
+                chips
+                class="mx-4"
+                label="Tipo de Serviço"
+                v-model="filterService"
+                :items="seguimentos"
+                variant="outlined"
+                rounded="xl"
+            ></v-select>
+        </v-col>
+        <v-col cols="12" md="3">
+            <v-btn 
+                variant="flat" 
+                class="rounded-xl btn-cadastrar" 
+                color="success"
+                @click="showFormFunc()"
+            >
+                CADASTRAR LANÇAMENTO
+            </v-btn>
+        </v-col>
+        <v-col cols="12" v-if="saidas.length > 0">
+            <h2 class="text-center text-secondary">
                 TOTAL DE SAÍDAS R$ {{ formattePrice(totalSaidas) }} - {{ saidasFiltrados.length }} Lançamentos
             </h2>
         </v-col>

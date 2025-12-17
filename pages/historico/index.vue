@@ -7,30 +7,28 @@
             <h2 class="text-center text-secondary">
                 {{ textDate }}
             </h2>
-            <v-row class="justify-center mt-3">
-                <v-col cols="4">
-                    <DatePicker 
-                        name="dataListagemPedidos"
-                        :date="selectedDate"
-                        :onlyDate="true"
-                        @dateEmit="setDate($event)"
-                    />
-                </v-col>
-                <v-col cols="4">
-                    <v-select
-                        chips
-                        class="mx-4"
-                        label="Tipo de Serviço"
-                        v-model="filterService"
-                        :items="seguimentos"
-                        variant="outlined"
-                        rounded="xl"
-                    ></v-select>
-                </v-col>
-            </v-row>
             <h2 class="text-secondary text-center mt-12" v-if="pedidosFiltrados.length === 0">
                 NÃO EXISTEM ALTERAÇÕES PARA A DATA SELECIONADA
             </h2>
+        </v-col>
+        <v-col cols="12" md="4">
+            <DatePicker 
+                name="dataListagemPedidos"
+                :date="selectedDate"
+                :onlyDate="true"
+                @dateEmit="setDate($event)"
+            />
+        </v-col>
+        <v-col cols="12" md="4" class="mt-4">
+            <v-select
+                chips
+                class="mx-4"
+                label="Tipo de Serviço"
+                v-model="filterService"
+                :items="seguimentos"
+                variant="outlined"
+                rounded="xl"
+            ></v-select>
         </v-col>
         <v-col cols="12" class="mb-10" v-if="pedidosFiltrados.length > 0">
             <DataTable 

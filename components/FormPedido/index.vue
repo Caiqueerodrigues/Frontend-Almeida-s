@@ -275,12 +275,13 @@
                 >
                     APAGAR
                 </v-btn>
+
                 <v-btn
                     variant="flat"
                     color="blue"
                     rounded="xl"
                     @click="showModalConfirmationClone = true"
-                    :disabled="(!props.id || props.id === '0')"
+                    :disabled="(!props.id || props.id === '0') || pedido.dataPagamento"
                     :loading="loading"
                 >
                     CLONAR PEDIDO

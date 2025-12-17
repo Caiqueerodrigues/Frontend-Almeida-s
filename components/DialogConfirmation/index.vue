@@ -1,12 +1,12 @@
 <template>
     <v-dialog 
-        max-width="30%" 
-        height="40%" 
+        max-width="600px" 
+        height="50%" 
         v-model="props.showModal"
         persistent
     >
         <v-card
-            class="text-surface bg-primary text-center "
+            class="text-surface bg-primary text-center px-2"
             prepend-icon="mdi-border-color"
             :title="props.title ?? `Apagar Pedido`"
         >
@@ -30,24 +30,28 @@
                 </div>
             </v-card-text>
             <template v-slot:actions>
-                <v-col cols="12">
-                    <v-btn
-                        class="bg-primary text-white font-weight-bold rounded-xl mr-4 px-3"
-                        size="large"
-                        variant="outlined"
-                        @click="emitEvent('setInactiveModal', false)"
-                    >
-                        {{ props.textCancel }}
-                    </v-btn>
-                    <v-btn
-                        class="bg-success text-primary font-weight-bold rounded-xl px-3"
-                        size="large"
-                        variant="outlined"
-                        @click="emitEvent('confirmAction', true)"
-                    >
-                        {{ props.textConfirm }}
-                    </v-btn>
-                </v-col>
+                <v-row class="justify-center pb-4">
+                    <v-col cols="12" md="6">
+                        <v-btn
+                            class="bg-primary text-white font-weight-bold rounded-xl mr-4 px-3"
+                            size="large"
+                            variant="outlined"
+                            @click="emitEvent('setInactiveModal', false)"
+                        >
+                            {{ props.textCancel }}
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-btn
+                            class="bg-success text-primary font-weight-bold rounded-xl px-3"
+                            size="large"
+                            variant="outlined"
+                            @click="emitEvent('confirmAction', true)"
+                        >
+                            {{ props.textConfirm }}
+                        </v-btn>
+                    </v-col>
+                </v-row>
             </template>
         </v-card>
     </v-dialog>

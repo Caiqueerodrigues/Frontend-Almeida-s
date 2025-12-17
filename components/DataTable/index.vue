@@ -249,7 +249,7 @@
 
         if (isCheckbox) return;
 
-        if(item.tipo || item.anotacoes) return emitId(item)
+        if(item.tipo || item.anotacoes || item.telefone) return emitId(item)
 
         if (props.redirect) {
             if(item.operacaoRealizada && item.operacaoRealizada === 'Pedido apagado') {

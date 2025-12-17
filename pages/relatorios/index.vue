@@ -10,7 +10,7 @@
                 SELECIONE O DIA OU PERÍODO
             </span>
         </v-col>
-        <v-col cols="4" v-if="!loading">
+        <v-col cols="12" md="4" v-if="!loading">
             <VueDatePicker 
                 v-model="date" 
                 range 
@@ -23,7 +23,7 @@
                 :max-date="now"
             />
         </v-col>
-        <v-col cols="3">
+        <v-col cols="12" md="3">
             <v-select
                 chips
                 label="Cliente"
@@ -34,7 +34,7 @@
                 rounded="xl"
             ></v-select>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="12" md="2">
             <v-select
                 chips
                 label="Situação"
@@ -45,7 +45,7 @@
                 rounded="xl"
             ></v-select>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="12" md="2">
             <v-select
                 chips
                 label="Tipo Serviço"
@@ -64,7 +64,7 @@
             </span>
             <span v-else>
                 <span class="text-secondary text-h6 font-weight-bold">
-                    *******************************************
+                    ***********
                 </span>
             </span>
             <v-btn 
