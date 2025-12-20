@@ -165,8 +165,12 @@
         const nomes = ['Todos'];
         pedidos.value.map(item => {
             if(!nomes.includes(item.client.nome)) nomes.push(item.client.nome)
-        })
-        return nomes;
+        });
+        return nomes.sort((a, b) => {
+            if (a === 'Todos') return -1;
+            if (b === 'Todos') return 1;
+            return a.localeCompare(b, 'pt-BR', { sensitivity: 'base' });
+        });
     });
 
     const pedidosFiltrados = computed(() => {
