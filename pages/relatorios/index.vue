@@ -133,6 +133,7 @@
     const showModalRelatorios = ref(false);
     const filter = ref({ client: 'Todos', situation: 'Todos', tipo: "Todos" });
     const showValues = ref(false);
+    const clientes = ref(['Todos']);
 
     const getPedidos = async () => {
         const initialDate = moment(date.value[0]).tz('America/Sao_Paulo').format('YYYY-MM-DD');
@@ -154,6 +155,16 @@
                     );
                 });
             }
+
+            const nomes = ['Todos'];
+            pedidos.value.forEach(item => {
+                if(!nomes.includes(item.client.nome)) nomes.push(item.client.nome)
+            });
+            clientes.value = nomes.sort((a, b) => {
+                if (a === 'Todos') return -1;
+                if (b === 'Todos') return 1;
+                return a.localeCompare(b, 'pt-BR', { sensitivity: 'base' });
+            });
         }).catch(e => console.error(e));
     }
 
@@ -161,18 +172,6 @@
         return pedidosFiltrados.value.reduce((acc , item) => acc + item.totalPares, 0).toFixed(0);
     });
     
-    const clientes = computed(() => {
-        const nomes = ['Todos'];
-        pedidos.value.map(item => {
-            if(!nomes.includes(item.client.nome)) nomes.push(item.client.nome)
-        });
-        return nomes.sort((a, b) => {
-            if (a === 'Todos') return -1;
-            if (b === 'Todos') return 1;
-            return a.localeCompare(b, 'pt-BR', { sensitivity: 'base' });
-        });
-    });
-
     const pedidosFiltrados = computed(() => {
         let filtrados = pedidos.value;
 
