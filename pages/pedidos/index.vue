@@ -60,7 +60,7 @@
                         class="w-75 mx-auto"
                         label="Tipo de Serviço"
                         v-model="filterService"
-                        :items="[ 'Todos', 'Corte', 'Debruagem', 'Dublagem' ]"
+                        :items="[ 'Todos', 'Corte', 'Debruagem', 'Dublagem', 'Material' ]"
                         variant="outlined"
                         rounded="xl"
                     ></v-select>

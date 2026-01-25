@@ -221,11 +221,14 @@
     const minDate = moment('2000-01-01').tz(timeZone).toDate();
     const now = moment().tz(timeZone).toDate();
     const mobile = ref(false);
+    
+    const firstDayOfMonth = moment().tz(timeZone).startOf('month').toDate();
+    const today = moment().tz(timeZone).toDate();
     const filters = ref(
         {
             firstFilter: null,
             client: null,
-            period: props.date,
+            period: [firstDayOfMonth, today],
             report: null,
             category: null,
             tipo: null,
@@ -350,7 +353,11 @@
         filters.value = {
             firstFilter: "CLIENTE",
             client: null,
-            period: [],
+            // Sempre do primeiro dia do mês até hoje
+            period: [
+                moment().tz(timeZone).startOf('month').toDate(),
+                moment().tz(timeZone).toDate()
+            ],
             report: null,
             situation: null,
             idPedidos: [],

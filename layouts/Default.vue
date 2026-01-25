@@ -82,33 +82,46 @@
                 class="bg-black"
                 temporary
             >
-                <p class="font-weight-bold ml-2 text-center text-secondary my-4 d-flex align-center pointer" @click="goTo('/perfil')">
-                    <img :src="backgroundImage" class="mr-2" style="width: 40px">
-                    Bem vind{{ dadosUser?.sexo === "M" ? 'o' : 'a' }} {{ usernameToken() ?? '' }}
-                </p>
-                <v-expansion-panels variant="accordion" v-model="expandedPanel">
-                    <v-expansion-panel
-                        v-for="item in items" 
-                        :key="item.title"
-                        class="bg-transparent font-weight-bold text-default px-2 pb-3"
-                        :title="item.title"
-                        
+            <v-row class="fill-height">
+                <v-col cols="12" class="min-h-80">
+                    <p class="font-weight-bold ml-2 text-center text-secondary my-4 d-flex align-center pointer" @click="goTo('/perfil')">
+                        <img :src="backgroundImage" class="mr-2" style="width: 40px">
+                        Bem vind{{ dadosUser?.sexo === "M" ? 'o' : 'a' }} {{ usernameToken() ?? '' }}
+                    </p>
+                    <v-expansion-panels variant="accordion" v-model="expandedPanel">
+                        <v-expansion-panel
+                            v-for="item in items" 
+                            :key="item.title"
+                            class="bg-transparent font-weight-bold text-default px-2 pb-3"
+                            :title="item.title"
+                            
+                        >
+                            <template v-slot:text>
+                                <v-btn
+                                    v-for="subItem in item.items" 
+                                    :key="subItem.title"
+                                    @click="!loading && goTo(subItem.route)" 
+                                    class="text-surface font-weight-bold text-center py-4 bg-transparent pointer"
+                                    :class="itemSelected === subItem.route || (subItem?.route.includes('pedido') && itemSelected?.includes('pedido')) ? 'selected' : ''"
+                                >
+                                    <v-icon class="pb-2 mx-1" color="primary">{{ subItem.icon }}</v-icon>
+                                        {{ subItem.title }}
+                                    <v-icon class="pb-2 mx-1" color="primary">{{ subItem.icon }}</v-icon>
+                                </v-btn>
+                            </template>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
+                </v-col>
+                <v-col cols="11" class="mx-auto">
+                    <v-btn
+                        variant="plain"
+                        class="w-100 text-red font-weight-black"
+                        @click="logout()"
                     >
-                        <template v-slot:text>
-                            <v-btn
-                                v-for="subItem in item.items" 
-                                :key="subItem.title"
-                                @click="!loading && goTo(subItem.route)" 
-                                class="text-surface font-weight-bold text-center py-4 bg-transparent pointer"
-                                :class="itemSelected === subItem.route || (subItem?.route.includes('pedido') && itemSelected?.includes('pedido')) ? 'selected' : ''"
-                            >
-                                <v-icon class="pb-2 mx-1" color="primary">{{ subItem.icon }}</v-icon>
-                                    {{ subItem.title }}
-                                <v-icon class="pb-2 mx-1" color="primary">{{ subItem.icon }}</v-icon>
-                            </v-btn>
-                        </template>
-                    </v-expansion-panel>
-                </v-expansion-panels>
+                        SAIR
+                    </v-btn>
+                </v-col>
+            </v-row>
             </v-navigation-drawer>
 
             <v-main class="px-5 bg-primary text-white" :class="loading ? 'max-height' : 'h-100'">
@@ -259,6 +272,10 @@
 <style scoped>
     .max-height {
         height: 98dvh !important;
+    }
+
+    .min-h-80 {
+        min-height: 80dvh !important;
     }
     
     .h-100 {

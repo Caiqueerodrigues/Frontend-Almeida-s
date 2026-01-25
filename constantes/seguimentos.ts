@@ -1,5 +1,6 @@
 export const SEGUIMENTOS: string[] = [
     'Corte',
     'Debruagem',
-    'Dublagem'
+    'Dublagem',
+    'Material'
 ]

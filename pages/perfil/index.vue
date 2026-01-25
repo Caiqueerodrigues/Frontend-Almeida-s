@@ -1,6 +1,6 @@
 <template>
     <v-form ref="form">
-        <v-row class="h-100 justify-center align-center">
+        <v-row class="h-100 justify-center align-center gap-0">
             <v-col cols="12">
                 <h2 class="text-center text-secondary pt-4">
                     Olá, {{ usernameToken() }}
@@ -10,9 +10,7 @@
                 </h4>
             </v-col>
 
-            <v-col 
-                cols="8"
-            >
+            <v-col cols="9">
                 <v-img
                     width="100%"
                     height="400px"
@@ -38,132 +36,153 @@
                 </v-img>
             </v-col>
 
-            <v-col cols="12" md="8">
+            <v-col cols="12" md="9">
                 <v-text-field
                     rounded="xl"
                     label="Nome Completo"
+                    class="mx-auto"
                     v-model="user.fullName"
                     type="text"
                     variant="outlined"
                     :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
                 ></v-text-field>
             </v-col>
-            <v-col cols="8" class="d-flex">
-                <v-text-field
-                    rounded="xl"
-                    label="Como gostaria de ser chamado(a)?"
-                    class="w-50 mr-5"
-                    v-model="user.name"
-                    type="text"
-                    variant="outlined"
-                    :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
-                ></v-text-field>
-                <v-text-field
-                    rounded="xl"
-                    class="w-50"
-                    label="Função"
-                    v-model="user.funct"
-                    type="text"
-                    variant="outlined"
-                    :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
-                ></v-text-field>
+            <v-col cols="12" md="9">
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <v-text-field
+                            rounded="xl"
+                            label="Como gostaria de ser chamado(a)?"
+                            v-model="user.name"
+                            class="mx-auto"
+                            type="text"
+                            variant="outlined"
+                            :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field
+                            rounded="xl"
+                            class="mx-auto"
+                            label="Função"
+                            v-model="user.funct"
+                            type="text"
+                            variant="outlined"
+                            :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
             </v-col>
 
-            <v-col cols="8" class="d-flex">
-                <v-select
-                    chips
-                    rounded="xl"
-                    class="w-select"
-                    label="Sexo"
-                    :items="[ 'M', 'F' ]"
-                    variant="outlined"
-                    :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
-                    v-model="user.sex"
-                ></v-select>
+            <v-col cols="12" md="9">
+                <v-row>
+                    <v-col cols="12" md="4">
+                        <v-select
+                            chips
+                            rounded="xl"
+                            class="w-select"
+                            label="Sexo"
+                            :items="[ 'M', 'F' ]"
+                            variant="outlined"
+                            :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
+                            v-model="user.sex"
+                        ></v-select>
+                    </v-col>
 
-                <v-text-field
-                    rounded="xl"
-                    class="w-50 ms-5"
-                    label="Nome de Usuário"
-                    v-model="user.user"
-                    type="text"
-                    variant="outlined"
-                    :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
-                ></v-text-field>
+                    <v-col cols="12" md="4">
+                        <v-text-field
+                            rounded="xl"
+                            label="Nome de Usuário"
+                            v-model="user.user"
+                            type="text"
+                            variant="outlined"
+                            :rules="[ (value) => !!value || 'Campo obrigatório!' ]"
+                        ></v-text-field>
+                    </v-col>
 
-                <v-radio-group
-                    v-model="user.active"
-                    inline
-                    class="d-flex justify-center color-default"
-                    label="Está ativo?"
-                >
-                    <v-radio
-                        label="Sim"
-                        :value="true"
-                    ></v-radio>
-                    <v-radio
-                        label="Não"
-                        :value="false"
-                    ></v-radio>
-                </v-radio-group>
+                    <v-col cols="12" md="4">
+                        <v-radio-group
+                            v-model="user.active"
+                            inline
+                            class="d-flex justify-center color-default"
+                            label="Está ativo?"
+                        >
+                            <v-radio
+                                label="Sim"
+                                :value="true"
+                            ></v-radio>
+                            <v-radio
+                                label="Não"
+                                :value="false"
+                            ></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                </v-row>
             </v-col>
 
-            <v-col cols="8" class="d-flex ga-4">
-                <div class="w-50">
-                    <p class="text-secondary font-weight-bold text-center">Seu primeiro login</p>
-                    <VueDatePicker 
-                        v-model="user.firstLogin"
-                        locale="pt-BR"
-                        :format="formatDate"
-                        dark
-                        disabled
-                    ></VueDatePicker>
-                </div>
-                <div class="w-50">
-                    <p class="text-secondary font-weight-bold text-center">Seu último login</p>
-                    <VueDatePicker 
-                        v-model="user.lastLogin"
-                        locale="pt-BR"
-                        :format="formatDate"
-                        dark
-                        disabled
-                    ></VueDatePicker>
-                </div>
+            <v-col cols="12" md="9">
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <p class="text-secondary font-weight-bold text-center">Seu primeiro login</p>
+                        <VueDatePicker 
+                            v-model="user.firstLogin"
+                            locale="pt-BR"
+                            :format="formatDate"
+                            dark
+                            disabled
+                        ></VueDatePicker>
+                    </v-col>
+        
+                    <v-col cols="12" md="6">
+                        <p class="text-secondary font-weight-bold text-center">Seu último login</p>
+                        <VueDatePicker 
+                            v-model="user.lastLogin"
+                            locale="pt-BR"
+                            :format="formatDate"
+                            dark
+                            disabled
+                        ></VueDatePicker>
+                    </v-col>
+                </v-row>
             </v-col>
 
-            <v-col cols="8">
-                <p class="text-h6 text-center text-secondary">TROCAR DE SENHA</p>
-            </v-col>
-            <v-col cols="8" class="mt-0 d-flex pt-0">
-                <v-text-field
-                    v-model="user.newPassword"
-                    rounded="xl"
-                    class="mb-2 w-50"
-                    variant="outlined"
-                    label="Insira a nova senha"
-                    :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                    :type="visible ? 'text' : 'password'"
-                    @click:append-inner="visible = !visible"
-                ></v-text-field>
-                <v-text-field
-                    v-model="confirmNewPassword"
-                    rounded="xl"
-                    class="mb-2 w-50 ms-4"
-                    variant="outlined"
-                    label="Insira novamente a nova senha"
-                    :rules="[rules.confirmPasswordRequiredIfFilled, rules.confirmPasswordMustMatch]"
-                    type="password"
-                    @click:append-inner="visible = !visible"
-                ></v-text-field>
-            </v-col>
-
-            <v-col cols="12" class="d-flex justify-center mb-8">
-                <v-btn variant="outlined" class="rounded-xl mr-6 font-weight-bold" @click="onCancelar()">
-                    CANCELAR
-                </v-btn>
-                <v-btn color="success" class="rounded-xl px-10 font-weight-bold" @click="submit()">
-                    SALVAR
-                </v-btn>
+            <v-col cols="12" md="9">
+                <v-row>
+                    <v-col cols="12">
+                        <p class="text-h6 text-center text-secondary">TROCAR DE SENHA</p>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field
+                            v-model="user.newPassword"
+                            rounded="xl"
+                            variant="outlined"
+                            label="Insira a nova senha"
+                            :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                            :type="visible ? 'text' : 'password'"
+                            @click:append-inner="visible = !visible"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field
+                            v-model="confirmNewPassword"
+                            rounded="xl"
+                            variant="outlined"
+                            label="Insira novamente a nova senha"
+                            :rules="[rules.confirmPasswordRequiredIfFilled, rules.confirmPasswordMustMatch]"
+                            type="password"
+                            @click:append-inner="visible = !visible"
+                        ></v-text-field>
+                    </v-col>
+        
+                    <v-col cols="12" class="d-flex justify-center mb-8">
+                        <v-btn variant="outlined" class="rounded-xl mr-6 font-weight-bold" @click="onCancelar()">
+                            CANCELAR
+                        </v-btn>
+                        <v-btn color="success" class="rounded-xl px-10 font-weight-bold" @click="submit()">
+                            SALVAR
+                        </v-btn>
+                    </v-col>
+                </v-row>
             </v-col>
         </v-row>
     </v-form>

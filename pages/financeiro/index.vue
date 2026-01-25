@@ -89,13 +89,15 @@
         "Corte": "#FFEB8D",
         "Dublagem": "#A5D6A7",
         "Debruagem": "#F8B4D9",
+        'Material': "#D3D3D3",
         "Geral": "#FfB4a7",
     })
     const typesLayout = ref({
         "Corte": { x: 5, y: 5, offsetY: 120 },
         "Dublagem": { x: 305, y: 5, offsetY: 120 },
         "Debruagem": { x: 605, y: 5, offsetY: 120 },
-        "Geral": { x: 905, y: 5, offsetY: 120 },
+        "Material": { x: 905, y: 5, offsetY: 120 },
+        "Geral": { x: 1205, y: 5, offsetY: 120 },
     });
 
     const onDragStart = (idx) => {
@@ -124,8 +126,11 @@
                 } else if (saida.tipoServico === 'Debruagem') {
                     x = 5;
                     y = 5;
-                } else if (saida.tipoServico === 'Geral') {
+                } else if (saida.tipoServico === 'Material') {
                     x = 905;
+                    y = 5;
+                } else if (saida.tipoServico === 'Geral') {
+                    x = 1205;
                     y = 5;
                 }
             }
@@ -140,7 +145,7 @@
     const getSaidas = async () => {
         filterService.value = 'Todos';
         saidas.value = [];
-        typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }, "Geral": { x: 905, y: 5, offsetY: 120 }}
+        typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }, "Material": { x: 905, y: 5, offsetY: 120 }, "Geral": { x: 1205, y: 5, offsetY: 120 }}
 
         const date = formatteDateDB(moment(selectedDate.value[0]).tz('America/Sao_Paulo').toDate()).split("T")[0];
         const dateFinal = formatteDateDB(moment(selectedDate.value[1]).tz('America/Sao_Paulo').toDate()).split("T")[0];

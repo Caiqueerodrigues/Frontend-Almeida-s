@@ -50,7 +50,7 @@
                 chips
                 label="Tipo Serviço"
                 v-model="filter.tipo"
-                :items="[ 'Todos', 'Corte', 'Debruagem', 'Dublagem' ]"
+                :items="[ 'Todos', 'Corte', 'Debruagem', 'Dublagem', 'Material' ]"
                 :disabled="clientes.length === 1"
                 variant="outlined"
                 rounded="xl"

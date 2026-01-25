@@ -14,7 +14,13 @@
                     Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[0].pedidosLancados : 0 }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Pagos: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosPagos : 0 }}
+                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosPagos : 0 }}
+                </p>
+                <p class="text-center text-red-darken-2">
+                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosAReceberPeriodo : 0 }}
+                </p>
+                <p class="text-center text-blue-darken-2">
+                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosRecebidosPeriodo : 0 }}
                 </p>
                 <p class="text-center text-secondary">
                     Gastos: {{ detailsCategory.length > 0 ? detailsCategory[0].gastos : 0 }}
@@ -32,7 +38,13 @@
                     Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[1].pedidosLancados : 0 }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Pagos: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosPagos : 0 }}
+                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosPagos : 0 }}
+                </p>
+                <p class="text-center text-red-darken-2">
+                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosAReceberPeriodo : 0 }}
+                </p>
+                <p class="text-center text-blue-darken-2">
+                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosRecebidosPeriodo : 0 }}
                 </p>
                 <p class="text-center text-secondary">
                     Gastos: {{ detailsCategory.length > 0 ? detailsCategory[1].gastos : 0 }}
@@ -52,7 +64,7 @@
                 :min-date="minDate"
                 :max-date="now"
             />
-            <div class="botao-container">
+            <div class="botao-container d-flex justify-center">
                 <v-btn 
                     variant="flat" 
                     class="rounded-xl" 
@@ -82,7 +94,13 @@
                     Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[2].pedidosLancados : 0 }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Pagos: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosPagos : 0 }}
+                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosPagos : 0 }}
+                </p>
+                <p class="text-center text-red-darken-2">
+                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosAReceberPeriodo : 0 }}
+                </p>
+                <p class="text-center text-blue-darken-2">
+                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosRecebidosPeriodo : 0 }}
                 </p>
                 <p class="text-center text-secondary">
                     Gastos: {{ detailsCategory.length > 0 ? detailsCategory[2].gastos : 0 }}
@@ -94,16 +112,49 @@
                 class="postit bg-default"
             >
                 <p class="text-center">
-                    <strong>GERAIS:</strong><br>
+                    <strong>VENDA MATERIAL:</strong><br>
+                </p>
+                <p class="text-center text-success">
+                    Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[4].pedidosLancados : 0 }}</strong><br>
+                </p>
+                <p class="text-center text-blue">
+                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[4].pedidosPagos : 0 }}
+                </p>
+                <p class="text-center text-red-darken-2">
+                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[4].pedidosAReceberPeriodo : 0 }}
+                </p>
+                <p class="text-center text-blue-darken-2">
+                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[4].pedidosRecebidosPeriodo : 0 }}
+                </p>
+                <p class="text-center text-secondary">
+                    Gastos: {{ detailsCategory.length > 0 ? detailsCategory[4].gastos : 0 }}
+                </p>
+            </div>
+        </v-col>
+        <v-col cols="11" md="4">
+            <div
+                class="postit bg-default"
+            >
+                <p class="text-center">
+                    <strong>Total:</strong><br>
                 </p>
                 <p class="text-center text-success">
                     Pedidos Cadastrados: <strong>{{ getTotal(detailsCategory.map(item => item.pedidosLancados)) }}</strong><br>
                 </p>
                 <p class="text-center text-blue">
-                    Pedidos Pagos: {{ getTotal(detailsCategory.map(item => item.pedidosPagos)) }}
+                    Recebimentos: {{ getTotal(detailsCategory.map(item => item.pedidosPagos)) }}
+                </p>
+                <p class="text-center text-red-darken-2">
+                    Pedidos a Receber: {{ getTotal(detailsCategory.map(item => item.pedidosAReceberPeriodo)) }}
+                </p>
+                <p class="text-center text-blue-darken-2">
+                    Pedidos Recebidos: {{ getTotal(detailsCategory.map(item => item.pedidosRecebidosPeriodo)) }}
+                </p>
+                <p class="text-center text-red-darken-3">
+                    Gastos Gerais: {{ detailsCategory.length > 0 ? detailsCategory[3].gastos : 0 }}
                 </p>
                 <p class="text-center text-secondary">
-                    Gastos: {{ getTotal(detailsCategory.map(item => item.gastos)) }}
+                    Gastos Totais: {{ getTotal(detailsCategory.map(item => item.gastos)) }}
                 </p>
             </div>
         </v-col>
@@ -142,7 +193,7 @@
         </v-col>
         <v-col cols="10" md="5" class="container-graph rounded-xl">
             <Charts
-                :labels="[ 'Geral', 'Corte', 'Debruagem', 'Dublagem' ]"
+                :labels="[ 'Geral', 'Corte', 'Debruagem', 'Dublagem', 'Venda Material' ]"
                 :data="dataPie"
                 type="pie"
                 :title="'Gastos por Tipo de Serviço R$ ' + (dataPie.reduce((a, b) => a + b, 0)).toFixed(2)"
@@ -260,11 +311,9 @@
     }
 
     .botao-container {
-        display: flex;
         flex-wrap: wrap;
         gap: 12px;
         width: 100%;
         margin-top: 16px;
-        justify-content: space-between;
     }
 </style>

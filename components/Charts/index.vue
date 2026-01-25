@@ -1,8 +1,10 @@
 <template>
-    <v-row class="justify-center ma-4">
-        <v-col cols="12" class="text-center d-flex justify-space-between align-center mb-4">
+    <v-row class="justify-center md:px-4">
+        <v-col cols="12" md="6" class="text-center my-4">
             <h2 class="text-secondary">{{ props.title }}</h2>
             <h2 class="text-secondary">{{ props.subTitle }}</h2>
+        </v-col>
+        <v-col cols="12" md="6" class="text-center my-4">
             <v-btn 
                 variant="flat" 
                 class="rounded-xl" 
