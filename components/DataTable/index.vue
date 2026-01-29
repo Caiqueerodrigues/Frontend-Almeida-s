@@ -193,7 +193,7 @@
                 </template>
 
                 <template v-slot:[`item.ver`]="{ item }">
-                    <div class="centered-cell texto-truncado">
+                    <div class="centered-cell texto-truncado" :class="itemEqualItemSelected(item) ? 'selected' : ''">
                         <v-btn variant="text" @click="emitId(item)">
                             <v-icon v-if="props.acaoVer">
                                 mdi-pencil
@@ -284,6 +284,11 @@
     }
 
     :deep(tr.v-data-table__tr.v-data-table__tr--clickable:hover) {
+        background-color: #ad5021 !important;
+        transition: background 0.5s;
+    }
+
+    :deep(tr.v-data-table__tr.v-data-table__tr--clickable:has(.selected)) {
         background-color: #ad5021 !important;
         transition: background 0.5s;
     }
