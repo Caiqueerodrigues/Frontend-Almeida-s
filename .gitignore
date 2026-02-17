@@ -6,3 +6,11 @@ node_modules
 /.nuxt
 .nuxt
 .nuxt/
+
+# Ignorar arquivos de ambiente adicionais
+.env
+# Ignorar arquivos de build
+dist/
+# Outros arquivos comuns
+.DS_Store
+*.log
