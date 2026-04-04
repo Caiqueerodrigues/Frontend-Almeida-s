@@ -40,7 +40,7 @@
             <AutoCompleteMultiple 
                 v-capitalize-first
                 :label="'Seguimento'"
-                :items="['Geral', ...SEGUIMENTOS]"
+                :items="['Geral', ...SEGUIMENTOS, 'Montagem']"
                 :selecteds="lancamento.tipoServico"
                 :outsideList="false"
                 :type="'text'"

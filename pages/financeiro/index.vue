@@ -75,7 +75,7 @@
     
     const router = useRouter();
 
-    const seguimentos = [ 'Todos', 'Geral', ...SEGUIMENTOS ]
+    const seguimentos = [ 'Todos', 'Geral', ...SEGUIMENTOS, 'Montagem' ]
     const dragContainer = ref(null);
     const saidas = ref([]);
     const filterService = ref('Todos');
@@ -91,6 +91,7 @@
         "Debruagem": "#F8B4D9",
         'Material': "#D3D3D3",
         "Geral": "#FfB4a7",
+        'Montagem': "#B4A7D6",
     })
     const typesLayout = ref({
         "Corte": { x: 5, y: 5, offsetY: 120 },
@@ -98,6 +99,7 @@
         "Debruagem": { x: 605, y: 5, offsetY: 120 },
         "Material": { x: 905, y: 5, offsetY: 120 },
         "Geral": { x: 1205, y: 5, offsetY: 120 },
+        "Montagem": { x: 1505, y: 5, offsetY: 120 },
     });
 
     const onDragStart = (idx) => {
@@ -132,7 +134,11 @@
                 } else if (saida.tipoServico === 'Geral') {
                     x = 1205;
                     y = 5;
+                } else if (saida.tipoServico === 'Montagem') {
+                    x = 1505;
+                    y = 5;
                 }
+
             }
 
             saidasFiltrados.value[draggingIdx.value].x = x;
@@ -145,7 +151,7 @@
     const getSaidas = async () => {
         filterService.value = 'Todos';
         saidas.value = [];
-        typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }, "Material": { x: 905, y: 5, offsetY: 120 }, "Geral": { x: 1205, y: 5, offsetY: 120 }}
+        typesLayout.value = { "Corte": { x: 5, y: 5, offsetY: 120 }, "Dublagem": { x: 305, y: 5, offsetY: 120 }, "Debruagem": { x: 605, y: 5, offsetY: 120 }, "Material": { x: 905, y: 5, offsetY: 120 }, "Geral": { x: 1205, y: 5, offsetY: 120 }, "Montagem": { x: 1505, y: 5, offsetY: 120 }}
 
         const date = formatteDateDB(moment(selectedDate.value[0]).tz('America/Sao_Paulo').toDate()).split("T")[0];
         const dateFinal = formatteDateDB(moment(selectedDate.value[1]).tz('America/Sao_Paulo').toDate()).split("T")[0];
