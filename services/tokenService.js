@@ -2,6 +2,7 @@ import { decodeJwt } from "jose";
 import axios from 'axios';
 
 let refreshTimeout = null;
+let refreshPromise = null;
 
 export const isLoggedIn = () => {
     if (typeof window !== 'undefined') {
@@ -73,7 +74,9 @@ export const tokenUserData = () => {
 }
 
 export const removeToken = () => {
+    clearRefresh();
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     setNewPhotoToken('global.png');
 }
 
@@ -104,32 +107,46 @@ const agendamentoRefresh = (token) => {
     const timeout = Math.max(((expiration - now) - skew) * 1000, 0);
 
     clearRefresh();
-    refreshTimeout = setTimeout(() => refreshToken(), timeout);
+    refreshTimeout = setTimeout(() => {
+        refreshToken().catch(() => removeToken());
+    }, timeout);
 }
 
-const refreshToken = async () => {
-    const token = localStorage.getItem("token");
+export const refreshToken = async () => {
+    if (refreshPromise) return refreshPromise;
+
+    const token = localStorage.getItem("refreshToken") || localStorage.getItem("token");
     const config = useRuntimeConfig();
     const apiBackend = config.public.API_BACKEND;
 
     if (!token) {
-        console.error("Token não encontrado!");
-        return;
+        throw new Error("Refresh token não encontrado");
     }
 
     const axiosInstance = axios.create({
         baseURL: apiBackend,
+        timeout: 1000 * 20,
         headers: {
             'Authorization': `Bearer ${token}`,
         },
     });
 
-    try {
+    refreshPromise = (async () => {
         const response = await axiosInstance.get('/users/refresh-token');
-        setToken(response.data.response);
-        agendamentoRefresh(response.data.response);
-    } catch (error) {
-        console.error(error);
+        const newToken = response?.data?.response;
+
+        if (!newToken || typeof newToken !== 'string') {
+            throw new Error("Resposta inválida ao renovar token");
+        }
+
+        setToken(newToken);
+        return newToken;
+    })();
+
+    try {
+        return await refreshPromise;
+    } finally {
+        refreshPromise = null;
     }
 }
 

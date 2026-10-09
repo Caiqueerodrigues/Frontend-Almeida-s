@@ -14,3 +14,4 @@ dist/
 # Outros arquivos comuns
 .DS_Store
 *.log
+*.output
