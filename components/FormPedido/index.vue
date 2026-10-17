@@ -68,6 +68,17 @@
             </v-col>
             <v-col cols="12">
                 <v-row class="justify-center" v-if="!loading && pedido.modelo">
+                    <v-col cols="12" class="d-flex justify-center py-0">
+                        <v-switch
+                            v-model="calcularTotalPelaGrade"
+                            class="text-secondary"
+                            label="Calcular total automaticamente pela grade"
+                            color="secondary"
+                            hide-details
+                            inset
+                            @update:model-value="alternarCalculoTotal"
+                        ></v-switch>
+                    </v-col>
                     <v-col cols="12" md="4">
                         <v-text-field
                             rounded="xl"
@@ -75,8 +86,9 @@
                             v-model="pedido.totalPares"
                             type="number"
                             variant="outlined"
+                            :readonly="calcularTotalPelaGrade"
                             :rules="[ (value) => !!value || 'O total de pares é obrigatório!' ]"
-                            @input="formateddPrice($event), calculateTotal()"
+                            @input="!calcularTotalPelaGrade && (formateddPrice($event), calculateTotal())"
                         ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="4">
@@ -112,7 +124,7 @@
                     variant="outlined"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" v-if="!loading && pedido.totalPares > 0">
+            <v-col cols="12" v-if="!loading && pedido.modelo && (calcularTotalPelaGrade || pedido.totalPares > 0)">
                 <h2 class="text-center text-secondary">
                     GRADE DO PEDIDO
                 </h2>
@@ -134,7 +146,7 @@
                     </v-col>
                     <v-col 
                         class="d-flex justify-center"
-                        v-if="!loading && pedido.totalPares > 0"
+                        v-if="!loading && pedido.modelo && (calcularTotalPelaGrade || pedido.totalPares > 0)"
                     >
                         <CardGradePedido 
                             :plus="true"
@@ -336,6 +348,7 @@ import moment from 'moment-timezone';
     const props = defineProps([ 'id' ]);
     
     const showModalReport = ref(false);
+    const calcularTotalPelaGrade = ref(false);
 
     const timeZone = 'America/Sao_Paulo';
 
@@ -483,6 +496,7 @@ import moment from 'moment-timezone';
 
     const validateForm = async () => {
         pedido.value.grade = pedido.value.grade.filter(item => item.grade !== '' && item.qtd !== null);
+        if(calcularTotalPelaGrade.value) atualizarTotalPelaGrade();
         setTimeout(async () => {
             const error = await validForm(form);
             if(error.valid) {
@@ -501,7 +515,7 @@ import moment from 'moment-timezone';
                 }
     
                 const totalGrade = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
-                if(Number(pedido.value.totalPares) !== totalGrade) {
+                if(!calcularTotalPelaGrade.value && Number(pedido.value.totalPares) !== totalGrade) {
                     showToastify("Quantidade divergentes de pares e grades!", "info");
                     return false;
                 }
@@ -535,22 +549,37 @@ import moment from 'moment-timezone';
 
     const calculateTotal = () => {
         const model = props.id !== '0' ? pedido.value.modelo : modelos.value.find(item => item.id === pedido.value.modelo);
+        if(!model) return;
         pedido.value.totalDinheiro = Number(Number(model.preco) * Number(pedido.value.totalPares)).toFixed(3);
+    }
+
+    const atualizarTotalPelaGrade = () => {
+        pedido.value.totalPares = pedido.value.grade.reduce((total, item) => total + Number(item.qtd || 0), 0);
+        calculateTotal();
+    }
+
+    const alternarCalculoTotal = (ativado) => {
+        if(ativado) {
+            if(pedido.value.grade.length === 0) addNewItemGrade();
+            atualizarTotalPelaGrade();
+        }
     }
 
     const setNewValor = (ev) => {
         pedido.value.grade[ev.index].grade = ev.grade;
         pedido.value.grade[ev.index].qtd = ev.qtd;
+        if(calcularTotalPelaGrade.value) atualizarTotalPelaGrade();
     }
     const addNewItemGrade = () => {
-        if(!qtdParesMenorQueGrade()) return;
+        if(!calcularTotalPelaGrade.value && !qtdParesMenorQueGrade()) return;
         pedido.value.grade.push({  id: Date.now() + Math.random(), grade: '', qtd: null });
     }
     const removeItemGrade = (ev, index) =>{
         pedido.value.grade.splice(index, 1);
+        if(calcularTotalPelaGrade.value) atualizarTotalPelaGrade();
     }
     const qtdParesMenorQueGrade = () => {
-        const total = pedido.value.grade.reduce((total, item) => total += item.qtd, 0);
+        const total = pedido.value.grade.reduce((total, item) => total + Number(item.qtd || 0), 0);
         const result = total < pedido.value.totalPares;
         if(!result) showToastify("Quantidades de pares divergentes!", 'info');
         return result;

@@ -207,7 +207,7 @@
 <script setup>
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
-    import moment from 'moment';
+    import moment from 'moment-timezone';
     import { SEGUIMENTOS } from '~/constantes/seguimentos';
 
     const axios = inject('axios');
