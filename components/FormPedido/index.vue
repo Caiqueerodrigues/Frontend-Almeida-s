@@ -107,7 +107,7 @@
                             chips
                             label="Categoria do serviço"
                             v-model="pedido.categoria"
-                            :items="[ 'Corte', 'Dublagem', 'Debruagem', 'Material' ]"
+                            :items="SEGUIMENTOS"
                             :rules="[(value) => !!value || 'A categoria é obrigatória!']"
                             variant="outlined"
                             rounded="xl"
@@ -336,6 +336,7 @@
 <script setup>
 import { ModalRelatorios } from '#components';
 import moment from 'moment-timezone';
+import { SEGUIMENTOS } from '~/constantes/seguimentos';
 
     const axios = inject("axios");
     const loading = inject("loading");

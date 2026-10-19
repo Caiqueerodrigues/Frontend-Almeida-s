@@ -3,161 +3,71 @@
         <v-col cols="12" class="text-center">
             <h2 class="text-secondary">Entradas e Saídas Gerais do Período</h2>
         </v-col>
-        <v-col cols="11" md="2">
-            <div
-                class="postit bg-default"
+        <template v-for="(card, index) in dashboardCards" :key="card.categoria">
+            <v-col
+                v-if="index === 2"
+                cols="11"
+                md="4"
+                class="text-center mt-4 d-flex flex-column align-center justify-center"
             >
-                <p class="text-center">
-                    <strong>CORTE:</strong><br>
-                </p>
-                <p class="text-center text-success">
-                    Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[0].pedidosLancados : 0 }}</strong><br>
-                </p>
-                <p class="text-center text-blue">
-                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosPagos : 0 }}
-                </p>
-                <p class="text-center text-red-darken-2">
-                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosAReceberPeriodo : 0 }}
-                </p>
-                <p class="text-center text-blue-darken-2">
-                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[0].pedidosRecebidosPeriodo : 0 }}
-                </p>
-                <p class="text-center text-secondary">
-                    Gastos: {{ detailsCategory.length > 0 ? detailsCategory[0].gastos : 0 }}
-                </p>
-            </div>
-        </v-col>
-        <v-col cols="11" md="2">
-            <div
-                class="postit bg-default"
-            >
-                <p class="text-center">
-                    <strong>DEBRUAGEM:</strong><br>
-                </p>
-                <p class="text-center text-success">
-                    Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[1].pedidosLancados : 0 }}</strong><br>
-                </p>
-                <p class="text-center text-blue">
-                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosPagos : 0 }}
-                </p>
-                <p class="text-center text-red-darken-2">
-                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosAReceberPeriodo : 0 }}
-                </p>
-                <p class="text-center text-blue-darken-2">
-                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[1].pedidosRecebidosPeriodo : 0 }}
-                </p>
-                <p class="text-center text-secondary">
-                    Gastos: {{ detailsCategory.length > 0 ? detailsCategory[1].gastos : 0 }}
-                </p>
-            </div>
-        </v-col>
-        <v-col cols="11" md="4" class="text-center mt-4 d-flex flex-column align-center justify-center">
-            <VueDatePicker 
-                class="w-100 mx-auto"
-                v-model="date" 
-                range 
-                autoApply
-                locale="pt-BR"
-                dark
-                format="dd/MM/yyyy"
-                :clearable="false"
-                :min-date="minDate"
-                :max-date="now"
-            />
-            <div class="botao-container d-flex justify-center">
-                <v-btn 
-                    variant="flat" 
-                    class="rounded-xl" 
-                    color="warning"
-                    @click="() => navigateTo('/financeiro')"
-                >
-                    IR PARA LANÇAMENTOS
-                </v-btn>
-                <v-btn 
-                    variant="flat" 
-                    class="rounded-xl" 
-                    color="success"
-                    @click="() => navigateTo('/pedidos')"
-                >
-                    IR PARA PEDIDOS
-                </v-btn>
-            </div>
-        </v-col>
-        <v-col cols="11" md="2">
-            <div
-                class="postit bg-default"
-            >
-                <p class="text-center">
-                    <strong>DUBLAGEM:</strong><br>
-                </p>
-                <p class="text-center text-success">
-                    Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[2].pedidosLancados : 0 }}</strong><br>
-                </p>
-                <p class="text-center text-blue">
-                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosPagos : 0 }}
-                </p>
-                <p class="text-center text-red-darken-2">
-                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosAReceberPeriodo : 0 }}
-                </p>
-                <p class="text-center text-blue-darken-2">
-                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[2].pedidosRecebidosPeriodo : 0 }}
-                </p>
-                <p class="text-center text-secondary">
-                    Gastos: {{ detailsCategory.length > 0 ? detailsCategory[2].gastos : 0 }}
-                </p>
-            </div>
-        </v-col>
-        <v-col cols="11" md="2">
-            <div
-                class="postit bg-default"
-            >
-                <p class="text-center">
-                    <strong>VENDA MATERIAL:</strong><br>
-                </p>
-                <p class="text-center text-success">
-                    Pedidos Cadastrados: <strong>{{ detailsCategory.length > 0 ? detailsCategory[4].pedidosLancados : 0 }}</strong><br>
-                </p>
-                <p class="text-center text-blue">
-                    Recebimentos: {{ detailsCategory.length > 0 ? detailsCategory[4].pedidosPagos : 0 }}
-                </p>
-                <p class="text-center text-red-darken-2">
-                    Pedidos a Receber: {{ detailsCategory.length > 0 ? detailsCategory[4].pedidosAReceberPeriodo : 0 }}
-                </p>
-                <p class="text-center text-blue-darken-2">
-                    Pedidos Recebidos: {{ detailsCategory.length > 0 ? detailsCategory[4].pedidosRecebidosPeriodo : 0 }}
-                </p>
-                <p class="text-center text-secondary">
-                    Gastos: {{ detailsCategory.length > 0 ? detailsCategory[4].gastos : 0 }}
-                </p>
-            </div>
-        </v-col>
-        <v-col cols="11" md="4">
-            <div
-                class="postit bg-default"
-            >
-                <p class="text-center">
-                    <strong>Total:</strong><br>
-                </p>
-                <p class="text-center text-success">
-                    Pedidos Cadastrados: <strong>{{ getTotal(detailsCategory.map(item => item.pedidosLancados)) }}</strong><br>
-                </p>
-                <p class="text-center text-blue">
-                    Recebimentos: {{ getTotal(detailsCategory.map(item => item.pedidosPagos)) }}
-                </p>
-                <p class="text-center text-red-darken-2">
-                    Pedidos a Receber: {{ getTotal(detailsCategory.map(item => item.pedidosAReceberPeriodo)) }}
-                </p>
-                <p class="text-center text-blue-darken-2">
-                    Pedidos Recebidos: {{ getTotal(detailsCategory.map(item => item.pedidosRecebidosPeriodo)) }}
-                </p>
-                <p class="text-center text-red-darken-3">
-                    Gastos Gerais: {{ detailsCategory.length > 0 ? detailsCategory[3].gastos : 0 }}
-                </p>
-                <p class="text-center text-secondary">
-                    Gastos Totais: {{ getTotal(detailsCategory.map(item => item.gastos)) }}
-                </p>
-            </div>
-        </v-col>
+                <VueDatePicker
+                    class="w-100 mx-auto"
+                    v-model="date"
+                    range
+                    autoApply
+                    locale="pt-BR"
+                    dark
+                    format="dd/MM/yyyy"
+                    :clearable="false"
+                    :min-date="minDate"
+                    :max-date="now"
+                />
+                <div class="botao-container d-flex justify-center">
+                    <v-btn
+                        variant="flat"
+                        class="rounded-xl"
+                        color="warning"
+                        @click="() => navigateTo('/financeiro')"
+                    >
+                        IR PARA LANÇAMENTOS
+                    </v-btn>
+                    <v-btn
+                        variant="flat"
+                        class="rounded-xl"
+                        color="success"
+                        @click="() => navigateTo('/pedidos')"
+                    >
+                        IR PARA PEDIDOS
+                    </v-btn>
+                </div>
+            </v-col>
+
+            <v-col cols="11" :md="index < 4 ? 2 : 3">
+                <div class="postit bg-default">
+                    <p class="text-center">
+                        <strong>{{ card.titulo }}:</strong><br>
+                    </p>
+                    <p class="text-center text-success">
+                        Pedidos Cadastrados: <strong>{{ card.pedidosLancados }}</strong><br>
+                    </p>
+                    <p class="text-center text-blue">
+                        Recebimentos: {{ card.pedidosPagos }}
+                    </p>
+                    <p class="text-center text-red-darken-2">
+                        Pedidos a Receber: {{ card.pedidosAReceberPeriodo }}
+                    </p>
+                    <p class="text-center text-blue-darken-2">
+                        Pedidos Recebidos: {{ card.pedidosRecebidosPeriodo }}
+                    </p>
+                    <p v-if="card.total" class="text-center text-red-darken-3">
+                        Gastos Gerais: {{ card.gastosGerais }}
+                    </p>
+                    <p class="text-center text-secondary">
+                        {{ card.total ? 'Gastos Totais' : 'Gastos' }}: {{ card.gastos }}
+                    </p>
+                </div>
+            </v-col>
+        </template>
 
         <v-col cols="10" class="container-graph rounded-xl">
             <Charts
@@ -193,7 +103,7 @@
         </v-col>
         <v-col cols="10" md="5" class="container-graph rounded-xl">
             <Charts
-                :labels="[ 'Geral', 'Corte', 'Debruagem', 'Dublagem', 'Venda Material', 'Montagem' ]"
+                :labels="SEGUIMENTOS"
                 :data="dataPie"
                 type="pie"
                 :title="'Gastos por Tipo de Serviço R$ ' + (dataPie.reduce((a, b) => a + b, 0)).toFixed(2)"
@@ -205,6 +115,7 @@
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
     import moment from 'moment-timezone';
+    import { SEGUIMENTOS } from '~/constantes/seguimentos';
 
     const router = useRouter();
     const axios = inject('axios');
@@ -221,6 +132,37 @@
     const dataBarAReceber = ref ([]);
     const dataPie = ref([]);
     const detailsCategory = ref([]);
+
+    const dashboardCards = computed(() => {
+        const cards = detailsCategory.value
+            .filter(({ categoria }) => !['Geral', 'Montagem'].includes(categoria))
+            .map(detail => ({
+                ...detail,
+                titulo: detail.categoria === 'Material' ? 'VENDA MATERIAL' : detail.categoria.toUpperCase(),
+                total: false
+            }));
+
+        const total = field => detailsCategory.value.reduce(
+            (sum, detail) => sum + (detail[field] ?? 0),
+            0
+        );
+        const geral = detailsCategory.value.find(({ categoria }) => categoria === 'Geral');
+
+        return [
+            ...cards,
+            {
+                categoria: 'Total',
+                titulo: 'Total',
+                pedidosLancados: total('pedidosLancados'),
+                pedidosPagos: total('pedidosPagos'),
+                pedidosAReceberPeriodo: total('pedidosAReceberPeriodo'),
+                pedidosRecebidosPeriodo: total('pedidosRecebidosPeriodo'),
+                gastosGerais: geral?.gastos ?? 0,
+                gastos: total('gastos'),
+                total: true
+            }
+        ];
+    });
 
     const navigateTo = (route) => {
         router.push(route);
@@ -241,10 +183,6 @@
         }).catch(error => {
             console.error(error);
         });
-    }
-
-    const getTotal = (array) => {
-        return array.reduce((a, b) => a + b, 0);
     }
 
     watch(date, () => {
